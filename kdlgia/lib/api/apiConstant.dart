@@ -1,0 +1,1 @@
+const String stockApi = 'https://www.kdlgia.com/api/user/stock/12869/7943e512c591000287ceb1402bc101a1/';
