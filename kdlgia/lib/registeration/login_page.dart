@@ -107,10 +107,14 @@ class LoginPage extends StatelessWidget {
                         if (username.isNotEmpty && password.isNotEmpty) {
                           login(username, password).then((response) {
                             if (response["Status"] == "1") {
+                          
+
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const HomePage()),
+                                    builder: (context) => HomePage(
+                                        token:
+                                            response["MobToken"].toString())),
                               );
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(

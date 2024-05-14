@@ -1,14 +1,18 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:kdlgia/diamond_search/search_card.dart';
 import 'package:kdlgia/navigation_pages/search_page.dart';
+import 'package:kdlgia/registeration/login_page.dart';
 import 'package:kdlgia/style/cardDetail.dart';
 import 'package:kdlgia/style/constant.dart';
 import 'package:kdlgia/style/search_card_ui.dart';
-import 'package:kdlgia/style/textStyle.dart'; // Import the search page
+import 'package:kdlgia/style/textStyle.dart';
+import 'package:kdlgia/user/profile.dart'; // Import the search page
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final String  token;
+
+  const HomePage({required this.token});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -25,7 +29,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     diamondsFuture = fetchItems();
-    
   }
 
   @override
@@ -34,17 +37,17 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Row(
-          mainAxisAlignment:
-              MainAxisAlignment.start, // Align items to start and end
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Padding(
-                padding: const EdgeInsets.all(paddingCard),
-                child: Card(
-                  child: Image.asset(
-                    'assets/Images/company_logo.png',
-                    height: 30,
-                  ),
-                )),
+              padding: const EdgeInsets.all(8.0),
+              child: Card(
+                child: Image.asset(
+                  'assets/Images/company_logo.png',
+                  height: 30,
+                ),
+              ),
+            ),
             const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -65,27 +68,48 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-            // Padding(
-            //   padding: const EdgeInsets.all(8.0),
-            //   child: GestureDetector(
-            //     onTap: () {
-            //       // Add code to handle logout
-            //     },
-            //     child: Card(
-            //       elevation: 4,
-            //       shape: CircleBorder(),
-            //       child: Padding(
-            //         padding: const EdgeInsets.all(8.0),
-            //         child: Icon(
-            //           Icons.exit_to_app,
-            //           color: Colors.black,
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
           ],
         ),
+        actions: [
+          PopupMenuButton<String>(
+            itemBuilder: (BuildContext context) {
+              return {'Profile', 'Settings', 'Logout'}.map((String choice) {
+                return PopupMenuItem<String>(
+                  value: choice,
+                  child: Text(choice),
+                );
+              }).toList();
+            },
+            onSelected: (String choice) {
+              // Handle the selected choice
+              switch (choice) {
+                case 'Profile':
+                  // Navigate to profile page
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => ProfilePage(token: widget.token,  ),
+                    ),
+                    
+                    
+                  );
+                  break;
+                case 'Settings':
+                  // Navigate to settings page
+                  break;
+                case 'Logout':
+                  // Perform logout action
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => LoginPage(),
+                    ),
+                  );
+                  break;
+              }
+            },
+          ),
+        ],
       ),
       body: Container(
         child: ListView(
@@ -112,16 +136,21 @@ class _HomePageState extends State<HomePage> {
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchPage(diamondsFuture: diamondsFuture)));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                SearchPage(diamondsFuture: diamondsFuture)));
                   },
                   child: const Padding(
-                  padding: EdgeInsets.all(paddingCard),
-                  child: Card(
-                    child: Center(child: TextStyleHeader(text: "Sock Search")),
+                    padding: EdgeInsets.all(paddingCard),
+                    child: Card(
+                      child:
+                          Center(child: TextStyleHeader(text: "Sock Search")),
+                    ),
                   ),
                 ),
-                ),
-                
+
                 const Padding(
                   padding: EdgeInsets.all(paddingCard),
                   child: Card(
@@ -133,7 +162,6 @@ class _HomePageState extends State<HomePage> {
             ),
             Column(
               children: [
-                
                 Padding(
                   padding: const EdgeInsets.all(paddingCard),
                   child: Card(
@@ -152,10 +180,10 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               Row(
                                 children: [
-                                   TextStyleHeader(
-                                    text:"Referance Search",
-                                    colors: isExpanded ? mainColor:Colors.black ,
-                                    
+                                  TextStyleHeader(
+                                    text: "Referance Search",
+                                    colors:
+                                        isExpanded ? mainColor : Colors.black,
                                   ),
                                   const Spacer(), // Use Spacer widget to fill available space
                                   Icon(
@@ -171,7 +199,8 @@ class _HomePageState extends State<HomePage> {
                       ),
                       if (isExpanded)
                         Padding(
-                          padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, bottom: 20),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -262,8 +291,7 @@ class _HomePageState extends State<HomePage> {
                 child: Card(
                   child: Column(
                     children: [
-                      const TextStyleHeader(text: "KDL Gia Exclusive Diamond"
-                      ),
+                      const TextStyleHeader(text: "KDL Gia Exclusive Diamond"),
                       GridView.count(
                         crossAxisCount: 2,
                         shrinkWrap:
@@ -328,9 +356,10 @@ class _HomePageState extends State<HomePage> {
                               Row(
                                 children: [
                                   TextStyleHeader(
-                                    text:"Order Summery Detail",
-                                    colors: orderSummaryDetailIsSelected ? mainColor: Colors.black,
-                                    
+                                    text: "Order Summery Detail",
+                                    colors: orderSummaryDetailIsSelected
+                                        ? mainColor
+                                        : Colors.black,
                                   ),
                                   const Spacer(), // Use Spacer widget to fill available space
                                   Icon(
@@ -356,8 +385,6 @@ class _HomePageState extends State<HomePage> {
                                     fontSize: 15, fontWeight: FontWeight.bold),
                                 textAlign: TextAlign.center,
                               ),
-                             
-                              
 
                               // Add more ListTile widgets for additional details
                             ],
@@ -389,9 +416,10 @@ class _HomePageState extends State<HomePage> {
                               Row(
                                 children: [
                                   TextStyleHeader(
-                                    text:"User Summery",
-                                    colors: userSummaruIsSelected ? mainColor : Colors.black,
-                                    
+                                    text: "User Summery",
+                                    colors: userSummaruIsSelected
+                                        ? mainColor
+                                        : Colors.black,
                                   ),
                                   const Spacer(), // Use Spacer widget to fill available space
                                   Icon(
@@ -417,9 +445,6 @@ class _HomePageState extends State<HomePage> {
                                     fontSize: 15, fontWeight: FontWeight.bold),
                                 textAlign: TextAlign.center,
                               ),
-                             
-                             
-                             
 
                               // Add more ListTile widgets for additional details
                             ],
@@ -446,25 +471,24 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         Padding(
                             padding: const EdgeInsets.all(paddingCard),
-
                             child: SizedBox(
-                              height: 60,
-                              width: 60,
-                            child:Card(
-                              
-                              child: Image.asset("assets/Images/user.png"),
-                            ))),
+                                height: 60,
+                                width: 60,
+                                child: Card(
+                                  child: Image.asset("assets/Images/user.png"),
+                                ))),
                         const Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             TextStyleHeader(
-                              text:"Atish Shah", fontWeight: FontWeight.normal,colors: Colors.black,
+                              text: "Atish Shah",
+                              fontWeight: FontWeight.normal,
+                              colors: Colors.black,
                             ),
                             TextStyleHeader(
-                              text: "Marketing Executive",
-                              fontWeight: FontWeight.normal,colors: Colors.black
-                              
-                            ),
+                                text: "Marketing Executive",
+                                fontWeight: FontWeight.normal,
+                                colors: Colors.black),
                           ],
                         ),
                       ],
@@ -474,96 +498,104 @@ class _HomePageState extends State<HomePage> {
                     ),
                     // Mail******************
                     const InsideShadowCard(
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 60,
-                            height: 60,
-                            child:Padding(padding: EdgeInsets.all(paddingCard),
-                          child: Card(
-                            child: Icon(Icons.mail),
-                          ),), 
+                        child: Row(
+                      children: [
+                        SizedBox(
+                          width: 60,
+                          height: 60,
+                          child: Padding(
+                            padding: EdgeInsets.all(paddingCard),
+                            child: Card(
+                              child: Icon(Icons.mail),
+                            ),
                           ),
-                          
-                          Padding(padding: EdgeInsets.all(paddingCard),
-                          child: Text("shah.darshil2299@gmail.com", style: TextStyle(fontSize: 15.0),),)
-                          
-                          
-
-                        ],
-                      )
-                      ),
-                                          const SizedBox(
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(paddingCard),
+                          child: Text(
+                            "shah.darshil2299@gmail.com",
+                            style: TextStyle(fontSize: 15.0),
+                          ),
+                        )
+                      ],
+                    )),
+                    const SizedBox(
                       height: 10,
                     ),
                     // WhatSup ******************
                     const InsideShadowCard(
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 60,
-                            height: 60,
-                            child:Padding(padding: EdgeInsets.all(paddingCard),
-                          child: Card(
-                            child: Icon(Icons.call),
-                          ),), 
+                        child: Row(
+                      children: [
+                        SizedBox(
+                          width: 60,
+                          height: 60,
+                          child: Padding(
+                            padding: EdgeInsets.all(paddingCard),
+                            child: Card(
+                              child: Icon(Icons.call),
+                            ),
                           ),
-                          
-                          Padding(padding: EdgeInsets.all(paddingCard),
-                          child: Text("+91 9664280220", style: TextStyle(fontSize: 15.0),),)
-                          
-                          
-
-                        ],
-                      )
-                      ),
-                                          const SizedBox(
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(paddingCard),
+                          child: Text(
+                            "+91 9664280220",
+                            style: TextStyle(fontSize: 15.0),
+                          ),
+                        )
+                      ],
+                    )),
+                    const SizedBox(
                       height: 10,
                     ),
                     // Whatsup
                     const InsideShadowCard(
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 60,
-                            height: 60,
-                            child:Padding(padding: EdgeInsets.all(paddingCard),
-                          child: Card(
-                            child: Icon(Icons.whatshot),
-                          ),), 
+                        child: Row(
+                      children: [
+                        SizedBox(
+                          width: 60,
+                          height: 60,
+                          child: Padding(
+                            padding: EdgeInsets.all(paddingCard),
+                            child: Card(
+                              child: Icon(Icons.whatshot),
+                            ),
                           ),
-                          
-                          Padding(padding: EdgeInsets.all(paddingCard),
-                          child: Text("shah.darshil2299@gmail.com", style: TextStyle(fontSize: 15.0),),)
-                          
-                          
-
-                        ],
-                      )
-                      ),
-                                          const SizedBox(
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(paddingCard),
+                          child: Text(
+                            "shah.darshil2299@gmail.com",
+                            style: TextStyle(fontSize: 15.0),
+                          ),
+                        )
+                      ],
+                    )),
+                    const SizedBox(
                       height: 10,
                     ),
                     const InsideShadowCard(
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 60,
-                            height: 60,
-                            child:Padding(padding: EdgeInsets.all(paddingCard),
-                          child: Card(
-                            child: Icon(Icons.near_me),
-                          ),), 
+                        child: Row(
+                      children: [
+                        SizedBox(
+                          width: 60,
+                          height: 60,
+                          child: Padding(
+                            padding: EdgeInsets.all(paddingCard),
+                            child: Card(
+                              child: Icon(Icons.near_me),
+                            ),
                           ),
-                          
-                          Padding(padding: EdgeInsets.all(paddingCard),
-                          child: Text("Darshil Shah", style: TextStyle(fontSize: 15.0),),)
-                          
-                          
-
-                        ],
-                      )
-                      )
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(paddingCard),
+                          child: Text(
+                            "Darshil Shah",
+                            style: TextStyle(fontSize: 15.0),
+                          ),
+                        )
+                      ],
+                    ))
                   ],
                 ),
               ),
@@ -572,8 +604,8 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       bottomNavigationBar: Padding(
-        padding:
-            const EdgeInsets.all(paddingCard), // Adjust the bottom padding as needed
+        padding: const EdgeInsets.all(
+            paddingCard), // Adjust the bottom padding as needed
         child: Container(
           height: 80, // Adjust the height as needed
           decoration: BoxDecoration(
@@ -593,10 +625,9 @@ class _HomePageState extends State<HomePage> {
             children: [
               TextButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomePage()),
-                  );
+                  setState(() {
+                    
+                  });
                   // Add your onPressed callback here
                 },
                 child: const Column(
