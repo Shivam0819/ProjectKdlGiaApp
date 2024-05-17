@@ -1,19 +1,20 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:kdlgia/diamond_search/diamondSearch.dart';
-import 'package:kdlgia/diamond_search/search_card.dart';
+import 'package:kdlgia/search/apiDiamondSerach.dart';
 import 'package:kdlgia/search/diamondData.dart';
+import 'package:kdlgia/search/diamondDataDetail.dart';
+import 'package:kdlgia/search/searchTemp.dart';
 import 'package:kdlgia/style/search_card_ui.dart';
 
-
 class SearchUi extends StatefulWidget {
-
   final String token;
-    SearchUi({super.key, 
-      required this.token
-
-    });
+  String totalStock;
+  SearchUi({
+    super.key,
+    required this.token,
+    this.totalStock = "****",
+  });
   // SearchUi({required this.diamondsFuture});
   // Define all the properties with appropriate types
   // Add '?' to indicate they can be null
@@ -175,335 +176,183 @@ class SearchUi extends StatefulWidget {
 
   List<Diamond> snapshotData = [];
 
-
   @override
   _SearchUiState createState() => _SearchUiState();
 }
 
 class _SearchUiState extends State<SearchUi> {
-  int datalength = 0;
-  List<Diamond> resultFilterDiamond = [];
-  Future<void> filterFunction() async {
-    print(resultFilterDiamond.length);
-    List<Diamond> originalDiamonds = await diamondsFuture;
-    List<Diamond> filteredDiamonds = List.from(originalDiamonds);
-    double? caratFromValue = double.tryParse(widget.caratFrom ?? '');
-    double? caratToValue = double.tryParse(widget.caratTo ?? '');
-    print(
-        "Result ${identityHashCode(resultFilterDiamond)} Original: ${identityHashCode(originalDiamonds)}  FIlter: ${identityHashCode(filteredDiamonds)} Diamond Future: ${identityHashCode(diamondsFuture)}");
-    // resultFilterDiamond = [...filteredDiamonds];
-    if (!widget.roundShpIsSelected &
-        !widget.princeShpIsSelected &
-        !widget.emraldShpIsSelected &
-        !widget.ovalShpIsSelected &
-        !widget.radiantShpIsSelected &
-        !widget.pearShpIsSelected &
-        !widget.marquiseShpIsSelected &
-        !widget.heartShpIsSelected &
-        !widget.cushionShpIsSelected &
-        !widget.othersShpIsSelected &
-        !widget.triangleShpIsSelected &
-        !widget.caratIsSelected &
-        !widget.caratFromIsSelected &
-        !widget.caratToIsSelected &
-        (widget.caratFrom == null) &
-        (widget.caratTo == null) &
-        !widget.colDIsSelected &
-        !widget.colEIsSelected &
-        !widget.colFIsSelected &
-        !widget.colGIsSelected &
-        !widget.colHIsSelected &
-        !widget.colIIsSelected &
-        !widget.colJIsSelected &
-        !widget.colKIsSelected &
-        !widget.colLIsSelected &
-        !widget.colMIsSelected &
-        !widget.colNIsSelected &
-        !widget.colO_PIsSelected &
-        !widget.colQ_RIsSelected &
-        !widget.colS_TIsSelected &
-        !widget.colU_VIsSelected &
-        !widget.colW_ZIsSelected &
-        !widget.claFlIsSelected &
-        !widget.claIfIsSelected &
-        !widget.claVvs1IsSelected &
-        !widget.claVvs2IsSelected &
-        !widget.claVs1IsSelected &
-        !widget.claVs2IsSelected &
-        !widget.claSi1IsSelected &
-        !widget.claSi2IsSelected &
-        !widget.claSi3IsSelected &
-        !widget.claI1IsSelected &
-        !widget.claI2IsSelected &
-        !widget.cutExIsSelected &
-        !widget.cutVgIsSelected &
-        !widget.cutGdIsSelected &
-        !widget.cutFrIsSelected &
-        !widget.cutPrIsSelected &
-        !widget.cutNoneIsSelected &
-        !widget.polExIsSelected &
-        !widget.polVgIsSelected &
-        !widget.polGdIsSelected &
-        !widget.polFrIsSelected &
-        !widget.polPrIsSelected &
-        !widget.symExIsSelected &
-        !widget.symVgIsSelected &
-        !widget.symGdIsSelected &
-        !widget.symFrIsSelected &
-        !widget.symPrIsSelected &
-        !widget.flNIsSelected &
-        !widget.flFIsSelected &
-        !widget.flMIsSelected &
-        !widget.flSIsSelected &
-        !widget.flVsIsSelected &
-        !widget.certGiaIsSelected &
-        !widget.certIgiIsSelected &
-        !widget.certHrdIsSelected &
-        !widget.certNgtcIsSelected &
-        !widget.bjmYesIsSelected &
-        !widget.bjmNoIsSelected &
-        !widget.locIndiaIsSelected &
-        !widget.locChinaIsSelected &
-        !widget.locHkIsSelected &
-        !widget.locSzIsSelected &
-        !widget.locH_KIsSelected &
-        !widget.locTransitIsSelected &
-        !widget.shortCut3EXNIsSelected &
-        !widget.shortCut3VGNIsSelected) {
-      resultFilterDiamond = [...filteredDiamonds];
-      print(
-          "${resultFilterDiamond.length}   ${originalDiamonds.length}    ${filteredDiamonds.length}");
-      print(
-          "Tttttttttttttttttttttttttttttttttttttttttt: Result ${identityHashCode(resultFilterDiamond)} Original: ${identityHashCode(originalDiamonds)}  FIlter: ${identityHashCode(filteredDiamonds)} Diamond Future: ${identityHashCode(diamondsFuture)}");
-
-      print(
-          "*********************object ${resultFilterDiamond.length} ${widget.snapshotData.length}"); //help to find length
-    } else {
-      resultFilterDiamond.clear();
-      print("object:***********************${resultFilterDiamond.length}");
-      // print("I am here************************");
-      // print(widget.roundShp);
-      for (var data in widget.snapshotData) {
-        // print("I am here******************");
-        // ISSUE i understand the problem is every only shape has value and other clary cut and other operator are null and its and operator so need some thing is every element of col and other is D then by default it should filter all in perticular clarity
-        Diamond? temp;
-
-        if (widget.roundShp?.toLowerCase() == null &&
-            widget.princeShp?.toLowerCase() == null &&
-            widget.emraldShp?.toLowerCase() == null &&
-            widget.radiantShp?.toLowerCase() == null &&
-            widget.ovalShp?.toLowerCase() == null &&
-            widget.pearShp?.toLowerCase() == null &&
-            widget.marquiseShp?.toLowerCase() == null &&
-            widget.heartShp?.toLowerCase() == null &&
-            widget.triangleShp?.toLowerCase() == null &&
-            widget.cushionShp?.toLowerCase() == null &&
-            widget.othersShp?.toLowerCase() == null) {
-          temp = data;
-        } else if (data.shape == widget.roundShp?.toLowerCase() ||
-            data.shape == widget.princeShp?.toLowerCase() ||
-            data.shape == widget.emraldShp?.toLowerCase() ||
-            data.shape == widget.radiantShp?.toLowerCase() ||
-            data.shape == widget.ovalShp?.toLowerCase() ||
-            data.shape == widget.pearShp?.toLowerCase() ||
-            data.shape == widget.marquiseShp?.toLowerCase() ||
-            data.shape == widget.heartShp?.toLowerCase() ||
-            data.shape == widget.triangleShp?.toLowerCase() ||
-            data.shape == widget.cushionShp?.toLowerCase() ||
-            data.shape == widget.othersShp?.toLowerCase()) {
-          temp = data;
-        } else {
-          continue;
-        }
-
-        if (widget.colD == null &&
-            widget.colE == null &&
-            widget.colF == null &&
-            widget.colG == null &&
-            widget.colH == null &&
-            widget.colI == null &&
-            widget.colJ == null &&
-            widget.colK == null &&
-            widget.colL == null &&
-            widget.colM == null &&
-            widget.colN == null) {
-          temp = data;
-        } else if (data.color == widget.colD ||
-            data.color == widget.colE ||
-            data.color == widget.colF ||
-            data.color == widget.colG ||
-            data.color == widget.colH ||
-            data.color == widget.colI ||
-            data.color == widget.colJ ||
-            data.color == widget.colK ||
-            data.color == widget.colL ||
-            data.color == widget.colM ||
-            data.color == widget.colN) {
-          temp = data;
-        } else {
-          continue;
-        }
-        if (widget.claFl == null &&
-            widget.claIf == null &&
-            widget.claVvs1 == null &&
-            widget.claVvs2 == null &&
-            widget.claVs1 == null &&
-            widget.claVs2 == null &&
-            widget.claSi1 == null &&
-            widget.claSi2 == null &&
-            widget.claSi3 == null &&
-            widget.claI1 == null &&
-            widget.claI2 == null) {
-              temp =data;
-        } else if (data.clarity == widget.claFl ||
-            data.clarity == widget.claIf ||
-            data.clarity == widget.claVvs1 ||
-            data.clarity == widget.claVvs2 ||
-            data.clarity == widget.claVs1 ||
-            data.clarity == widget.claVs2 ||
-            data.clarity == widget.claSi1 ||
-            data.clarity == widget.claSi2 ||
-            data.clarity == widget.claSi3 ||
-            data.clarity == widget.claI1 ||
-            data.clarity == widget.claI2) {
-        } else {
-          continue;
-        }
-
-        if (widget.cutEx == null &&
-            widget.cutVg == null &&
-            widget.cutGd == null &&
-            widget.cutFr == null &&
-            widget.cutNone == null) {
-          temp = data;
-        } else if (data.cut == widget.cutEx ||
-            data.cut == widget.cutVg ||
-            data.cut == widget.cutGd ||
-            data.cut == widget.cutFr ||
-            data.cut == widget.cutNone) {
-          temp = data;
-        } else {
-          continue;
-        }
-        if (widget.polEx == null &&
-            widget.polVg == null &&
-            widget.polGd == null &&
-            widget.polFr == null) {
-          temp = data;
-        } else if (data.polish == widget.polEx ||
-            data.polish == widget.polVg ||
-            data.polish == widget.polGd ||
-            data.polish == widget.polFr) {
-          temp = data;
-        } else {
-          continue;
-        }
-        if (widget.symEx == null &&
-            widget.symVg == null &&
-            widget.symGd == null &&
-            widget.symFr == null) {
-          temp = data;
-        } else if (data.symmetry == widget.symEx ||
-            data.symmetry == widget.symVg ||
-            data.symmetry == widget.symGd ||
-            data.symmetry == widget.symFr) {
-          temp = data;
-        } else {
-          continue;
-        }
-
-        if (widget.flN == null &&
-            widget.flF == null &&
-            widget.flM == null &&
-            widget.flS == null &&
-            widget.flVs == null) {
-          temp = data;
-        } else if (data.fluorescence == widget.flN ||
-            data.fluorescence == widget.flF ||
-            data.fluorescence == widget.flM ||
-            data.fluorescence == widget.flS ||
-            data.fluorescence == widget.flVs) {
-          temp = data;
-        } else {
-          continue;
-        }
-        if (widget.certGia == null &&
-            widget.certIgi == null &&
-            widget.certNgtc == null &&
-            widget.certHrd == null) {
-          temp = data;
-        } else if (data.report == widget.certGia ||
-            data.report == widget.certIgi ||
-            data.report == widget.certNgtc ||
-            data.report == widget.certHrd) {
-          temp = data;
-        } else {
-          continue;
-        }
-
-        if (widget.locChina == null &&
-            widget.locIndia == null &&
-            widget.locSz == null &&
-            widget.locHk == null &&
-            widget.locH_K == null &&
-            widget.locTransit == null) {
-          temp = data;
-        } else if (data.place == widget.locChina ||
-            data.place == widget.locIndia ||
-            data.place == widget.locHk ||
-            data.place == widget.locSz ||
-            data.place == widget.locH_K ||
-            data.place == widget.locTransit) {
-          temp = data;
-        } else {
-          continue;
-        }
-        if (caratFromValue != null && caratToValue != null) {
-          if (double.parse(data.carat) >= caratFromValue &&
-              double.parse(data.carat) <= caratToValue) {
-            // print(data);
-            // print("Hello");
-            temp = data;
-          } else {
-            continue;
-          }
-        } else if (caratFromValue != null) {
-          if (double.parse(data.carat) >= caratFromValue) {
-            temp = data;
-          } else {
-            continue;
-          }
-        } else if (caratToValue != null) {
-          if (double.parse(data.carat) <= caratToValue) {
-            temp = data;
-          } else {
-            continue;
-          }
-        } else {
-          temp = data;
-        }
-
-        resultFilterDiamond.add(temp.copy());
-      }
-
-      //  print(
-      //     "ffffffffffffffffffffffffffffffffffff*********************object ${resultFilterDiamond.length} ${filteredDiamonds.length}"); //help to find length
-    }
-    //help to find length
-  }
-
-  late Future<List<Diamond>> diamondsFuture;
-  late Future<List<Diamond>> advanceDiamondsFuture;
+  late Future<DiamondData> diamondsFuture;
 
   late TextEditingController _controllerCaratFrom;
   late TextEditingController _controllerCaratTo;
+  List<Diamond> resultFilterDiamond = [];
+  String buildQueryString() {
+    List<String?> shapes = [
+      widget.roundShp.toString().toLowerCase(),
+      widget.princeShp.toString().toLowerCase(),
+      widget.emraldShp.toString().toLowerCase(),
+      widget.ovalShp.toString().toLowerCase(),
+      widget.radiantShp.toString().toLowerCase(),
+      widget.pearShp.toString().toLowerCase(),
+      widget.marquiseShp.toString().toLowerCase(),
+      widget.heartShp.toString().toLowerCase(),
+      widget.cushionShp.toString().toLowerCase(),
+      widget.othersShp.toString().toLowerCase(),
+      widget.triangleShp.toString().toLowerCase()
+    ];
+
+    String shapesParam =
+        shapes.where((shape) => shape != null && shape!.isNotEmpty).join(',');
+
+    List<String?> colors = [
+      widget.colD,
+      widget.colE,
+      widget.colF,
+      widget.colG,
+      widget.colH,
+      widget.colI,
+      widget.colJ,
+      widget.colK,
+      widget.colL,
+      widget.colM,
+      widget.colN,
+      widget.colO_P,
+      widget.colQ_R,
+      widget.colS_T,
+      widget.colU_V,
+      widget.colW_Z
+    ];
+
+    String colorsParam =
+        colors.where((color) => color != null && color!.isNotEmpty).join(',');
+
+    List<String?> clarities = [
+      widget.claFl,
+      widget.claIf,
+      widget.claVvs1,
+      widget.claVvs2,
+      widget.claVs1,
+      widget.claVs2,
+      widget.claSi1,
+      widget.claSi2,
+      widget.claSi3,
+      widget.claI1,
+      widget.claI2
+    ];
+
+    String claritiesParam = clarities
+        .where((clarity) => clarity != null && clarity!.isNotEmpty)
+        .join(',');
+
+    List<String?> cuts = [
+      widget.cutEx,
+      widget.cutVg,
+      widget.cutGd,
+      widget.cutFr,
+      widget.cutPr,
+      widget.cutNone
+    ];
+
+    String cutsParam =
+        cuts.where((cut) => cut != null && cut!.isNotEmpty).join(',');
+
+    List<String?> polishes = [
+      widget.polEx,
+      widget.polVg,
+      widget.polGd,
+      widget.polFr,
+      widget.polPr
+    ];
+
+    String polishesParam = polishes
+        .where((polish) => polish != null && polish!.isNotEmpty)
+        .join(',');
+
+    List<String?> symmetries = [
+      widget.symEx,
+      widget.symVg,
+      widget.symGd,
+      widget.symFr,
+      widget.symPr
+    ];
+
+    String symmetriesParam = symmetries
+        .where((symmetry) => symmetry != null && symmetry!.isNotEmpty)
+        .join(',');
+
+    List<String?> fluor = [
+      widget.flN,
+      widget.flF,
+      widget.flM,
+      widget.flS,
+      widget.flVs
+    ];
+
+    String fluorParam =
+        fluor.where((f) => f != null && f!.isNotEmpty).join(',');
+
+    List<String?> certs = [
+      widget.certGia,
+      widget.certIgi,
+      widget.certHrd,
+      widget.certNgtc
+    ];
+
+    String certsParam =
+        certs.where((cert) => cert != null && cert!.isNotEmpty).join(',');
+
+    List<String?> locations = [
+      widget.locIndia,
+      widget.locChina,
+      widget.locHk,
+      widget.locSz,
+      widget.locH_K,
+      widget.locTransit
+    ];
+
+    String locationsParam = locations
+        .where((location) => location != null && location!.isNotEmpty)
+        .join(',');
+
+    List<String?> shortCuts = [widget.shortCut3EXN, widget.shortCut3VGN];
+
+    String shortCutsParam = shortCuts
+        .where((shortcut) => shortcut != null && shortcut!.isNotEmpty)
+        .join(',');
+
+    String? querr =
+        'q_is_schv=1&q_shp=${shapesParam}&q_co=${colorsParam}&q_cl=${claritiesParam}&q_lab=${certsParam}&q_places=${locationsParam}&q_pol=${polishesParam}&q_sym=${symmetriesParam}&q_fl=${fluorParam}&q_carat1=${widget.caratFrom.toString()}&q_carat2=${widget.caratTo.toString()}&q_perpage=25&q_price1=&q_price2=&q_price_type=dollar&q_depth1=&q_depth2=&q_table1=&q_table2=';
+
+    //  "q_is_schv=1"
+    // // "&q_shp=${shapesParam}"
+    // "&q_co=${colorsParam}"
+    // // "&q_cl=${claritiesParam}"
+    // // "&q_lab=${certsParam}"
+    // // "&q_carat1=${widget.caratFrom ?? ''}"
+    // // "&q_carat2=${widget.caratTo ?? ''}"
+    // // "&q_id="
+    // // "&q_id_type=report_no"
+    // // "&q_perpage=25"
+    // // "&q_price1="
+    // // "&q_price2="
+    // // "&q_price_type=dollar"
+    // // "&q_depth1="
+    // // "&q_depth2="
+    // // "&q_table1="
+    // // "&q_table2="
+    // ;
+
+    print(querr);
+
+    return querr;
+  }
 
   @override
   void initState() {
     super.initState();
     _controllerCaratFrom = TextEditingController();
     _controllerCaratTo = TextEditingController();
-    diamondsFuture = fetchItems();
+    diamondsFuture = fetchDataSearchDiamond(widget.token);
   }
 
   @override
@@ -528,23 +377,29 @@ class _SearchUiState extends State<SearchUi> {
           ),
         ),
 
-        title: FutureBuilder<List<Diamond>>(
-          future: diamondsFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Text("Loading...");
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else if (snapshot.hasData) {
-              // datalength = snapshot.data!.length;
-              // resultFilterDiamond = snapshot.data!;
-              widget.snapshotData = [...snapshot.data!];
-              return Text("${widget.snapshotData.length} Total Stock");
-            } else {
-              return const Text('0');
-            }
-          },
-        ),
+        title: FutureBuilder(
+            future: fetchDataSearchDiamond(widget.token,
+                searchQuerry: buildQueryString()),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Center(
+                        child: CircularProgressIndicator(strokeWidth: 3.0),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text("Result")
+                    ]);
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+              {
+                return Text('${snapshot.data!.total} Results');
+              }
+            }),
         centerTitle: true, // Optionally, center the title horizontally
       ),
       body: Container(
@@ -587,7 +442,8 @@ class _SearchUiState extends State<SearchUi> {
                                                   ? "Round"
                                                   : null;
                                           // Toggle isSelected flag
-                                          filterFunction();
+                                          fetchDataSearchDiamond(widget.token,
+                                              searchQuerry: buildQueryString());
                                         });
                                       },
                                       child: Column(
@@ -645,7 +501,8 @@ class _SearchUiState extends State<SearchUi> {
                                                   ? "Princess"
                                                   : null;
                                           // Toggle isSelected flag
-                                          filterFunction();
+                                          fetchDataSearchDiamond(widget.token,
+                                              searchQuerry: buildQueryString());
                                         });
                                       },
                                       child: Column(
@@ -701,7 +558,9 @@ class _SearchUiState extends State<SearchUi> {
                                                   .emraldShpIsSelected
                                               ? "Emerald"
                                               : null; // Toggle isSelected flag
-                                          filterFunction();
+                                          fetchDataSearchDiamond(widget.token,
+                                              searchQuerry: buildQueryString());
+                                          ;
                                         });
                                       },
                                       child: Column(
@@ -757,7 +616,8 @@ class _SearchUiState extends State<SearchUi> {
                                                   .ovalShpIsSelected
                                               ? "Oval"
                                               : null; // Toggle isSelected flag
-                                          filterFunction();
+                                          fetchDataSearchDiamond(widget.token,
+                                              searchQuerry: buildQueryString());
                                         });
                                       },
                                       child: Column(
@@ -809,13 +669,14 @@ class _SearchUiState extends State<SearchUi> {
                                         setState(() {
                                           widget.pearShpIsSelected =
                                               !widget.pearShpIsSelected;
-                                          widget.pearShp = widget
-                                                  .pearShpIsSelected
-                                              ? "Pear"
-                                              : null; 
+                                          widget.pearShp =
+                                              widget.pearShpIsSelected
+                                                  ? "Pear"
+                                                  : null;
                                           // Toggle isSelected flag
 
-                                          filterFunction();
+                                          fetchDataSearchDiamond(widget.token,
+                                              searchQuerry: buildQueryString());
                                         });
                                       },
                                       child: Column(
@@ -871,7 +732,8 @@ class _SearchUiState extends State<SearchUi> {
                                                   .marquiseShpIsSelected
                                               ? "Marquise"
                                               : null; // Toggle isSelected flag
-                                          filterFunction();
+                                          fetchDataSearchDiamond(widget.token,
+                                              searchQuerry: buildQueryString());
                                         });
                                       },
                                       child: Column(
@@ -928,7 +790,8 @@ class _SearchUiState extends State<SearchUi> {
                                                   .heartShpIsSelected
                                               ? "Heart"
                                               : null; // Toggle isSelected flag
-                                          filterFunction();
+                                          fetchDataSearchDiamond(widget.token,
+                                              searchQuerry: buildQueryString());
                                         });
                                       },
                                       child: Column(
@@ -985,7 +848,8 @@ class _SearchUiState extends State<SearchUi> {
                                                   .triangleShpIsSelected
                                               ? "Triangle"
                                               : null; // Toggle isSelected flag
-                                          filterFunction();
+                                          fetchDataSearchDiamond(widget.token,
+                                              searchQuerry: buildQueryString());
                                         });
                                       },
                                       child: Column(
@@ -1042,7 +906,8 @@ class _SearchUiState extends State<SearchUi> {
                                                   .cushionShpIsSelected
                                               ? "Cushion"
                                               : null; // Toggle isSelected flag
-                                          filterFunction();
+                                          fetchDataSearchDiamond(widget.token,
+                                              searchQuerry: buildQueryString());
                                         });
                                       },
                                       child: Column(
@@ -1098,7 +963,8 @@ class _SearchUiState extends State<SearchUi> {
                                                 .othersShpIsSelected
                                             ? "Other"
                                             : null; // Toggle isSelected flag
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       });
                                     },
                                     child: Column(
@@ -1194,8 +1060,9 @@ class _SearchUiState extends State<SearchUi> {
                                           widget.caratFrom =
                                               _controllerCaratFrom.text
                                                   .toString();
-                                          print("Called cart");
-                                          filterFunction(); // Trigger filter function after updating the value
+                                          fetchDataSearchDiamond(widget.token,
+                                              searchQuerry: buildQueryString());
+                                          ; // Trigger filter function after updating the value
                                         });
                                       },
                                     ),
@@ -1228,7 +1095,9 @@ class _SearchUiState extends State<SearchUi> {
                                           widget.caratTo = _controllerCaratTo
                                               .text
                                               .toString();
-                                          filterFunction();
+                                          fetchDataSearchDiamond(widget.token,
+                                              searchQuerry: buildQueryString());
+                                          ;
                                         });
                                       },
                                     ),
@@ -1282,7 +1151,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.colD = (widget.colDIsSelected)
                                             ? "D"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -1317,7 +1187,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.colE = (widget.colEIsSelected)
                                             ? "E"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -1352,7 +1223,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.colF = (widget.colFIsSelected)
                                             ? "F"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -1387,7 +1259,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.colG = (widget.colGIsSelected)
                                             ? "G"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -1422,7 +1295,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.colH = (widget.colHIsSelected)
                                             ? "H"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -1457,7 +1331,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.colI = (widget.colIIsSelected)
                                             ? "I"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -1492,7 +1367,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.colJ = (widget.colJIsSelected)
                                             ? "J"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -1527,7 +1403,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.colK = (widget.colKIsSelected)
                                             ? "K"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -1562,7 +1439,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.colL = (widget.colLIsSelected)
                                             ? "L"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -1597,7 +1475,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.colM = (widget.colMIsSelected)
                                             ? "M"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -1632,7 +1511,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.colN = (widget.colNIsSelected)
                                             ? "N"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -1693,7 +1573,8 @@ class _SearchUiState extends State<SearchUi> {
                                         setState(() {
                                           widget.claFlIsSelected = !widget
                                               .claFlIsSelected; // Toggle isSelected flag
-                                          filterFunction();
+                                          fetchDataSearchDiamond(widget.token,
+                                              searchQuerry: buildQueryString());
                                         });
                                         widget.claFl = (widget.claFlIsSelected)
                                             ? "FL"
@@ -1729,7 +1610,8 @@ class _SearchUiState extends State<SearchUi> {
                                         setState(() {
                                           widget.claIfIsSelected = !widget
                                               .claIfIsSelected; // Toggle isSelected flag
-                                          filterFunction();
+                                          fetchDataSearchDiamond(widget.token,
+                                              searchQuerry: buildQueryString());
                                         });
                                         widget.claIf = (widget.claIfIsSelected)
                                             ? "IF"
@@ -1770,7 +1652,8 @@ class _SearchUiState extends State<SearchUi> {
                                             (widget.claVvs1IsSelected)
                                                 ? "VVS1"
                                                 : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -1802,7 +1685,8 @@ class _SearchUiState extends State<SearchUi> {
                                         setState(() {
                                           widget.claVvs2IsSelected = !widget
                                               .claVvs2IsSelected; // Toggle isSelected flag
-                                          filterFunction();
+                                          fetchDataSearchDiamond(widget.token,
+                                              searchQuerry: buildQueryString());
                                         });
                                         widget.claVvs2 =
                                             (widget.claVvs2IsSelected)
@@ -1840,7 +1724,8 @@ class _SearchUiState extends State<SearchUi> {
                                         setState(() {
                                           widget.claVs1IsSelected = !widget
                                               .claVs1IsSelected; // Toggle isSelected flag
-                                          filterFunction();
+                                          fetchDataSearchDiamond(widget.token,
+                                              searchQuerry: buildQueryString());
                                         });
                                         widget.claVs1 =
                                             (widget.claVs1IsSelected)
@@ -1883,7 +1768,8 @@ class _SearchUiState extends State<SearchUi> {
                                             (widget.claVs2IsSelected)
                                                 ? "VS2"
                                                 : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -1919,7 +1805,8 @@ class _SearchUiState extends State<SearchUi> {
                                             (widget.claSi1IsSelected)
                                                 ? "SI1"
                                                 : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -1952,6 +1839,8 @@ class _SearchUiState extends State<SearchUi> {
                                         setState(() {
                                           widget.claSi2IsSelected = !widget
                                               .claSi2IsSelected; // Toggle isSelected flag
+                                          fetchDataSearchDiamond(widget.token,
+                                              searchQuerry: buildQueryString());
                                         });
                                         widget.claSi2 =
                                             (widget.claSi2IsSelected)
@@ -1991,7 +1880,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.claI1 = (widget.claI1IsSelected)
                                             ? "I1"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -2027,7 +1917,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.claI2 = (widget.claI2IsSelected)
                                             ? "I2"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -2113,7 +2004,8 @@ class _SearchUiState extends State<SearchUi> {
                                           widget.flN = null;
                                           widget.certGia = null;
                                         }
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
 
                                         setState(() {
                                           // Toggle isSelected flag
@@ -2188,7 +2080,8 @@ class _SearchUiState extends State<SearchUi> {
                                           widget.flN = null;
                                           widget.certGia = null;
                                         }
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
 
                                         setState(() {
                                           // Toggle isSelected flag
@@ -2257,7 +2150,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.cutEx = widget.cutExIsSelected
                                             ? "EX"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -2293,7 +2187,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.cutVg = widget.cutVgIsSelected
                                             ? "VG"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -2329,7 +2224,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.cutGd = widget.cutGdIsSelected
                                             ? "GD"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -2365,7 +2261,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.cutFr = widget.cutFrIsSelected
                                             ? "FR"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -2466,7 +2363,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.polEx = widget.polExIsSelected
                                             ? "EX"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -2502,7 +2400,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.polVg = widget.polVgIsSelected
                                             ? "VG"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -2538,7 +2437,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.polGd = widget.polGdIsSelected
                                             ? "GD"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -2574,7 +2474,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.polFr = widget.polFrIsSelected
                                             ? "FR"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -2675,7 +2576,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.symEx = widget.symExIsSelected
                                             ? "EX"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -2711,7 +2613,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.symVg = widget.symVgIsSelected
                                             ? "VG"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -2747,7 +2650,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.symGd = widget.symGdIsSelected
                                             ? "GD"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -2783,7 +2687,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.symFr = widget.symFrIsSelected
                                             ? "FR"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -2882,7 +2787,8 @@ class _SearchUiState extends State<SearchUi> {
                                         });
                                         widget.flN =
                                             widget.flNIsSelected ? "N" : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -2917,7 +2823,8 @@ class _SearchUiState extends State<SearchUi> {
                                         });
                                         widget.flF =
                                             widget.flFIsSelected ? "F" : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -2952,7 +2859,8 @@ class _SearchUiState extends State<SearchUi> {
                                         });
                                         widget.flM =
                                             widget.flMIsSelected ? "M" : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -2987,7 +2895,8 @@ class _SearchUiState extends State<SearchUi> {
                                         });
                                         widget.flS =
                                             widget.flSIsSelected ? "S" : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -3022,7 +2931,8 @@ class _SearchUiState extends State<SearchUi> {
                                         });
                                         widget.flVs =
                                             widget.flVsIsSelected ? "VS" : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -3088,7 +2998,8 @@ class _SearchUiState extends State<SearchUi> {
                                             widget.certGiaIsSelected
                                                 ? "GIA"
                                                 : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -3125,7 +3036,8 @@ class _SearchUiState extends State<SearchUi> {
                                             widget.certNgtcIsSelected
                                                 ? "NGTC"
                                                 : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -3162,7 +3074,8 @@ class _SearchUiState extends State<SearchUi> {
                                             widget.certIgiIsSelected
                                                 ? "IGI"
                                                 : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -3199,7 +3112,8 @@ class _SearchUiState extends State<SearchUi> {
                                             widget.certHrdIsSelected
                                                 ? "HRD"
                                                 : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -3299,7 +3213,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.bjmYes = widget.bjmYesIsSelected
                                             ? "BGM"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -3335,7 +3250,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.bjmNo = widget.bjmNoIsSelected
                                             ? "BGM NO"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -3437,7 +3353,8 @@ class _SearchUiState extends State<SearchUi> {
                                             widget.locChinaIsSelected
                                                 ? "China"
                                                 : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -3473,7 +3390,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.locSz = widget.locSzIsSelected
                                             ? "SZ"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -3509,7 +3427,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.locHk = widget.locHkIsSelected
                                             ? "HK"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -3545,7 +3464,8 @@ class _SearchUiState extends State<SearchUi> {
                                         widget.locH_K = widget.locH_KIsSelected
                                             ? "H-K"
                                             : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -3582,7 +3502,8 @@ class _SearchUiState extends State<SearchUi> {
                                             widget.locTransitIsSelected
                                                 ? "在途"
                                                 : null;
-                                        filterFunction();
+                                        fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: buildQueryString());
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(
@@ -3670,13 +3591,28 @@ class _SearchUiState extends State<SearchUi> {
             children: [
               TextButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => SearchResults(
-                              diamondData: resultFilterDiamond,
-                            )),
-                  );
+                  fetchDataSearchDiamond(widget.token, searchQuerry: buildQueryString())
+                                        .then((diamondData) {
+
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SearchResultsTemp(
+                                            diamondData: diamondData, token: widget.token, querryUrl: buildQueryString(),
+                                          ),
+                                        ),
+                                      );
+                                    }).catchError((error) {
+                                      // Handle error
+                                      print('Error: $error');
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                              'An error occurred. Please try again later.'),
+                                        ),
+                                      );
+                                    });
                   // Add your onPressed callback here
                 },
                 child: Column(
@@ -3685,7 +3621,32 @@ class _SearchUiState extends State<SearchUi> {
                     const SizedBox(
                       height: 2,
                     ), // Add some space between the icon and text
-                    Text("Result(${resultFilterDiamond.length})")
+                    FutureBuilder(
+                        future: fetchDataSearchDiamond(widget.token,
+                            searchQuerry: buildQueryString()),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                 Text("Search("),
+
+                                  Center(
+                                    child: CircularProgressIndicator(
+                                        strokeWidth: 3.0),
+                                  ),
+                                Text(")"),
+
+                                  
+                                ]);
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          }
+                          {
+                            return Text('Search(${snapshot.data!.total})');
+                          }
+                        }),
                   ],
                 ),
               ),
@@ -3706,82 +3667,159 @@ class _SearchUiState extends State<SearchUi> {
                   // Add your onPressed callback here
                   setState(() {
                     widget.roundShpIsSelected = false;
+                    widget.roundShp = null;
                     widget.princeShpIsSelected = false;
+                    widget.princeShp = null;
                     widget.emraldShpIsSelected = false;
+                    widget.emraldShp = null;
                     widget.ovalShpIsSelected = false;
+                    widget.ovalShp = null;
                     widget.radiantShpIsSelected = false;
+                    widget.radiantShp = null;
                     widget.pearShpIsSelected = false;
+                    widget.pearShp = null;
                     widget.marquiseShpIsSelected = false;
+                    widget.marquiseShp = null;
                     widget.heartShpIsSelected = false;
+                    widget.heartShp = null;
                     widget.cushionShpIsSelected = false;
+                    widget.cushionShp = null;
                     widget.othersShpIsSelected = false;
+                    widget.othersShp = null;
                     widget.triangleShpIsSelected = false;
+                    widget.triangleShp = null;
                     widget.caratIsSelected = false;
+                    widget.carat = null;
                     widget.caratFromIsSelected = false;
+                    widget.caratFrom = null;
                     widget.caratToIsSelected = false;
+                    widget.caratTo = null;
                     widget.colDIsSelected = false;
+                    widget.colD = null;
                     widget.colEIsSelected = false;
+                    widget.colE = null;
                     widget.colFIsSelected = false;
+                    widget.colF = null;
                     widget.colGIsSelected = false;
+                    widget.colG = null;
                     widget.colHIsSelected = false;
+                    widget.colH = null;
                     widget.colIIsSelected = false;
+                    widget.colI = null;
                     widget.colJIsSelected = false;
+                    widget.colJ = null;
                     widget.colKIsSelected = false;
+                    widget.colK = null;
                     widget.colLIsSelected = false;
+                    widget.colL = null;
                     widget.colMIsSelected = false;
+                    widget.colM = null;
                     widget.colNIsSelected = false;
+                    widget.colN = null;
                     widget.colO_PIsSelected = false;
+                    widget.colO_P = null;
                     widget.colQ_RIsSelected = false;
+                    widget.colQ_R = null;
                     widget.colS_TIsSelected = false;
+                    widget.colS_T = null;
                     widget.colU_VIsSelected = false;
+                    widget.colU_V = null;
                     widget.colW_ZIsSelected = false;
+                    widget.colW_Z = null;
                     widget.claFlIsSelected = false;
+                    widget.claFl = null;
                     widget.claIfIsSelected = false;
+                    widget.claIf = null;
                     widget.claVvs1IsSelected = false;
+                    widget.claVvs1 = null;
                     widget.claVvs2IsSelected = false;
+                    widget.claVvs2 = null;
                     widget.claVs1IsSelected = false;
+                    widget.claVs1 = null;
                     widget.claVs2IsSelected = false;
+                    widget.claVs2 = null;
                     widget.claSi1IsSelected = false;
+                    widget.claSi1 = null;
                     widget.claSi2IsSelected = false;
+                    widget.claSi2 = null;
                     widget.claSi3IsSelected = false;
+                    widget.claSi3 = null;
                     widget.claI1IsSelected = false;
+                    widget.claI1 = null;
                     widget.claI2IsSelected = false;
+                    widget.claI2 = null;
                     widget.cutExIsSelected = false;
+                    widget.cutEx = null;
                     widget.cutVgIsSelected = false;
+                    widget.cutVg = null;
                     widget.cutGdIsSelected = false;
+                    widget.cutGd = null;
                     widget.cutFrIsSelected = false;
+                    widget.cutFr = null;
                     widget.cutPrIsSelected = false;
+                    widget.cutPr = null;
                     widget.cutNoneIsSelected = false;
+                    widget.cutNone = null;
                     widget.polExIsSelected = false;
+                    widget.polEx = null;
                     widget.polVgIsSelected = false;
+                    widget.polVg = null;
                     widget.polGdIsSelected = false;
+                    widget.polGd = null;
                     widget.polFrIsSelected = false;
+                    widget.polFr = null;
                     widget.polPrIsSelected = false;
+                    widget.polPr = null;
                     widget.symExIsSelected = false;
+                    widget.symEx = null;
                     widget.symVgIsSelected = false;
+                    widget.symVg = null;
                     widget.symGdIsSelected = false;
+                    widget.symGd = null;
                     widget.symFrIsSelected = false;
+                    widget.symFr = null;
                     widget.symPrIsSelected = false;
+                    widget.symPr = null;
                     widget.flNIsSelected = false;
+                    widget.flN = null;
                     widget.flFIsSelected = false;
+                    widget.flF = null;
                     widget.flMIsSelected = false;
+                    widget.flM = null;
                     widget.flSIsSelected = false;
+                    widget.flS = null;
                     widget.flVsIsSelected = false;
+                    widget.flVs = null;
                     widget.certGiaIsSelected = false;
+                    widget.certGia = null;
                     widget.certIgiIsSelected = false;
+                    widget.certIgi = null;
                     widget.certHrdIsSelected = false;
+                    widget.certHrd = null;
                     widget.certNgtcIsSelected = false;
+                    widget.certNgtc = null;
                     widget.bjmYesIsSelected = false;
+                    widget.bjmYes = null;
                     widget.bjmNoIsSelected = false;
+                    widget.bjmNo = null;
                     widget.locIndiaIsSelected = false;
+                    widget.locIndia = null;
                     widget.locChinaIsSelected = false;
+                    widget.locChina = null;
                     widget.locHkIsSelected = false;
+                    widget.locHk = null;
                     widget.locSzIsSelected = false;
+                    widget.locSz = null;
                     widget.locH_KIsSelected = false;
+                    widget.locH_K = null;
                     widget.locTransitIsSelected = false;
+                    widget.locTransit = null;
                     widget.shortCut3EXNIsSelected = false;
+                    widget.shortCut3EXN = null;
                     widget.shortCut3VGNIsSelected = false;
-                    filterFunction();
+                    widget.shortCut3VGN = null;
+                    fetchDataSearchDiamond(widget.token,
+                        searchQuerry: buildQueryString());
                   });
                 },
                 child: const Column(

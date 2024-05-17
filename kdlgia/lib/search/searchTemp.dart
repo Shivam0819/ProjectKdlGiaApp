@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:kdlgia/api_assets_popup/imagePopup.dart';
 import 'package:kdlgia/cart/cartApi.dart';
-import 'package:kdlgia/search/diamondDataDetail.dart';
+import 'package:kdlgia/search/diamondData.dart';
 import 'package:kdlgia/style/search_card_ui.dart';
 import 'package:kdlgia/style/styleTextSearchResult.dart';
 
 class SearchResultsTemp extends StatefulWidget {
-    List<Diamond> diamondData;
+    DiamondData diamondData;
     String token;
+    String querryUrl;
 
   SearchResultsTemp({super.key, 
     required this.diamondData,
-    required this.token
+    required this.token,
+    required this.querryUrl,
   });
   @override
   _SearchResultsTempState createState() => _SearchResultsTempState();
@@ -40,15 +42,15 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
             color: Colors.black, // Customize the color of the back button
           ),
         ),
-        title: Text("${widget.diamondData.length} Result"),
+        title: Text("${widget.diamondData.diamonds.length} Result ${widget.diamondData.pages}"),
         centerTitle: true,
       ),
       body:  ListView.builder(
-              itemCount: widget.diamondData.length,
+              itemCount: widget.diamondData.diamonds.length,
               itemBuilder: (context, index) {
                 bool isChecked = isCheckedMap[index] ?? false;
                 bool isStared = isStaredMap[index] ?? false;
-                final diamond = widget.diamondData[index];
+                final diamond = widget.diamondData.diamonds[index];
                 return InkWell(
                   onTap: () {
                     // Navigator.push(context, MaterialPageRoute(builder: (context)=> SearchDetail(diamondDetail: diamond,)));
@@ -97,10 +99,8 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                                     InkWell(
                                       onTap: () {
                                          if (diamond.canToCart){
-                                            print("Adding cart");
                                             addToCart(diamond.id, widget.token);
                                           }else{
-                                            print("Remove cart");
 
                                             removeFromCart(diamond.id, widget.token);
                                           }

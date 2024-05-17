@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kdlgia/cart/cartApi.dart';
-import 'package:kdlgia/diamond_search/search_card.dart';
 import 'package:kdlgia/navigation_pages/search_page.dart';
 import 'package:kdlgia/registeration/login_page.dart';
 import 'package:kdlgia/search/apiDiamondSerach.dart';
@@ -148,11 +147,11 @@ class _HomePageState extends State<HomePage> {
                 // ),
                 InkWell(
                   onTap: () {
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) =>
-                    //             SearchPage(diamondsFuture: diamondsFuture)));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                SearchPage(token: widget.token,)));
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(paddingCard),
@@ -340,7 +339,7 @@ class _HomePageState extends State<HomePage> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => SearchResultsTemp(
-                                            diamondData: diamondData.diamonds, token: widget.token,
+                                            diamondData: diamondData, token: widget.token, querryUrl: querry,
                                           ),
                                         ),
                                       );
