@@ -1,13 +1,19 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:kdlgia/diamond_search/diamondSearch.dart';
 import 'package:kdlgia/diamond_search/search_card.dart';
+import 'package:kdlgia/search/diamondData.dart';
 import 'package:kdlgia/style/search_card_ui.dart';
-// import 'package:KDLGia/api_assets_popup/videoPopUp.dart';
-// import 'package:kdlgia/diamond_search/search_card.dart';
-// import 'package:kdlgia/search_navigation_ui/search_ui.dart';
-// import 'package:kdlgia/style/search_card_ui.dart';
+
 
 class SearchUi extends StatefulWidget {
+
+  final String token;
+    SearchUi({super.key, 
+      required this.token
+
+    });
   // SearchUi({required this.diamondsFuture});
   // Define all the properties with appropriate types
   // Add '?' to indicate they can be null
@@ -169,7 +175,6 @@ class SearchUi extends StatefulWidget {
 
   List<Diamond> snapshotData = [];
 
-  SearchUi({super.key});
 
   @override
   _SearchUiState createState() => _SearchUiState();
