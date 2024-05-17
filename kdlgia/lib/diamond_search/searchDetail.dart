@@ -56,7 +56,7 @@ class _SearchDetailState extends State<SearchDetail> {
           ),
         ),
 
-        title: Text("Diamond Details"),
+        title: const Text("Diamond Details"),
         centerTitle: true, // Optionally, center the title horizontally
       ),
       body: Padding(
@@ -570,8 +570,8 @@ class _SearchDetailState extends State<SearchDetail> {
             if (kdlImpexDetailIsSelected)
               Table(
                 children: [
-                  TableRow(children: [
-                    const TableCell(
+                  const TableRow(children: [
+                    TableCell(
                         child: StyledTextSearchDetail(text: "Luster:")),
                     TableCell(
                         child: StyledTextSearchDetail(

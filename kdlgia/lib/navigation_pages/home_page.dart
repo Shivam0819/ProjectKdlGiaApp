@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:kdlgia/cart/cartApi.dart';
 import 'package:kdlgia/diamond_search/search_card.dart';
 import 'package:kdlgia/navigation_pages/search_page.dart';
 import 'package:kdlgia/registeration/login_page.dart';
+import 'package:kdlgia/search/apiDiamondSerach.dart';
+import 'package:kdlgia/search/diamondData.dart';
+import 'package:kdlgia/search/searchTemp.dart';
 import 'package:kdlgia/style/cardDetail.dart';
 import 'package:kdlgia/style/constant.dart';
 import 'package:kdlgia/style/search_card_ui.dart';
@@ -10,9 +13,9 @@ import 'package:kdlgia/style/textStyle.dart';
 import 'package:kdlgia/user/profile.dart'; // Import the search page
 
 class HomePage extends StatefulWidget {
-  final String  token;
+  final String token;
 
-  const HomePage({required this.token});
+  const HomePage({super.key, required this.token});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -21,14 +24,23 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool isExpanded = false;
   bool isStockNoSelected = true;
-  bool orderSummaryDetailIsSelected = true;
-  bool userSummaruIsSelected = true;
-  late Future<List<Diamond>> diamondsFuture;
+  bool orderSummaryDetailIsSelected = false;
+  bool userSummaruIsSelected = false;
+  String searchByReferance = "id";
+  late final TextEditingController _searchQuerry = TextEditingController();
+
+  late Future<DiamondData> diamondsFuture;
   late int stockWehave;
   @override
   void initState() {
     super.initState();
-    diamondsFuture = fetchItems();
+    diamondsFuture = fetchDataSearchDiamond(widget.token, );
+  }
+
+  @override
+  void dispose() {
+    _searchQuerry.dispose();
+    super.dispose();
   }
 
   @override
@@ -88,10 +100,10 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (BuildContext context) => ProfilePage(token: widget.token,  ),
+                      builder: (BuildContext context) => ProfilePage(
+                        token: widget.token,
+                      ),
                     ),
-                    
-                    
                   );
                   break;
                 case 'Settings':
@@ -121,32 +133,66 @@ class _HomePageState extends State<HomePage> {
               physics:
                   const NeverScrollableScrollPhysics(), // Disable scrolling if needed
               children: [
-                const Padding(
-                  padding: EdgeInsets.all(paddingCard),
-                  child: Card(
-                    child:
-                        Center(child: TextStyleHeader(text: "Arriving Soon")),
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(paddingCard),
-                  child: Card(
-                    child: Center(child: TextStyleHeader(text: "Pair")),
-                  ),
-                ),
+                // const Padding(
+                //   padding: EdgeInsets.all(paddingCard),
+                //   child: Card(
+                //     child:
+                //         Center(child: TextStyleHeader(text: "Arriving Soon")),
+                //   ),
+                // ),
+                // const Padding(
+                //   padding: EdgeInsets.all(paddingCard),
+                //   child: Card(
+                //     child: Center(child: TextStyleHeader(text: "Pair")),
+                //   ),
+                // ),
                 InkWell(
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                SearchPage(diamondsFuture: diamondsFuture)));
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) =>
+                    //             SearchPage(diamondsFuture: diamondsFuture)));
                   },
-                  child: const Padding(
-                    padding: EdgeInsets.all(paddingCard),
+                  child: Padding(
+                    padding: const EdgeInsets.all(paddingCard),
                     child: Card(
-                      child:
-                          Center(child: TextStyleHeader(text: "Sock Search")),
+                      child: Center(
+                          child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "assets/app_icons/search.png",
+                            height: 60,
+                            color: mainColor,
+                          ),
+                          const TextStyleHeader(
+                            text: "Sock Search",
+                            colors: mainColor,
+                            fontWeight: FontWeight.normal,
+                          ),
+                          
+                          FutureBuilder(future: diamondsFuture, builder: (context, snapshot){
+                            if(snapshot.connectionState == ConnectionState.waiting){
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+
+                            }else{
+                              return TextStyleHeader(
+                            text: snapshot.data!.total.toString(),
+                            colors: mainColor,
+                            fontWeight: FontWeight.normal,
+                          );
+
+                            }
+                          }
+                          
+                          )
+                          
+                        ],
+                      )),
                     ),
                   ),
                 ),
@@ -154,7 +200,25 @@ class _HomePageState extends State<HomePage> {
                 const Padding(
                   padding: EdgeInsets.all(paddingCard),
                   child: Card(
-                    child: Center(child: Text("Arriving Soon")),
+                    child: Center(
+                        child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.shopping_cart_checkout_outlined,
+                            size: 60, color: mainColor),
+                        TextStyleHeader(
+                          text: "Cart",
+                          colors: mainColor,
+                          fontWeight: FontWeight.normal,
+                        ),
+                        // TextStyleHeader(
+                        //   text: "(8555)",
+                        //   colors: Colors.black,
+                        //   fontWeight: FontWeight.normal,
+                        // ),
+                      ],
+                    )),
                   ),
                 ),
                 // Add more children as needed
@@ -180,16 +244,16 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               Row(
                                 children: [
-                                  TextStyleHeader(
+                                  const TextStyleHeader(
                                     text: "Referance Search",
-                                    colors:
-                                        isExpanded ? mainColor : Colors.black,
+                                    colors:mainColor,
+                                        
                                   ),
                                   const Spacer(), // Use Spacer widget to fill available space
                                   Icon(
                                     isExpanded
                                         ? Icons.arrow_upward_rounded
-                                        : Icons.arrow_downward_rounded,
+                                        : Icons.arrow_downward_rounded,color: mainColor,
                                   ),
                                 ],
                               ),
@@ -216,6 +280,7 @@ class _HomePageState extends State<HomePage> {
                                   TextButton(
                                     onPressed: () {
                                       isStockNoSelected = true;
+                                      searchByReferance = "id";
                                       setState(() {});
                                     },
                                     child: Text(
@@ -229,6 +294,8 @@ class _HomePageState extends State<HomePage> {
                                   TextButton(
                                     onPressed: () {
                                       isStockNoSelected = false;
+                                      searchByReferance = "report_no";
+
                                       setState(() {});
                                     },
                                     child: Text(
@@ -241,12 +308,14 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ],
                               ),
-                              const SizedBox(
+                              SizedBox(
                                 width: 350, // Set the width of the container
                                 child: TextField(
-                                  decoration: InputDecoration(
+                                  controller: _searchQuerry,
+                                  decoration: const InputDecoration(
                                     labelText: 'Search Here',
                                     hintText: 'Space or newline separated list',
+
                                     border:
                                         OutlineInputBorder(), // You can choose any border type
                                   ),
@@ -261,6 +330,31 @@ class _HomePageState extends State<HomePage> {
                                 child: ElevatedButton(
                                   onPressed: () {
                                     // Add your search functionality here
+                                    String querry =
+                                        "q_id=${_searchQuerry.text.toString()}&q_id_type=${searchByReferance.toString()}";
+                                        showCarts(widget.token);
+                                    fetchDataSearchDiamond(widget.token, searchQuerry: querry)
+                                        .then((diamondData) {
+
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SearchResultsTemp(
+                                            diamondData: diamondData.diamonds, token: widget.token,
+                                          ),
+                                        ),
+                                      );
+                                    }).catchError((error) {
+                                      // Handle error
+                                      print('Error: $error');
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                              'An error occurred. Please try again later.'),
+                                        ),
+                                      );
+                                    });
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor:
@@ -355,17 +449,15 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               Row(
                                 children: [
-                                  TextStyleHeader(
+                                  const TextStyleHeader(
                                     text: "Order Summery Detail",
-                                    colors: orderSummaryDetailIsSelected
-                                        ? mainColor
-                                        : Colors.black,
+                                    colors: mainColor,
                                   ),
                                   const Spacer(), // Use Spacer widget to fill available space
                                   Icon(
                                     orderSummaryDetailIsSelected
                                         ? Icons.arrow_upward_rounded
-                                        : Icons.arrow_downward_rounded,
+                                        : Icons.arrow_downward_rounded,color: mainColor,
                                   ),
                                 ],
                               ),
@@ -374,12 +466,12 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       if (orderSummaryDetailIsSelected)
-                        Padding(
-                          padding: const EdgeInsets.only(left: 20),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 20),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
+                               Text(
                                 "Order Summery will be here",
                                 style: TextStyle(
                                     fontSize: 15, fontWeight: FontWeight.bold),
@@ -415,17 +507,15 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               Row(
                                 children: [
-                                  TextStyleHeader(
+                                  const TextStyleHeader(
                                     text: "User Summery",
-                                    colors: userSummaruIsSelected
-                                        ? mainColor
-                                        : Colors.black,
+                                    colors: mainColor,
                                   ),
                                   const Spacer(), // Use Spacer widget to fill available space
                                   Icon(
                                     userSummaruIsSelected
                                         ? Icons.arrow_upward_rounded
-                                        : Icons.arrow_downward_rounded,
+                                        : Icons.arrow_downward_rounded,color: mainColor,
                                   ),
                                 ],
                               ),
@@ -434,12 +524,12 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       if (userSummaruIsSelected)
-                        Padding(
-                          padding: const EdgeInsets.only(left: 20),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 20),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
+                              Text(
                                 "User Summery will here",
                                 style: TextStyle(
                                     fontSize: 15, fontWeight: FontWeight.bold),
@@ -625,9 +715,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               TextButton(
                 onPressed: () {
-                  setState(() {
-                    
-                  });
+                  setState(() {});
                   // Add your onPressed callback here
                 },
                 child: const Column(
@@ -642,12 +730,12 @@ class _HomePageState extends State<HomePage> {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            SearchPage(diamondsFuture: diamondsFuture)),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //       builder: (context) =>
+                  //           SearchPage(diamondsFuture: diamondsFuture)),
+                  // );
                 },
                 child: const Column(
                   children: [

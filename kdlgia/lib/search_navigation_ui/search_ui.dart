@@ -807,7 +807,10 @@ class _SearchUiState extends State<SearchUi> {
                                           widget.pearShp = widget
                                                   .pearShpIsSelected
                                               ? "Pear"
-                                              : null; // Toggle isSelected flag
+                                              : null; 
+                                          // Toggle isSelected flag
+
+                                          filterFunction();
                                         });
                                       },
                                       child: Column(

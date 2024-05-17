@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:kdlgia/style/search_card_ui.dart';
 import 'package:kdlgia/user/apiUserInfo.dart';
 import 'package:kdlgia/user/userProfile.dart'; // Import ApiService
 
 class ProfilePage extends StatefulWidget {
   final String token;
-  ProfilePage({required this.token});
+  const ProfilePage({super.key, required this.token});
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -67,14 +66,14 @@ class _ProfilePageState extends State<ProfilePage> {
           },
           color: Colors.black,
         ),
-        title: Text("User Profile"),
+        title: const Text("User Profile"),
         centerTitle: true,
       ),
       body: FutureBuilder<UserProfile>(
         future: _userProfileFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
@@ -90,42 +89,42 @@ class _ProfilePageState extends State<ProfilePage> {
             _addressController.text = userProfile.userAddress ?? '';
             _emailController.text = userProfile.userEmail ?? '';
             return SingleChildScrollView(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
+                  const Text(
                     'User Profile',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   _buildProfileField('Real Name', _realNameController),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   _buildProfileField('Gender', _genderController),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   _buildProfileField('Phone', _phoneController),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   _buildProfileField('QQ', _qqController),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   _buildProfileField('Skype', _skypeController),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   _buildProfileField('WeChat', _wechatController),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   _buildProfileField('WhatsApp', _whatsappController),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   _buildProfileField('Company', _companyController),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   _buildProfileField('Address', _addressController),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   _buildProfileField('Email', _emailController),
-                  SizedBox(height: 10),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 10),
+                  const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: _updateProfile,
-                    child: Text('Update'),
+                    child: const Text('Update'),
                   ),
                 ],
               ),
@@ -148,7 +147,7 @@ class _ProfilePageState extends State<ProfilePage> {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
     );
   }
@@ -180,7 +179,7 @@ class _ProfilePageState extends State<ProfilePage> {
       if (response.statusCode == 200) {
         // print('Profile updated successfully');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Profile updated successfully'),
           ),
         );
@@ -191,7 +190,7 @@ class _ProfilePageState extends State<ProfilePage> {
       } else {
         print('Failed to update profile');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Failed to update profile'),
           ),
         );
@@ -200,7 +199,7 @@ class _ProfilePageState extends State<ProfilePage> {
       print('Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error: ${e}'),
+            content: Text('Error: $e'),
           ),
         );
     }
