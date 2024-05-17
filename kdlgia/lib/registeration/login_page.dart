@@ -283,25 +283,7 @@ class LoginPage extends StatelessWidget {
                   ],
                 ),
               ),
-              TextButton(
-                onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //       builder: (context) =>
-                  //           SearchPage(diamondsFuture: diamondsFuture)),
-                  // );
-                },
-                child: const Column(
-                  children: [
-                    Icon(Icons.history),
-                    SizedBox(
-                      height: 2,
-                    ), // Add some space between the icon and text
-                    Text('History'),
-                  ],
-                ),
-              ),
+              
               TextButton(
                 onPressed: () {
                   // Add your onPressed callback here

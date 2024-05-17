@@ -2,15 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:kdlgia/api_assets_popup/imagePopup.dart';
 import 'package:kdlgia/cart/cartApi.dart';
 import 'package:kdlgia/search/diamondData.dart';
+import 'package:kdlgia/search/dragableFab.dart';
+import 'package:kdlgia/search/expandable.dart';
+import 'package:kdlgia/search/pagination.dart';
 import 'package:kdlgia/style/search_card_ui.dart';
 import 'package:kdlgia/style/styleTextSearchResult.dart';
 
 class SearchResultsTemp extends StatefulWidget {
-    DiamondData diamondData;
-    String token;
-    String querryUrl;
+  DiamondData diamondData;
+  String token;
+  String querryUrl;
 
-  SearchResultsTemp({super.key, 
+  SearchResultsTemp({
+    super.key,
     required this.diamondData,
     required this.token,
     required this.querryUrl,
@@ -20,17 +24,27 @@ class SearchResultsTemp extends StatefulWidget {
 }
 
 class _SearchResultsTempState extends State<SearchResultsTemp> {
-
   late Map<int, bool> isCheckedMap =
       {}; // Map to store isChecked state for each Diamond item
   late Map<int, bool> isStaredMap = {};
+  bool _isExpanded = false;
+  int _currentPage = 1;
+  final int _totalPages = 250;
+  void _onPageChanged(int page) {
+    setState(() {
+      _currentPage = page;
+    });
+  }
 
-  
+  void _toggleExpanded() {
+    setState(() {
+      _isExpanded = !_isExpanded;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       appBar: AppBar(
         leading: Card(
           child: IconButton(
@@ -42,273 +56,352 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
             color: Colors.black, // Customize the color of the back button
           ),
         ),
-        title: Text("${widget.diamondData.diamonds.length} Result ${widget.diamondData.pages}"),
+        title: Text(
+            "${widget.diamondData.total} Result ${widget.diamondData.pages}"),
         centerTitle: true,
       ),
-      body:  ListView.builder(
-              itemCount: widget.diamondData.diamonds.length,
-              itemBuilder: (context, index) {
-                bool isChecked = isCheckedMap[index] ?? false;
-                bool isStared = isStaredMap[index] ?? false;
-                final diamond = widget.diamondData.diamonds[index];
-                return InkWell(
-                  onTap: () {
-                    // Navigator.push(context, MaterialPageRoute(builder: (context)=> SearchDetail(diamondDetail: diamond,)));
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(paddingCard),
-                    child: Card.filled(
-                      color: Colors.white,
-                      elevation: 7,
-                      borderOnForeground: false,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: ListView.builder(
+        itemCount: widget.diamondData.diamonds.length,
+        itemBuilder: (context, index) {
+          bool isChecked = isCheckedMap[index] ?? false;
+          bool isStared = isStaredMap[index] ?? false;
+          final diamond = widget.diamondData.diamonds[index];
+          return InkWell(
+            onTap: () {
+              // Navigator.push(context, MaterialPageRoute(builder: (context)=> SearchDetail(diamondDetail: diamond,)));
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(paddingCard),
+              child: Card.filled(
+                color: Colors.white,
+                elevation: 7,
+                borderOnForeground: false,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // **********ClickBox and Star ************//
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              right: paddingCard, left: paddingCard),
+                          child: Container(
+                              child: Row(
                             children: [
-                              // **********ClickBox and Star ************//
-                              Padding(
-                                padding: const EdgeInsets.only(right: paddingCard, left: paddingCard),
-                                child: Container(
-                                    child: Row(
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          isCheckedMap[index] =
-                                              !isChecked; // Update isChecked state in the map
-                                        });
-                                      },
-                                      child: SizedBox(
-                                        width: widthOfSearchResultCard,
-                                        height: heighOfSearchResultCard,
-                                        child: Card.filled(
-                                          color: Colors.white,
-                                          elevation: 7,
-                                          child: isChecked
-                                              ? Image.asset(
-                                                  "assets/app_icons/check.png")
-                                              : Container(),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                         if (diamond.canToCart){
-                                            addToCart(diamond.id, widget.token);
-                                          }else{
-
-                                            removeFromCart(diamond.id, widget.token);
-                                          }
-                                          setState(() {
-                                            
-                                          });
-                                      },
-                                      child: SizedBox(
-                                        width: widthOfSearchResultCard,
-                                        height: heighOfSearchResultCard,
-                                        child: Card.filled(
-                                          color: Colors.white,
-                                          elevation: 7,
-                                          child: diamond.canToCart
-                                              ? const Icon(Icons.star,
-                                                  color: Color.fromRGBO(
-                                                      33, 98, 238, 1)) //#2162E0
-                                              : const Icon(Icons.star_border),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )),
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    isCheckedMap[index] =
+                                        !isChecked; // Update isChecked state in the map
+                                  });
+                                },
+                                child: SizedBox(
+                                  width: widthOfSearchResultCard,
+                                  height: heighOfSearchResultCard,
+                                  child: Card.filled(
+                                    color: Colors.white,
+                                    elevation: 7,
+                                    child: isChecked
+                                        ? Image.asset(
+                                            "assets/app_icons/check.png")
+                                        : Container(),
+                                  ),
+                                ),
                               ),
-                              // ********** cert camera video ************//
-                              Padding(
-                                padding: const EdgeInsets.only(right:paddingCard, left: paddingCard),
-                                child: Container(
-                                  child: Row(
-                                    children: [
-                                      InkWell(
-                                        onTap: () {},
-                                        child: const SizedBox(
-                                          width: widthOfSearchResultCard,
-                                          height: heighOfSearchResultCard,
-                                          child: Card.filled(
-                                            color: Colors.white,
-                                            elevation: 7,
-                                            child: Icon(Icons.web_outlined),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      InkWell(
-                                        onTap: () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              // Navigator.of(context).pop();
-                                              return ImagePopup(
-                                                  imageUrl:
-                                                      diamond.imageUrl);
-                                            },
-                                          );
-                                          print(diamond.imageUrl);
-                                        },
-                                        child: const SizedBox(
-                                          width: widthOfSearchResultCard,
-                                          height: heighOfSearchResultCard,
-                                          child: Card.filled(
-                                            color: Colors.white,
-                                            elevation: 7,
-                                            child:
-                                                Icon(Icons.camera_alt_outlined),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      InkWell(
-                                        onTap: () {},
-                                        child: const SizedBox(
-                                          width: widthOfSearchResultCard,
-                                          height: heighOfSearchResultCard,
-                                          child: Card.filled(
-                                            color: Colors.white,
-                                            elevation: 7,
-                                            child:
-                                                Icon(Icons.video_call_outlined),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                    ],
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  if (diamond.canToCart) {
+                                    // addToCart(diamond.id, widget.token);
+                                    print("Add to");
+                                  }
+                                  setState(() {
+                                    isStaredMap[index] = !isStared;
+                                  });
+                                },
+                                child: SizedBox(
+                                  width: widthOfSearchResultCard,
+                                  height: heighOfSearchResultCard,
+                                  child: Card.filled(
+                                    color: Colors.white,
+                                    elevation: 7,
+                                    child: isStared
+                                        ? const Icon(Icons.star,
+                                            color: Color.fromRGBO(
+                                                33, 98, 238, 1)) //#2162E0
+                                        : const Icon(Icons.star_border),
                                   ),
                                 ),
                               ),
                             ],
-                          ),
-                          const Divider(color: Colors.grey),
-                          Padding(
-                            padding: const EdgeInsets.all(paddingCard),
-                            child: Table(
-                              defaultVerticalAlignment:
-                                  TableCellVerticalAlignment.intrinsicHeight,
+                          )),
+                        ),
+                        // ********** cert camera video ************//
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              right: paddingCard, left: paddingCard),
+                          child: Container(
+                            child: Row(
                               children: [
-                                TableRow(children: [
-                                  TableCell(
-                                      child: StyledText(
-                                          text:
-                                              "Stock No.: ${diamond.id}")),
-                                  TableCell(
-                                      child: StyledText(
-                                    text: "Disc%: ${diamond.back}",
-                                    color: Colors.redAccent,
-                                  )),
-                                ]),
-                                TableRow(children: [
-                                  TableCell(
-                                      child: StyledText(
-                                          text:
-                                              "${diamond.diaReport}: ${diamond.diaReportNo}")),
-                                  TableCell(
-                                      child: StyledText(
-                                    text: "Amount: ${diamond.dollar1}",
-                                    color: Colors.red,
-                                  )),
-                                ]),
-                              ],
-                            ),
-                          ),
-                          const Divider(color: Colors.grey),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: paddingCard,
-                                right: paddingCard,
-                                ),
-                            child: Table(
-                              defaultVerticalAlignment:
-                                  TableCellVerticalAlignment.middle,
-                              children: [
-                                TableRow(children: [
-                                  TableCell(
-                                      child: StyledText(
-                                          text: "Shp: ${diamond.diaShape}")),
-                                  TableCell(
-                                      child: StyledText(
-                                          text: "Carat: ${diamond.diaCarat}")),
-                                  TableCell(
-                                      child: StyledText(
-                                          text: "Color: ${diamond.diaColor}")),
-                                  TableCell(
-                                      child: StyledText(
-                                          text: "Clarity: ${diamond.diaClarity}")),
-                                ]),
-                                TableRow(children: [
-                                  TableCell(
-                                      child: StyledText(
-                                          text: "Cut: ${diamond.diaCut}")),
-                                  TableCell(
-                                      child: StyledText(
-                                          text: "Polish: ${diamond.diaPolish}")),
-                                  TableCell(
-                                      child: StyledText(
-                                          text: "Symm: ${diamond.diaSymmetry}")),
-                                  TableCell(
-                                      child: StyledText(
-                                          text:
-                                              "Fluoro: ${diamond.diaFluorescence}")),
-                                ]),
-                                TableRow(children: [
-                                  TableCell(
-                                      child: StyledText(
-                                          text: "Loc: ${diamond.diaPlace}")),
-                                  TableCell(
-                                      child: StyledText(
-                                          text: "Tbl : ${diamond.diaTable}")),
-                                  TableCell(
-                                      child: StyledText(
-                                          text: "Td: ${diamond.diaDepth}")),
-                                  TableCell(
-                                    child: StyledText(
-                                      text: "Rap: ${diamond.rap}",
+                                InkWell(
+                                  onTap: () {},
+                                  child: const SizedBox(
+                                    width: widthOfSearchResultCard,
+                                    height: heighOfSearchResultCard,
+                                    child: Card.filled(
+                                      color: Colors.white,
+                                      elevation: 7,
+                                      child: Icon(Icons.web_outlined),
                                     ),
                                   ),
-                                ]),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        // Navigator.of(context).pop();
+                                        return ImagePopup(
+                                            imageUrl: diamond.imageUrl);
+                                      },
+                                    );
+                                    print(diamond.imageUrl);
+                                  },
+                                  child: const SizedBox(
+                                    width: widthOfSearchResultCard,
+                                    height: heighOfSearchResultCard,
+                                    child: Card.filled(
+                                      color: Colors.white,
+                                      elevation: 7,
+                                      child: Icon(Icons.camera_alt_outlined),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                InkWell(
+                                  onTap: () {},
+                                  child: const SizedBox(
+                                    width: widthOfSearchResultCard,
+                                    height: heighOfSearchResultCard,
+                                    child: Card.filled(
+                                      color: Colors.white,
+                                      elevation: 7,
+                                      child: Icon(Icons.video_call_outlined),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
                               ],
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: paddingCard,
-                                right: paddingCard,
-                                bottom: paddingCard),
-                            child: Table(
-                              defaultVerticalAlignment:
-                                  TableCellVerticalAlignment.middle,
-                              children: [
-                                TableRow(children: [
-                                  TableCell(
-                                      child: StyledText(
-                                          text:
-                                              "Measurement: ${diamond.diaDiameter}")),
-                                ]),
-                              ],
+                        ),
+                      ],
+                    ),
+                    const Divider(color: Colors.grey),
+                    Padding(
+                      padding: const EdgeInsets.all(paddingCard),
+                      child: Table(
+                        defaultVerticalAlignment:
+                            TableCellVerticalAlignment.intrinsicHeight,
+                        children: [
+                          TableRow(children: [
+                            TableCell(
+                                child: StyledText(
+                                    text: "Stock No.: ${diamond.id}")),
+                            TableCell(
+                                child: StyledText(
+                              text: "Disc%: ${diamond.back}",
+                              color: Colors.redAccent,
+                            )),
+                          ]),
+                          TableRow(children: [
+                            TableCell(
+                                child: StyledText(
+                                    text:
+                                        "${diamond.diaReport}: ${diamond.diaReportNo}")),
+                            TableCell(
+                                child: StyledText(
+                              text: "Amount: ${diamond.dollar1}",
+                              color: Colors.red,
+                            )),
+                          ]),
+                        ],
+                      ),
+                    ),
+                    const Divider(color: Colors.grey),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: paddingCard,
+                        right: paddingCard,
+                      ),
+                      child: Table(
+                        defaultVerticalAlignment:
+                            TableCellVerticalAlignment.middle,
+                        children: [
+                          TableRow(children: [
+                            TableCell(
+                                child: StyledText(
+                                    text: "Shp: ${diamond.diaShape}")),
+                            TableCell(
+                                child: StyledText(
+                                    text: "Carat: ${diamond.diaCarat}")),
+                            TableCell(
+                                child: StyledText(
+                                    text: "Color: ${diamond.diaColor}")),
+                            TableCell(
+                                child: StyledText(
+                                    text: "Clarity: ${diamond.diaClarity}")),
+                          ]),
+                          TableRow(children: [
+                            TableCell(
+                                child:
+                                    StyledText(text: "Cut: ${diamond.diaCut}")),
+                            TableCell(
+                                child: StyledText(
+                                    text: "Polish: ${diamond.diaPolish}")),
+                            TableCell(
+                                child: StyledText(
+                                    text: "Symm: ${diamond.diaSymmetry}")),
+                            TableCell(
+                                child: StyledText(
+                                    text:
+                                        "Fluoro: ${diamond.diaFluorescence}")),
+                          ]),
+                          TableRow(children: [
+                            TableCell(
+                                child: StyledText(
+                                    text: "Loc: ${diamond.diaPlace}")),
+                            TableCell(
+                                child: StyledText(
+                                    text: "Tbl : ${diamond.diaTable}")),
+                            TableCell(
+                                child: StyledText(
+                                    text: "Td: ${diamond.diaDepth}")),
+                            TableCell(
+                              child: StyledText(
+                                text: "Rap: ${diamond.rap}",
+                              ),
                             ),
-                          ),
-                         ],
+                          ]),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: paddingCard,
+                          right: paddingCard,
+                          bottom: paddingCard),
+                      child: Table(
+                        defaultVerticalAlignment:
+                            TableCellVerticalAlignment.middle,
+                        children: [
+                          TableRow(children: [
+                            TableCell(
+                                child: StyledText(
+                                    text:
+                                        "Measurement: ${diamond.diaDiameter}")),
+                          ]),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
           );
         },
+      ),
+      
+      // floatingActionButton: PaginationRow(
+      //   currentPage: _currentPage,
+      //   totalPages: _totalPages,
+      //   onPageChanged: _onPageChanged,
+      // ),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          if (_isExpanded) ...[
+            Card(
+            child: InkWell(
+              onTap: () {},
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.arrow_back_ios),
+                ),
+              ),
+            ),
+            Card(
+            child: InkWell(
+              onTap: () {},
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('1'),
+                ),
+              ),
+            ),
+            Card(
+            child: InkWell(
+              onTap: () {},
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('2'),
+                ),
+              ),
+            ),
+            Card(
+            child: InkWell(
+              onTap: () {},
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('2'),
+                ),
+              ),
+            ),
+            Card(
+            child: InkWell(
+              onTap: () {},
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('2'),
+                ),
+              ),
+            ),
+            Card(
+            child: InkWell(
+              onTap: () {},
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('2562'),
+                ),
+              ),
+            ),
+            Card(
+            child: InkWell(
+              onTap: () {},
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.arrow_forward_ios_rounded),
+                ),
+              ),
+            ),
+          
+          ],
+          FloatingActionButton(
+            onPressed: _toggleExpanded,
+            child: Icon(_isExpanded ? Icons.close : Icons.menu),
+            mini: true,
+          ),
+        ],
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(paddingCard),
