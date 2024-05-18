@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kdlgia/cart/cartApi.dart';
+import 'package:kdlgia/cart/cartData.dart';
+import 'package:kdlgia/navigation_pages/cart_page.dart';
 import 'package:kdlgia/navigation_pages/search_page.dart';
 import 'package:kdlgia/registeration/login_page.dart';
 import 'package:kdlgia/search/apiDiamondSerach.dart';
@@ -29,11 +31,13 @@ class _HomePageState extends State<HomePage> {
   late final TextEditingController _searchQuerry = TextEditingController();
 
   late Future<DiamondData> diamondsFuture;
+  late Future<CartResponse> cartResponse;
   late int stockWehave;
   @override
   void initState() {
     super.initState();
     diamondsFuture = fetchDataSearchDiamond(widget.token, );
+    cartResponse = showCarts(widget.token);
   }
 
   @override
@@ -195,8 +199,15 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-
-                const Padding(
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                CartPage(token: widget.token,)));
+                  },
+               child:  Padding(
                   padding: EdgeInsets.all(paddingCard),
                   child: Card(
                     child: Center(
@@ -211,15 +222,28 @@ class _HomePageState extends State<HomePage> {
                           colors: mainColor,
                           fontWeight: FontWeight.normal,
                         ),
-                        // TextStyleHeader(
-                        //   text: "(8555)",
-                        //   colors: Colors.black,
-                        //   fontWeight: FontWeight.normal,
-                        // ),
+                        FutureBuilder(future: cartResponse, builder: (context, snapshot){
+                            if(snapshot.connectionState == ConnectionState.waiting){
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+
+                            }else{
+                              return TextStyleHeader(
+                            text: snapshot.data!.cart.item.length.toString(),
+                            colors: mainColor,
+                            fontWeight: FontWeight.normal,
+                          );
+
+                            }
+                          }
+                          
+                          )
                       ],
                     )),
                   ),
                 ),
+                )
                 // Add more children as needed
               ],
             ),
@@ -714,8 +738,11 @@ class _HomePageState extends State<HomePage> {
             children: [
               TextButton(
                 onPressed: () {
-                  setState(() {});
-                  // Add your onPressed callback here
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            HomePage(token: widget.token,)));
                 },
                 child: const Column(
                   children: [
@@ -729,12 +756,11 @@ class _HomePageState extends State<HomePage> {
               ),
               TextButton(
                 onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //       builder: (context) =>
-                  //           SearchPage(diamondsFuture: diamondsFuture)),
-                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            SearchPage(token: widget.token,)));
                 },
                 child: const Column(
                   children: [
@@ -748,11 +774,12 @@ class _HomePageState extends State<HomePage> {
               ),
               TextButton(
                 onPressed: () {
-                  // Add your onPressed callback here
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => SearchPage(diamondsFuture: diamondsFuture,)),
-                  // );
+                 Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                CartPage(token: widget.token,)));
+                  
                 },
                 child: const Column(
                   children: [

@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:kdlgia/api_assets_popup/imagePopup.dart';
-import 'package:kdlgia/cart/cartApi.dart';
 import 'package:kdlgia/diamond_search/searchDetail.dart';
 import 'package:kdlgia/search/apiDiamondSerach.dart';
 import 'package:kdlgia/search/diamondData.dart';
 import 'package:kdlgia/search/diamondDataDetail.dart';
-import 'package:kdlgia/search/dragableFab.dart';
-import 'package:kdlgia/search/expandable.dart';
-import 'package:kdlgia/search/pagination.dart';
+
 import 'package:kdlgia/style/search_card_ui.dart';
 import 'package:kdlgia/style/styleTextSearchResult.dart';
 
