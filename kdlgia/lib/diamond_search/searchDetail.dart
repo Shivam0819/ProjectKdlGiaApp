@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kdlgia/diamond_search/search_card.dart';
+import 'package:kdlgia/search/diamondDataDetail.dart';
 import 'package:kdlgia/style/search_card_ui.dart';
 import 'package:kdlgia/style/styleTextSearchResult.dart';
 import 'package:kdlgia/style/textStyle.dart';
@@ -23,10 +23,10 @@ class _SearchDetailState extends State<SearchDetail> {
   Widget build(BuildContext context) {
     Widget content;
     if (selectedOption == "image") {
-      if (widget.diamondDetail.image.isNotEmpty) {
-        print("hello ${widget.diamondDetail.image}");
+      if (widget.diamondDetail.imageUrl.isNotEmpty) {
+        print("hello ${widget.diamondDetail.imageUrl}");
         content = Image.network(
-          "https://kdna-image.starjew.com/${widget.diamondDetail.image}.jpg?imageView2/2/w/800/h/800/q/100/",
+          "${widget.diamondDetail.imageUrl}",
         );
       } else {
         content = const Icon(
@@ -176,7 +176,7 @@ class _SearchDetailState extends State<SearchDetail> {
 
             StyledText(
               text:
-                  "${widget.diamondDetail.shape.toUpperCase()} ${widget.diamondDetail.stockNo}",
+                  "${widget.diamondDetail.diaShape.toUpperCase()} ${widget.diamondDetail.id}",
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: Colors.black87,
@@ -188,7 +188,7 @@ class _SearchDetailState extends State<SearchDetail> {
               color: Colors.redAccent,
             ),
             StyledText(
-                text: "Price: ${widget.diamondDetail.price}",
+                text: "Price: ${widget.diamondDetail.dollar1}",
                 fontSize: 23,
                 fontWeight: FontWeight.bold,
               color: Colors.redAccent,
@@ -208,23 +208,23 @@ class _SearchDetailState extends State<SearchDetail> {
                   TableCell(
                       child: StyledText(
                     text:
-                        "${widget.diamondDetail.clarity} ${widget.diamondDetail.color} ${widget.diamondDetail.cut}-${widget.diamondDetail.polish}-${widget.diamondDetail.symmetry} ${widget.diamondDetail.fluorescence}",
+                        "${widget.diamondDetail.diaClarity} ${widget.diamondDetail.diaColor} ${widget.diamondDetail.diaCut}-${widget.diamondDetail.diaPolish}-${widget.diamondDetail.diaSymmetry} ${widget.diamondDetail.diaFluorescence}",
                   )),
                   TableCell(
                       child: StyledText(
                     text:
-                        "${widget.diamondDetail.color} ${widget.diamondDetail.depth}",
+                        "${widget.diamondDetail.diaColor} ${widget.diamondDetail.diaDepth}",
                   ))
                 ]),
                 TableRow(children: [
                   TableCell(
                       child: StyledText(
                     text:
-                        "CT: ${widget.diamondDetail.carat} T: ${widget.diamondDetail.table}}",
+                        "CT: ${widget.diamondDetail.diaCarat} T: ${widget.diamondDetail.diaTable}}",
                   )),
                   TableCell(
                       child: StyledText(
-                    text: "Dia: ${widget.diamondDetail.measurements}",
+                    text: "Dia: ${widget.diamondDetail.diaDiameter}",
                   ))
                 ]),
               ],
@@ -276,31 +276,31 @@ class _SearchDetailState extends State<SearchDetail> {
                     const TableCell(child: StyledTextSearchDetail(text: "Ref.No:")),
                     TableCell(
                         child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.stockNo))
+                            text: widget.diamondDetail.diaReportNo))
                   ]),
                   TableRow(children: [
                     const TableCell(child: StyledTextSearchDetail(text: "Shape:")),
                     TableCell(
                         child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.shape))
+                            text: widget.diamondDetail.diaShape))
                   ]),
                   TableRow(children: [
                     const TableCell(child: StyledTextSearchDetail(text: "Carats:")),
                     TableCell(
                         child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.carat))
+                            text: widget.diamondDetail.diaCarat))
                   ]),
                   TableRow(children: [
                     const TableCell(child: StyledTextSearchDetail(text: "Clarity:")),
                     TableCell(
                         child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.clarity))
+                            text: widget.diamondDetail.diaClarity))
                   ]),
                   TableRow(children: [
                     const TableCell(child: StyledTextSearchDetail(text: "Color:")),
                     TableCell(
                         child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.color)),
+                            text: widget.diamondDetail.diaColor)),
                   ]),
                   TableRow(children: [
                     const TableCell(
@@ -308,27 +308,27 @@ class _SearchDetailState extends State<SearchDetail> {
                     TableCell(
                         child: StyledTextSearchDetail(
                             text:
-                                "${widget.diamondDetail.cut} / ${widget.diamondDetail.polish} / ${widget.diamondDetail.symmetry}")),
+                                "${widget.diamondDetail.diaCut} / ${widget.diamondDetail.diaPolish} / ${widget.diamondDetail.diaSymmetry}")),
                   ]),
                   TableRow(children: [
                     const TableCell(
                         child: StyledTextSearchDetail(text: "Fluorescence:")),
                     TableCell(
                         child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.fluorescence)),
+                            text: widget.diamondDetail.diaFluorescence)),
                   ]),
                   TableRow(children: [
                     const TableCell(
                         child: StyledTextSearchDetail(text: "Measurement:")),
                     TableCell(
                         child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.measurements)),
+                            text: widget.diamondDetail.diaDiameter)),
                   ]),
                   TableRow(children: [
                     const TableCell(child: StyledTextSearchDetail(text: "Color:")),
                     TableCell(
                         child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.color)),
+                            text: widget.diamondDetail.diaColor)),
                   ]),
                   const TableRow(children: [
                     TableCell(child: StyledTextSearchDetail(text: "L:W::")),
@@ -348,7 +348,7 @@ class _SearchDetailState extends State<SearchDetail> {
                     const TableCell(child: StyledTextSearchDetail(text: "Price:")),
                     TableCell(
                         child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.price)),
+                            text: widget.diamondDetail.dollar1)),
                   ]),
                   TableRow(children: [
                     const TableCell(
@@ -368,13 +368,13 @@ class _SearchDetailState extends State<SearchDetail> {
                         child: StyledTextSearchDetail(text: "Key To Symbol:")),
                     TableCell(
                         child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.keyToSymbols)),
+                            text: widget.diamondDetail.diaSerial)),
                   ]),
                   TableRow(children: [
                     const TableCell(child: StyledTextSearchDetail(text: "Commenr:")),
                     TableCell(
                         child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.comments)),
+                            text: widget.diamondDetail.diaCa)),
                   ]),
                 ],
               ),
@@ -426,61 +426,61 @@ class _SearchDetailState extends State<SearchDetail> {
                         child: StyledTextSearchDetail(text: "Total Depth %:")),
                     TableCell(
                         child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.depth))
+                            text: widget.diamondDetail.diaDepth))
                   ]),
                   TableRow(children: [
                     const TableCell(child: StyledTextSearchDetail(text: "Table %:")),
                     TableCell(
                         child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.table))
+                            text: widget.diamondDetail.diaTable))
                   ]),
                   TableRow(children: [
                     const TableCell(
                         child: StyledTextSearchDetail(text: "Crown Height %:")),
                     TableCell(
                         child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.ca))
+                            text: widget.diamondDetail.diaCa))
                   ]),
                   TableRow(children: [
                     const TableCell(
                         child: StyledTextSearchDetail(text: "Pav. Height %:")),
                     TableCell(
                         child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.pa))
+                            text: widget.diamondDetail.diaPa))
                   ]),
                   TableRow(children: [
                     const TableCell(
                         child: StyledTextSearchDetail(text: "Pa Height:")),
                     TableCell(
                         child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.hna)),
+                            text: widget.diamondDetail.diaHna)),
                   ]),
                   TableRow(children: [
                     const TableCell(
                         child: StyledTextSearchDetail(text: "Cut/Pol/Sym:")),
                     TableCell(
                         child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.culet)),
+                            text: widget.diamondDetail.diaWt)),
                   ]),
                   TableRow(children: [
                     const TableCell(
                         child: StyledTextSearchDetail(text: "Fluorescence:")),
                     TableCell(
                         child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.fluorescence)),
+                            text: widget.diamondDetail.diaFluorescence)),
                   ]),
                   TableRow(children: [
                     const TableCell(
                         child: StyledTextSearchDetail(text: "Measurement:")),
                     TableCell(
                         child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.measurements)),
+                            text: widget.diamondDetail.diaDiameter)),
                   ]),
                   TableRow(children: [
                     const TableCell(child: StyledTextSearchDetail(text: "Color:")),
                     TableCell(
                         child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.color)),
+                            text: widget.diamondDetail.diaColor)),
                   ]),
                   const TableRow(children: [
                     TableCell(child: StyledTextSearchDetail(text: "L:W::")),
@@ -500,7 +500,7 @@ class _SearchDetailState extends State<SearchDetail> {
                     const TableCell(child: StyledTextSearchDetail(text: "Price:")),
                     TableCell(
                         child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.price)),
+                            text: widget.diamondDetail.dollar1)),
                   ]),
                   TableRow(children: [
                     const TableCell(
@@ -520,13 +520,13 @@ class _SearchDetailState extends State<SearchDetail> {
                         child: StyledTextSearchDetail(text: "Key To Symbol:")),
                     TableCell(
                         child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.keyToSymbols)),
+                            text: widget.diamondDetail.diaTable)),
                   ]),
                   TableRow(children: [
                     const TableCell(child: StyledTextSearchDetail(text: "Commenr:")),
                     TableCell(
                         child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.comments)),
+                            text: widget.diamondDetail.diaClarity)),
                   ]),
                 ],
               ),
@@ -568,92 +568,92 @@ class _SearchDetailState extends State<SearchDetail> {
                   ],
                 )),
             if (kdlImpexDetailIsSelected)
-              Table(
+               Table(
                 children: [
+                  TableRow(children: [
+                    const TableCell(
+                        child: StyledTextSearchDetail(text: "Total Depth %:")),
+                    TableCell(
+                        child: StyledTextSearchDetail(
+                            text: widget.diamondDetail.diaDepth))
+                  ]),
+                  TableRow(children: [
+                    const TableCell(child: StyledTextSearchDetail(text: "Table %:")),
+                    TableCell(
+                        child: StyledTextSearchDetail(
+                            text: widget.diamondDetail.diaTable))
+                  ]),
+                  TableRow(children: [
+                    const TableCell(
+                        child: StyledTextSearchDetail(text: "Crown Height %:")),
+                    TableCell(
+                        child: StyledTextSearchDetail(
+                            text: widget.diamondDetail.diaCa))
+                  ]),
+                  TableRow(children: [
+                    const TableCell(
+                        child: StyledTextSearchDetail(text: "Pav. Height %:")),
+                    TableCell(
+                        child: StyledTextSearchDetail(
+                            text: widget.diamondDetail.diaPa))
+                  ]),
+                  TableRow(children: [
+                    const TableCell(
+                        child: StyledTextSearchDetail(text: "Pa Height:")),
+                    TableCell(
+                        child: StyledTextSearchDetail(
+                            text: widget.diamondDetail.diaHna)),
+                  ]),
+                  TableRow(children: [
+                    const TableCell(
+                        child: StyledTextSearchDetail(text: "Cut/Pol/Sym:")),
+                    TableCell(
+                        child: StyledTextSearchDetail(
+                            text: widget.diamondDetail.diaWt)),
+                  ]),
+                  TableRow(children: [
+                    const TableCell(
+                        child: StyledTextSearchDetail(text: "Fluorescence:")),
+                    TableCell(
+                        child: StyledTextSearchDetail(
+                            text: widget.diamondDetail.diaFluorescence)),
+                  ]),
+                  TableRow(children: [
+                    const TableCell(
+                        child: StyledTextSearchDetail(text: "Measurement:")),
+                    TableCell(
+                        child: StyledTextSearchDetail(
+                            text: widget.diamondDetail.diaDiameter)),
+                  ]),
+                  TableRow(children: [
+                    const TableCell(child: StyledTextSearchDetail(text: "Color:")),
+                    TableCell(
+                        child: StyledTextSearchDetail(
+                            text: widget.diamondDetail.diaColor)),
+                  ]),
                   const TableRow(children: [
-                    TableCell(
-                        child: StyledTextSearchDetail(text: "Luster:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: "NA"))
-                  ]),
-                  TableRow(children: [
-                    const TableCell(child: StyledTextSearchDetail(text: "Opens in Table:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.table))
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Opens in Crown:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.ca))
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Opens in Pavillion:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.pa))
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Back in Table:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.hna)),
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Back in Crown:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.culet)),
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Tab-Cr Inclusion:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.fluorescence)),
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Inclusion Pattern:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.ins)),
-                  ]),
-                  TableRow(children: [
-                    const TableCell(child: StyledTextSearchDetail(text: "Eye Clean:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.eyeClean)),
-                  ]),
-                  const TableRow(children: [
-                    TableCell(child: StyledTextSearchDetail(text: "Heart & Arrow:")),
+                    TableCell(child: StyledTextSearchDetail(text: "L:W::")),
                     TableCell(child: StyledTextSearchDetail(text: "0.00")),
                   ]),
                   const TableRow(children: [
-                    TableCell(child: StyledTextSearchDetail(text: "ICI Cut:")),
+                    TableCell(child: StyledTextSearchDetail(text: "SGS:")),
                     TableCell(child: StyledTextSearchDetail(text: "")),
                   ]),
                   const TableRow(children: [
                     TableCell(
                         child:
-                            StyledTextSearchDetail(text: "HRD Cut")),
+                            StyledTextSearchDetail(text: "Laser Inscription")),
                     TableCell(child: StyledTextSearchDetail(text: "")),
                   ]),
                   TableRow(children: [
-                    const TableCell(child: StyledTextSearchDetail(text: "Eligibility RMK:")),
+                    const TableCell(child: StyledTextSearchDetail(text: "Price:")),
                     TableCell(
                         child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.price)),
+                            text: widget.diamondDetail.dollar1)),
                   ]),
                   TableRow(children: [
                     const TableCell(
-                        child: StyledTextSearchDetail(text: "Rough Origin:")),
+                        child: StyledTextSearchDetail(text: "Rap Back %:")),
                     TableCell(
                         child: StyledTextSearchDetail(
                             text: widget.diamondDetail.back)),
@@ -666,12 +666,17 @@ class _SearchDetailState extends State<SearchDetail> {
                   ]),
                   TableRow(children: [
                     const TableCell(
-                        child: StyledTextSearchDetail(text: "Cuntry of Origin:")),
+                        child: StyledTextSearchDetail(text: "Key To Symbol:")),
                     TableCell(
                         child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.place)),
+                            text: widget.diamondDetail.diaTable)),
                   ]),
-                  
+                  TableRow(children: [
+                    const TableCell(child: StyledTextSearchDetail(text: "Commenr:")),
+                    TableCell(
+                        child: StyledTextSearchDetail(
+                            text: widget.diamondDetail.diaClarity)),
+                  ]),
                 ],
               ),
             
