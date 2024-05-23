@@ -10,7 +10,7 @@ class UserProfile {
   final String? userEmail; // Nullable field
   final String? userPhone; // Nullable field
   final String? userAddress; // Nullable field
-  final int userLoginTimes;
+  var userLoginTimes;
   final String userAddTime;
   final String userThisTime;
   final String userThisIp;
@@ -19,20 +19,20 @@ class UserProfile {
   final bool isModified;
   final String? userAbbr; // Nullable field
   final String? userCompany; // Nullable field
-  final int userFetchDays;
-  final int orders;
-  final int quantity;
-  final int consumption;
-  final int balance;
-  final int myHold;
-  final int myMemo;
-  final int myNotTakenCount;
-  final int myNotTakenAmount;
+  var userFetchDays;
+  var orders;
+  var quantity;
+  var consumption;
+  var balance;
+  var myHold;
+  var myMemo;
+  var myNotTakenCount;
+  var myNotTakenAmount;
   final String sales;
   final String salesPhone;
   final String salesWeixin;
-  final int exrate;
-  final int tax;
+  var exrate;
+  var tax;
 
   UserProfile({
     required this.userId,

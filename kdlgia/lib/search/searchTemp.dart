@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kdlgia/api_assets_popup/imagePopup.dart';
+import 'package:kdlgia/cart/cartApi.dart';
 import 'package:kdlgia/diamond_search/searchDetail.dart';
 import 'package:kdlgia/search/apiDiamondSerach.dart';
 import 'package:kdlgia/search/diamondData.dart';
@@ -25,7 +26,8 @@ class SearchResultsTemp extends StatefulWidget {
 }
 
 class _SearchResultsTempState extends State<SearchResultsTemp> {
-  late Map<int, bool> isCheckedMap = {}; // Map to store isChecked state for each Diamond item
+  late Map<int, bool> isCheckedMap =
+      {}; // Map to store isChecked state for each Diamond item
   late Map<int, bool> isStaredMap = {};
   bool _isExpanded = false;
   int _currentPage = 1;
@@ -47,7 +49,9 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent && !_isLoadingMore) {
+    if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent &&
+        !_isLoadingMore) {
       _fetchMoreData();
     }
   }
@@ -63,7 +67,8 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
       await Future.delayed(Duration(seconds: 2));
 
       // Fetch more data from the API and add it to the list
-      DiamondData newDiamondData = await fetchDataSearchDiamond(widget.token, searchQuerry: "${widget.querryUrl} + &page=2");
+      DiamondData newDiamondData = await fetchDataSearchDiamond(widget.token,
+          searchQuerry: "${widget.querryUrl} + &page=2");
       setState(() {
         _diamonds.addAll(newDiamondData.diamonds);
         _isLoadingMore = false;
@@ -113,7 +118,8 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
           child: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pop(context); // Navigate back when the back button is pressed
+              Navigator.pop(
+                  context); // Navigate back when the back button is pressed
             },
             color: Colors.black, // Customize the color of the back button
           ),
@@ -130,12 +136,17 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
           }
 
           bool isChecked = isCheckedMap[index] ?? false;
-          bool isStared = isStaredMap[index] ?? false;
+          bool isStared = isStaredMap[index] ?? _diamonds[index].inCart == "Y";
           final diamond = _diamonds[index];
 
           return InkWell(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> SearchDetail(diamondDetail: diamond,)));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => SearchDetail(
+                            diamondDetail: diamond,
+                          )));
             },
             child: Padding(
               padding: const EdgeInsets.all(paddingCard),
@@ -150,14 +161,16 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(right: paddingCard, left: paddingCard),
+                          padding: const EdgeInsets.only(
+                              right: paddingCard, left: paddingCard),
                           child: Container(
                             child: Row(
                               children: [
                                 InkWell(
                                   onTap: () {
                                     setState(() {
-                                      isCheckedMap[index] = !isChecked; // Update isChecked state in the map
+                                      isCheckedMap[index] =
+                                          !isChecked; // Update isChecked state in the map
                                     });
                                   },
                                   child: SizedBox(
@@ -166,16 +179,23 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                                     child: Card.filled(
                                       color: Colors.white,
                                       elevation: 7,
-                                      child: isChecked ? Image.asset("assets/app_icons/check.png") : Container(),
+                                      child: isChecked
+                                          ? Image.asset(
+                                              "assets/app_icons/check.png")
+                                          : Container(),
                                     ),
                                   ),
                                 ),
                                 const SizedBox(width: 10),
                                 InkWell(
                                   onTap: () {
-                                    if (diamond.canToCart) {
-                                      // addToCart(diamond.id, widget.token);
-                                      print("Add to");
+                                    if (isStared) {
+                                      removeFromCart(diamond.id, widget.token);
+                                      print("Called me to remoce!!");
+                                    } else {
+                                      addToCart(diamond.id, widget.token);
+                                      print("Called me to add!!");
+
                                     }
                                     setState(() {
                                       isStaredMap[index] = !isStared;
@@ -188,7 +208,9 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                                       color: Colors.white,
                                       elevation: 7,
                                       child: isStared
-                                          ? const Icon(Icons.star, color: Color.fromRGBO(33, 98, 238, 1)) //#2162E0
+                                          ? const Icon(Icons.star,
+                                              color: Color.fromRGBO(
+                                                  33, 98, 238, 1)) //#2162E0
                                           : const Icon(Icons.star_border),
                                     ),
                                   ),
@@ -198,7 +220,8 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(right: paddingCard, left: paddingCard),
+                          padding: const EdgeInsets.only(
+                              right: paddingCard, left: paddingCard),
                           child: Container(
                             child: Row(
                               children: [
@@ -220,7 +243,8 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
-                                        return ImagePopup(imageUrl: diamond.imageUrl);
+                                        return ImagePopup(
+                                            imageUrl: diamond.imageUrl);
                                       },
                                     );
                                     print(diamond.imageUrl);
@@ -259,53 +283,98 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                     Padding(
                       padding: const EdgeInsets.all(paddingCard),
                       child: Table(
-                        defaultVerticalAlignment: TableCellVerticalAlignment.intrinsicHeight,
+                        defaultVerticalAlignment:
+                            TableCellVerticalAlignment.intrinsicHeight,
                         children: [
                           TableRow(children: [
-                            TableCell(child: StyledText(text: "Stock No.: ${diamond.id}")),
-                            TableCell(child: StyledText(text: "Disc%: ${diamond.back}", color: Colors.redAccent)),
+                            TableCell(
+                                child: StyledText(
+                                    text: "Stock No.: ${diamond.id}")),
+                            TableCell(
+                                child: StyledText(
+                                    text: "Disc%: ${diamond.back}",
+                                    color: Colors.redAccent)),
                           ]),
                           TableRow(children: [
-                            TableCell(child: StyledText(text: "${diamond.diaReport}: ${diamond.diaReportNo}")),
-                            TableCell(child: StyledText(text: "Amount: ${diamond.dollar1}", color: Colors.red)),
+                            TableCell(
+                                child: StyledText(
+                                    text:
+                                        "${diamond.diaReport}: ${diamond.diaReportNo}")),
+                            TableCell(
+                                child: StyledText(
+                                    text: "Amount: ${diamond.dollar1}",
+                                    color: Colors.red)),
                           ]),
                         ],
                       ),
                     ),
                     const Divider(color: Colors.grey),
                     Padding(
-                      padding: const EdgeInsets.only(left: paddingCard, right: paddingCard),
+                      padding: const EdgeInsets.only(
+                          left: paddingCard, right: paddingCard),
                       child: Table(
-                        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                        defaultVerticalAlignment:
+                            TableCellVerticalAlignment.middle,
                         children: [
                           TableRow(children: [
-                            TableCell(child: StyledText(text: "Shp: ${diamond.diaShape}")),
-                            TableCell(child: StyledText(text: "Carat: ${diamond.diaCarat}")),
-                            TableCell(child: StyledText(text: "Color: ${diamond.diaColor}")),
-                            TableCell(child: StyledText(text: "Clarity: ${diamond.diaClarity}")),
+                            TableCell(
+                                child: StyledText(
+                                    text: "Shp: ${diamond.diaShape}")),
+                            TableCell(
+                                child: StyledText(
+                                    text: "Carat: ${diamond.diaCarat}")),
+                            TableCell(
+                                child: StyledText(
+                                    text: "Color: ${diamond.diaColor}")),
+                            TableCell(
+                                child: StyledText(
+                                    text: "Clarity: ${diamond.diaClarity}")),
                           ]),
                           TableRow(children: [
-                            TableCell(child: StyledText(text: "Cut: ${diamond.diaCut}")),
-                            TableCell(child: StyledText(text: "Polish: ${diamond.diaPolish}")),
-                            TableCell(child: StyledText(text: "Symm: ${diamond.diaSymmetry}")),
-                            TableCell(child: StyledText(text: "Fluoro: ${diamond.diaFluorescence}")),
+                            TableCell(
+                                child:
+                                    StyledText(text: "Cut: ${diamond.diaCut}")),
+                            TableCell(
+                                child: StyledText(
+                                    text: "Polish: ${diamond.diaPolish}")),
+                            TableCell(
+                                child: StyledText(
+                                    text: "Symm: ${diamond.diaSymmetry}")),
+                            TableCell(
+                                child: StyledText(
+                                    text:
+                                        "Fluoro: ${diamond.diaFluorescence}")),
                           ]),
                           TableRow(children: [
-                            TableCell(child: StyledText(text: "Loc: ${diamond.diaPlace}")),
-                            TableCell(child: StyledText(text: "Tbl : ${diamond.diaTable}")),
-                            TableCell(child: StyledText(text: "Td: ${diamond.diaDepth}")),
-                            TableCell(child: StyledText(text: "Rap: ${diamond.rap}")),
+                            TableCell(
+                                child: StyledText(
+                                    text: "Loc: ${diamond.diaPlace}")),
+                            TableCell(
+                                child: StyledText(
+                                    text: "Tbl : ${diamond.diaTable}")),
+                            TableCell(
+                                child: StyledText(
+                                    text: "Td: ${diamond.diaDepth}")),
+                            TableCell(
+                                child: StyledText(text: "Rap: ${diamond.rap}")),
                           ]),
                         ],
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: paddingCard, right: paddingCard, bottom: paddingCard),
+                      padding: const EdgeInsets.only(
+                          left: paddingCard,
+                          right: paddingCard,
+                          bottom: paddingCard),
                       child: Table(
-                        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                        defaultVerticalAlignment:
+                            TableCellVerticalAlignment.middle,
                         children: [
                           TableRow(children: [
-                            TableCell(child: StyledText(text: "Measurement: ${diamond.diaDiameter}")),
+                            TableCell(
+                                child: StyledText(
+                                    text:
+                                        "Measurement: ${diamond.diaDiameter}")),
                           ]),
                         ],
                       ),
@@ -341,6 +410,7 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                   // Add functionality here
                 },
                 child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.shopify),
                     SizedBox(height: 2),
@@ -353,6 +423,7 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                   // Add functionality here
                 },
                 child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.save_rounded),
                     SizedBox(height: 2),
@@ -365,6 +436,7 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                   setState(() {});
                 },
                 child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.shopping_cart),
                     SizedBox(height: 2),

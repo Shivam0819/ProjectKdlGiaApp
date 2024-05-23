@@ -171,7 +171,7 @@ class _HomePageState extends State<HomePage> {
                             color: mainColor,
                           ),
                           const TextStyleHeader(
-                            text: "Sock Search",
+                            text: "Stock Search",
                             colors: mainColor,
                             fontWeight: FontWeight.normal,
                           ),
@@ -207,7 +207,7 @@ class _HomePageState extends State<HomePage> {
                             builder: (context) =>
                                 CartPage(token: widget.token,)));
                   },
-               child:  Padding(
+               child:  const Padding(
                   padding: EdgeInsets.all(paddingCard),
                   child: Card(
                     child: Center(
@@ -222,23 +222,23 @@ class _HomePageState extends State<HomePage> {
                           colors: mainColor,
                           fontWeight: FontWeight.normal,
                         ),
-                        FutureBuilder(future: cartResponse, builder: (context, snapshot){
-                            if(snapshot.connectionState == ConnectionState.waiting){
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
+                        // FutureBuilder(future: cartResponse, builder: (context, snapshot){
+                        //     if(snapshot.connectionState == ConnectionState.waiting){
+                        //       return const Center(
+                        //         child: CircularProgressIndicator(),
+                        //       );
 
-                            }else{
-                              return TextStyleHeader(
-                            text: snapshot.data!.cart.item.length.toString(),
-                            colors: mainColor,
-                            fontWeight: FontWeight.normal,
-                          );
+                        //     }else{
+                        //       return TextStyleHeader(
+                        //     text: snapshot.data!.cart.item.length.toString(),
+                        //     colors: mainColor,
+                        //     fontWeight: FontWeight.normal,
+                        //   );
 
-                            }
-                          }
+                        //     }
+                        //   }
                           
-                          )
+                        //   )
                       ],
                     )),
                   ),
@@ -735,6 +735,7 @@ class _HomePageState extends State<HomePage> {
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               TextButton(
                 onPressed: () {
@@ -745,6 +746,8 @@ class _HomePageState extends State<HomePage> {
                             HomePage(token: widget.token,)));
                 },
                 child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+
                   children: [
                     Icon(Icons.home_rounded),
                     SizedBox(
@@ -763,6 +766,7 @@ class _HomePageState extends State<HomePage> {
                             SearchPage(token: widget.token,)));
                 },
                 child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.search_rounded),
                     SizedBox(
@@ -782,6 +786,8 @@ class _HomePageState extends State<HomePage> {
                   
                 },
                 child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+
                   children: [
                     Icon(Icons.shopping_cart_rounded),
                     SizedBox(

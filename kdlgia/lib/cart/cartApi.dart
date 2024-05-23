@@ -43,9 +43,7 @@ Future<CartResponse> showCarts(String token) async {
 
       final parsed = jsonDecode(response.body.toString());
       CartResponse cartResponse = CartResponse.fromJson(parsed);
-      print('Cart total items: ${cartResponse.cart.total}');
-      print('Cart amount: ${cartResponse.cart.amount}');
-      print('Cart items: ${cartResponse.cart.item}');
+      
       return cartResponse;
     } else {
       // Handle error response
@@ -80,7 +78,41 @@ Future<String> removeFromCart(String itemId, String token) async {
   }
 }
 
-Future<String> submitCart(String token) async {
+
+
+
+
+
+Future<void> submitOrder(String token, String subids, String cart_receiver, String cart_phone,  {String cart_note = ""}) async {
+  final url = Uri.parse('https://www.kdlgia.com/consumer/submit_order');
+  final headers = {
+    'Mob-Token': token,
+    'Content-Type': 'application/x-www-form-urlencoded',
+  };
+  final body = {
+    'subids': subids,
+    'depids': '',
+    'cart_receiver': cart_receiver,
+    'cart_phone': cart_note,
+    'cart_note': 'a',
+  };
+
+  final response = await http.post(
+    url,
+    headers: headers,
+    body: body,
+  );
+
+  if (response.statusCode == 200) {
+    print(response.body);
+    print('Order submitted successfully');
+  } else {
+    print('Failed to submit order: ${response.statusCode}');
+    print('Response body: ${response.body}');
+  }
+}
+
+Future<String> Order(String token) async {
   String url =
       'https://www.kdlgia.com/consumer/order/?q_id_type=dia_report_no&q_ord_sn=&q_ord_tm1=&q_ord_tm2=&q_place=&q_ord_st=&q_perpage=25';
 

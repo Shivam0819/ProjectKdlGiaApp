@@ -3616,6 +3616,8 @@ class _SearchUiState extends State<SearchUi> {
                   // Add your onPressed callback here
                 },
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+
                   children: [
                     const Icon(Icons.search_rounded),
                     const SizedBox(
@@ -3653,7 +3655,10 @@ class _SearchUiState extends State<SearchUi> {
               const TextButton(
                 onPressed: null,
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+
                   children: [
+
                     Icon(Icons.save_rounded),
                     SizedBox(
                       height: 2,
@@ -3823,6 +3828,8 @@ class _SearchUiState extends State<SearchUi> {
                   });
                 },
                 child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+
                   children: [
                     Icon(Icons.border_clear_rounded),
                     SizedBox(

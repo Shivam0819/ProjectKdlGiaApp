@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kdlgia/navigation_pages/home_page.dart';
+import 'package:kdlgia/registeration/signUpApi.dart';
+import 'package:kdlgia/registeration/signup_page.dart';
 import 'package:kdlgia/style/constant.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -196,7 +198,12 @@ class LoginPage extends StatelessWidget {
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        return;
+                        fetchCaptcha().then((value) => {
+                          Navigator.push(context, MaterialPageRoute(builder: (context){
+                         return SignUpPage(imageToken: value,);
+                          
+                        }))
+                        });
                       },
                       child: const Card.filled(
                         color: Colors.white,

@@ -1,7 +1,10 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 class CartResponse {
   final int s;
   final String m;
-  final CartData cart;
+  final CartData? cart;
   final List<dynamic> post;
   final List<dynamic> get;
 
@@ -15,11 +18,11 @@ class CartResponse {
 
   factory CartResponse.fromJson(Map<String, dynamic> json) {
     return CartResponse(
-      s: json['s'],
-      m: json['m'],
-      cart: CartData.fromJson(json['cart']),
-      post: json['post'],
-      get: json['get'],
+      s: json['s'] ?? 0,
+      m: json['m'] ?? '',
+      cart: json['cart'] != null ? CartData.fromJson(json['cart']) : null,
+      post: json['post'] ?? [],
+      get: json['get'] ?? [],
     );
   }
 }
@@ -28,7 +31,7 @@ class CartData {
   final List<String> item;
   final int total;
   final String amount;
-  final FormData form;
+  final FormData? form;
 
   CartData({
     required this.item,
@@ -39,13 +42,16 @@ class CartData {
 
   factory CartData.fromJson(Map<String, dynamic> json) {
     return CartData(
-      item: List<String>.from(json['item']),
-      total: json['total'],
-      amount: json['amount'],
-      form: FormData.fromJson(json['form']),
+      item: List<String>.from(json['item'] ?? []),
+      total: json['total'] ?? 0,
+      amount: json['amount'] ?? '',
+      form: (json['form'] as List<dynamic>).isEmpty
+          ? null
+          : FormData.fromJson(json['form']),
     );
   }
 }
+
 
 class FormData {
   final String cartReceiver;
@@ -62,10 +68,10 @@ class FormData {
 
   factory FormData.fromJson(Map<String, dynamic> json) {
     return FormData(
-      cartReceiver: json['cart_receiver'],
-      cartPhone: json['cart_phone'],
-      cartAddress: json['cart_address'],
-      cartNote: json['cart_note'],
+      cartReceiver: json['cart_receiver'] ?? '',
+      cartPhone: json['cart_phone'] ?? '',
+      cartAddress: json['cart_address'] ?? '',
+      cartNote: json['cart_note'] ?? '',
     );
   }
 }
