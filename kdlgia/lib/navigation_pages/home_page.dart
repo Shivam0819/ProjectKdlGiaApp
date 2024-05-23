@@ -674,7 +674,7 @@ class _HomePageState extends State<HomePage> {
                                 child: Padding(
                                   padding: EdgeInsets.all(paddingCard),
                                   child: Card(
-                                    child: Image.asset("assets/logo/whatsup.png"),
+                                    child: Image.asset("assets/logo/whatsapp.png"),
                                   ),
                                 ),
                               ),
