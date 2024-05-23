@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kdlgia/api_assets_popup/imagePopup.dart';
 import 'package:kdlgia/cart/cartApi.dart';
 import 'package:kdlgia/diamond_search/searchDetail.dart';
+import 'package:kdlgia/navigation_pages/cart_page.dart';
 import 'package:kdlgia/search/apiDiamondSerach.dart';
 import 'package:kdlgia/search/diamondData.dart';
 import 'package:kdlgia/search/diamondDataDetail.dart';
@@ -419,9 +420,7 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                 ),
               ),
               TextButton(
-                onPressed: () {
-                  // Add functionality here
-                },
+                onPressed: null,
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -433,7 +432,12 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
               ),
               TextButton(
                 onPressed: () {
-                  setState(() {});
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CartPage(
+                                token: widget.token,
+                              )));
                 },
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,

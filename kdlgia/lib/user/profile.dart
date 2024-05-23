@@ -78,6 +78,7 @@ class _ProfilePageState extends State<ProfilePage> {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
             final userProfile = snapshot.data!;
+            print(snapshot.data);
             _realNameController.text = userProfile.userRealName;
             _genderController.text = userProfile.userGender ?? '';
             _phoneController.text = userProfile.userPhone ?? '';

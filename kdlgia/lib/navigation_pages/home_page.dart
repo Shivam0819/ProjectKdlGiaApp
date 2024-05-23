@@ -11,7 +11,9 @@ import 'package:kdlgia/style/cardDetail.dart';
 import 'package:kdlgia/style/constant.dart';
 import 'package:kdlgia/style/search_card_ui.dart';
 import 'package:kdlgia/style/textStyle.dart';
-import 'package:kdlgia/user/profile.dart'; // Import the search page
+import 'package:kdlgia/user/apiUserInfo.dart';
+import 'package:kdlgia/user/profile.dart';
+import 'package:kdlgia/user/userProfile.dart'; // Import the search page
 
 class HomePage extends StatefulWidget {
   final String token;
@@ -29,6 +31,7 @@ class _HomePageState extends State<HomePage> {
   bool userSummaruIsSelected = false;
   String searchByReferance = "id";
   late final TextEditingController _searchQuerry = TextEditingController();
+  late Future<UserProfile> _userProfileFuture;
 
   late Future<DiamondData> diamondsFuture;
   late Future<CartResponse> cartResponse;
@@ -36,8 +39,11 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    diamondsFuture = fetchDataSearchDiamond(widget.token, );
+    diamondsFuture = fetchDataSearchDiamond(
+      widget.token,
+    );
     cartResponse = showCarts(widget.token);
+    _userProfileFuture = ApiService.fetchUserProfile(widget.token);
   }
 
   @override
@@ -154,8 +160,9 @@ class _HomePageState extends State<HomePage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                SearchPage(token: widget.token,)));
+                            builder: (context) => SearchPage(
+                                  token: widget.token,
+                                )));
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(paddingCard),
@@ -175,25 +182,22 @@ class _HomePageState extends State<HomePage> {
                             colors: mainColor,
                             fontWeight: FontWeight.normal,
                           ),
-                          
-                          FutureBuilder(future: diamondsFuture, builder: (context, snapshot){
-                            if(snapshot.connectionState == ConnectionState.waiting){
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
-
-                            }else{
-                              return TextStyleHeader(
-                            text: snapshot.data!.total.toString(),
-                            colors: mainColor,
-                            fontWeight: FontWeight.normal,
-                          );
-
-                            }
-                          }
-                          
-                          )
-                          
+                          FutureBuilder(
+                              future: diamondsFuture,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                } else {
+                                  return TextStyleHeader(
+                                    text: snapshot.data!.total.toString(),
+                                    colors: mainColor,
+                                    fontWeight: FontWeight.normal,
+                                  );
+                                }
+                              })
                         ],
                       )),
                     ),
@@ -204,45 +208,46 @@ class _HomePageState extends State<HomePage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                CartPage(token: widget.token,)));
+                            builder: (context) => CartPage(
+                                  token: widget.token,
+                                )));
                   },
-               child:  const Padding(
-                  padding: EdgeInsets.all(paddingCard),
-                  child: Card(
-                    child: Center(
-                        child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.shopping_cart_checkout_outlined,
-                            size: 60, color: mainColor),
-                        TextStyleHeader(
-                          text: "Cart",
-                          colors: mainColor,
-                          fontWeight: FontWeight.normal,
-                        ),
-                        // FutureBuilder(future: cartResponse, builder: (context, snapshot){
-                        //     if(snapshot.connectionState == ConnectionState.waiting){
-                        //       return const Center(
-                        //         child: CircularProgressIndicator(),
-                        //       );
+                  child: const Padding(
+                    padding: EdgeInsets.all(paddingCard),
+                    child: Card(
+                      child: Center(
+                          child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.shopping_cart_checkout_outlined,
+                              size: 60, color: mainColor),
+                          TextStyleHeader(
+                            text: "Cart",
+                            colors: mainColor,
+                            fontWeight: FontWeight.normal,
+                          ),
+                          // FutureBuilder(future: cartResponse, builder: (context, snapshot){
+                          //     if(snapshot.connectionState == ConnectionState.waiting){
+                          //       return const Center(
+                          //         child: CircularProgressIndicator(),
+                          //       );
 
-                        //     }else{
-                        //       return TextStyleHeader(
-                        //     text: snapshot.data!.cart.item.length.toString(),
-                        //     colors: mainColor,
-                        //     fontWeight: FontWeight.normal,
-                        //   );
+                          //     }else{
+                          //       return TextStyleHeader(
+                          //     text: snapshot.data!.cart.item.length.toString(),
+                          //     colors: mainColor,
+                          //     fontWeight: FontWeight.normal,
+                          //   );
 
-                        //     }
-                        //   }
-                          
-                        //   )
-                      ],
-                    )),
+                          //     }
+                          //   }
+
+                          //   )
+                        ],
+                      )),
+                    ),
                   ),
-                ),
                 )
                 // Add more children as needed
               ],
@@ -269,14 +274,14 @@ class _HomePageState extends State<HomePage> {
                                 children: [
                                   const TextStyleHeader(
                                     text: "Referance Search",
-                                    colors:mainColor,
-                                        
+                                    colors: mainColor,
                                   ),
                                   const Spacer(), // Use Spacer widget to fill available space
                                   Icon(
                                     isExpanded
                                         ? Icons.arrow_upward_rounded
-                                        : Icons.arrow_downward_rounded,color: mainColor,
+                                        : Icons.arrow_downward_rounded,
+                                    color: mainColor,
                                   ),
                                 ],
                               ),
@@ -355,15 +360,18 @@ class _HomePageState extends State<HomePage> {
                                     // Add your search functionality here
                                     String querry =
                                         "q_id=${_searchQuerry.text.toString()}&q_id_type=${searchByReferance.toString()}";
-                                        showCarts(widget.token);
-                                    fetchDataSearchDiamond(widget.token, searchQuerry: querry)
+                                    showCarts(widget.token);
+                                    fetchDataSearchDiamond(widget.token,
+                                            searchQuerry: querry)
                                         .then((diamondData) {
-
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => SearchResultsTemp(
-                                            diamondData: diamondData, token: widget.token, querryUrl: querry,
+                                          builder: (context) =>
+                                              SearchResultsTemp(
+                                            diamondData: diamondData,
+                                            token: widget.token,
+                                            querryUrl: querry,
                                           ),
                                         ),
                                       );
@@ -480,7 +488,8 @@ class _HomePageState extends State<HomePage> {
                                   Icon(
                                     orderSummaryDetailIsSelected
                                         ? Icons.arrow_upward_rounded
-                                        : Icons.arrow_downward_rounded,color: mainColor,
+                                        : Icons.arrow_downward_rounded,
+                                    color: mainColor,
                                   ),
                                 ],
                               ),
@@ -494,7 +503,7 @@ class _HomePageState extends State<HomePage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                               Text(
+                              Text(
                                 "Order Summery will be here",
                                 style: TextStyle(
                                     fontSize: 15, fontWeight: FontWeight.bold),
@@ -538,7 +547,8 @@ class _HomePageState extends State<HomePage> {
                                   Icon(
                                     userSummaruIsSelected
                                         ? Icons.arrow_upward_rounded
-                                        : Icons.arrow_downward_rounded,color: mainColor,
+                                        : Icons.arrow_downward_rounded,
+                                    color: mainColor,
                                   ),
                                 ],
                               ),
@@ -571,145 +581,174 @@ class _HomePageState extends State<HomePage> {
             Padding(
               padding: const EdgeInsets.all(paddingCard),
               child: Card(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const TextStyleHeader(text: "Key Account Manager"),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment
-                          .start, // Align items to start and end
-                      children: [
-                        Padding(
-                            padding: const EdgeInsets.all(paddingCard),
-                            child: SizedBox(
-                                height: 60,
+                child: FutureBuilder<UserProfile>(
+                  future: _userProfileFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else {
+                      final userProfile = snapshot.data!;
+                      var salesPersonName = userProfile.salesPerson ?? '';
+                      var salesPersonaPhone =
+                          userProfile.salesPersonPhone ?? '';
+                      var salesPersonWexine =
+                          userProfile.salesPersonSkype ?? '';
+                      var salesPersonWhatsapp =
+                          userProfile.salesPersonWhatsapp ?? '';
+                      var salesPersonSkype = userProfile.salesSkype ?? '';
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const TextStyleHeader(text: "Key Account Manager"),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment
+                                .start, // Align items to start and end
+                            children: [
+                              Padding(
+                                  padding: const EdgeInsets.all(paddingCard),
+                                  child: SizedBox(
+                                      height: 60,
+                                      width: 60,
+                                      child: Card(
+                                        child: Image.asset(
+                                            "assets/Images/user.png"),
+                                      ))),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TextStyleHeader(
+                                    text: salesPersonName,
+                                    fontWeight: FontWeight.normal,
+                                    colors: Colors.black,
+                                  ),
+                                  const TextStyleHeader(
+                                      text: "Marketing Executive",
+                                      fontWeight: FontWeight.normal,
+                                      colors: Colors.black),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          // Mail******************
+                          InsideShadowCard(
+                              child: Row(
+                            children: [
+                              SizedBox(
                                 width: 60,
-                                child: Card(
-                                  child: Image.asset("assets/Images/user.png"),
-                                ))),
-                        const Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            TextStyleHeader(
-                              text: "Atish Shah",
-                              fontWeight: FontWeight.normal,
-                              colors: Colors.black,
+                                height: 60,
+                                child: Padding(
+                                  padding: EdgeInsets.all(paddingCard),
+                                  child: Card(
+                                    child: Image.asset("assets/logo/telephone.png"),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(paddingCard),
+                                child: Text(
+                                  salesPersonaPhone,
+                                  style: TextStyle(fontSize: 15.0),
+                                ),
+                              )
+                            ],
+                          )),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          // WhatSup ******************
+                          InsideShadowCard(
+                              child: Row(
+                            children: [
+                              SizedBox(
+                                width: 60,
+                                height: 60,
+                                child: Padding(
+                                  padding: EdgeInsets.all(paddingCard),
+                                  child: Card(
+                                    child: Image.asset("assets/logo/whatsup.png"),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(paddingCard),
+                                child: Text(
+                                  salesPersonWhatsapp,
+                                  style: TextStyle(fontSize: 15.0),
+                                ),
+                              )
+                            ],
+                          )),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          // Whatsup
+                          InsideShadowCard(
+                              child: Row(
+                            children: [
+                              SizedBox(
+                                width: 60,
+                                height: 60,
+                                child: Padding(
+                                  padding: EdgeInsets.all(paddingCard),
+                                  child: Card(
+                                    child: Image.asset("assets/logo/wechat.png"),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(paddingCard),
+                                child: Text(
+                                  salesPersonWexine,
+                                  style: TextStyle(fontSize: 15.0),
+                                ),
+                              )
+                            ],
+                          )),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          InsideShadowCard(
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 60,
+                                  height: 60,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(paddingCard),
+                                    child: Card(
+                                      child: Image.asset("assets/logo/skype.png"),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  // Expanded widget added here
+                                  child: Padding(
+                                    padding: EdgeInsets.all(paddingCard),
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Text(
+                                        salesPersonSkype, // Use null-aware operator to handle null value
+                                        style: TextStyle(fontSize: 15.0),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                            TextStyleHeader(
-                                text: "Marketing Executive",
-                                fontWeight: FontWeight.normal,
-                                colors: Colors.black),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    // Mail******************
-                    const InsideShadowCard(
-                        child: Row(
-                      children: [
-                        SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: Padding(
-                            padding: EdgeInsets.all(paddingCard),
-                            child: Card(
-                              child: Icon(Icons.mail),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(paddingCard),
-                          child: Text(
-                            "shah.darshil2299@gmail.com",
-                            style: TextStyle(fontSize: 15.0),
-                          ),
-                        )
-                      ],
-                    )),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    // WhatSup ******************
-                    const InsideShadowCard(
-                        child: Row(
-                      children: [
-                        SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: Padding(
-                            padding: EdgeInsets.all(paddingCard),
-                            child: Card(
-                              child: Icon(Icons.call),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(paddingCard),
-                          child: Text(
-                            "+91 9664280220",
-                            style: TextStyle(fontSize: 15.0),
-                          ),
-                        )
-                      ],
-                    )),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    // Whatsup
-                    const InsideShadowCard(
-                        child: Row(
-                      children: [
-                        SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: Padding(
-                            padding: EdgeInsets.all(paddingCard),
-                            child: Card(
-                              child: Icon(Icons.whatshot),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(paddingCard),
-                          child: Text(
-                            "shah.darshil2299@gmail.com",
-                            style: TextStyle(fontSize: 15.0),
-                          ),
-                        )
-                      ],
-                    )),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const InsideShadowCard(
-                        child: Row(
-                      children: [
-                        SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: Padding(
-                            padding: EdgeInsets.all(paddingCard),
-                            child: Card(
-                              child: Icon(Icons.near_me),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(paddingCard),
-                          child: Text(
-                            "Darshil Shah",
-                            style: TextStyle(fontSize: 15.0),
-                          ),
-                        )
-                      ],
-                    ))
-                  ],
+                          )
+                        ],
+                      );
+                    }
+                  },
                 ),
               ),
             ),
@@ -740,14 +779,14 @@ class _HomePageState extends State<HomePage> {
               TextButton(
                 onPressed: () {
                   Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            HomePage(token: widget.token,)));
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => HomePage(
+                                token: widget.token,
+                              )));
                 },
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-
                   children: [
                     Icon(Icons.home_rounded),
                     SizedBox(
@@ -760,10 +799,11 @@ class _HomePageState extends State<HomePage> {
               TextButton(
                 onPressed: () {
                   Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            SearchPage(token: widget.token,)));
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SearchPage(
+                                token: widget.token,
+                              )));
                 },
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -778,16 +818,15 @@ class _HomePageState extends State<HomePage> {
               ),
               TextButton(
                 onPressed: () {
-                 Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                CartPage(token: widget.token,)));
-                  
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CartPage(
+                                token: widget.token,
+                              )));
                 },
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-
                   children: [
                     Icon(Icons.shopping_cart_rounded),
                     SizedBox(
