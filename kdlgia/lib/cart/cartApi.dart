@@ -105,6 +105,9 @@ Future<void> submitOrder(String token, String subids, String cart_receiver, Stri
 
   if (response.statusCode == 200) {
     print(response.body);
+    final parsed = jsonDecode(response.body.toString());
+
+    print(parsed);
     print('Order submitted successfully');
   } else {
     print('Failed to submit order: ${response.statusCode}');
