@@ -3,6 +3,7 @@ import 'package:kdlgia/cart/cartApi.dart';
 import 'package:kdlgia/cart/cartData.dart';
 import 'package:kdlgia/navigation_pages/cart_page.dart';
 import 'package:kdlgia/navigation_pages/search_page.dart';
+import 'package:kdlgia/order_status/orderPage.dart';
 import 'package:kdlgia/registeration/login_page.dart';
 import 'package:kdlgia/search/apiDiamondSerach.dart';
 import 'package:kdlgia/search/diamondData.dart';
@@ -440,22 +441,27 @@ class _HomePageState extends State<HomePage> {
                   true, // Ensure the GridView occupies only the space it needs
               physics:
                   const NeverScrollableScrollPhysics(), // Disable scrolling if needed
-              children: const [
+              children:  [
                 Padding(
                   padding: EdgeInsets.all(paddingCard),
                   child: Card(
                     child: Center(child: TextStyleHeader(text: "Flewless")),
                   ),
                 ),
-                Padding(
+                InkWell(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>OrderPage(token: widget.token)));
+                  },
+                  child: Padding(
                   padding: EdgeInsets.all(paddingCard),
                   child: Card(
                     child: Center(
                         child: TextStyleHeader(
-                      text: "Wish List",
+                      text: "Order Status",
                     )),
                   ),
                 ),
+                )
 
                 // Add more children as needed
               ],

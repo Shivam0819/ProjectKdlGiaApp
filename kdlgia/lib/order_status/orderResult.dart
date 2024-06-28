@@ -1,87 +1,61 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:kdlgia/api_assets_popup/imagePopup.dart';
+import 'package:kdlgia/diamond_search/searchDetail.dart';
 import 'package:kdlgia/navigation_pages/cart_page.dart';
 import 'package:kdlgia/order_status/order_api.dart';
 import 'package:kdlgia/order_status/order_data.dart';
 import 'package:kdlgia/style/search_card_ui.dart';
+import 'package:kdlgia/style/styleTextSearchResult.dart';
 
 class OrderResult extends StatefulWidget {
   final String token;
   final String querryUrl;
+  final String headinAppBar;
 
   OrderResult({
     super.key,
     required this.token,
     required this.querryUrl,
+    required this.headinAppBar
   });
   @override
   _OrderResultState createState() => _OrderResultState();
 }
 
 class _OrderResultState extends State<OrderResult> {
-  late Map<int, bool> isCheckedMap =
-      {}; // Map to store isChecked state for each Diamond item
-  late Map<int, bool> isStaredMap = {};
-  bool _isExpanded = false;
-  int _currentPage = 1;
-  bool _isLoadingMore = false;
-  final ScrollController _scrollController = ScrollController();
+
+
   late final Future<List<Order>> _order;
-  late OrderData orderData;
+  late Future<OrderData> orderData;
 
   @override
   void initState() {
     super.initState();
-    _order = orderFatchApi(widget.token).then((value){
-       orderData =  value;
-       print(orderData);
-       print(orderData.order);
-       return orderData.order;
-    });
-    _scrollController.addListener(_onScroll);
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  void _onScroll() {
-    if (_scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent &&
-        !_isLoadingMore) {
-      _fetchMoreData();
-    }
-  }
-
-  Future<void> _fetchMoreData() async {
-    if (_currentPage < orderData.pages) {
-      setState(() {
-        _isLoadingMore = true;
-      });
-
-      _currentPage++;
-      // Simulate network request delay
-      await Future.delayed(Duration(seconds: 2));
-
-      // Fetch more data from the API and add it to the list
-      OrderData newDiamondData = await orderFatchApi(widget.token);
-      setState(() {
-        // _order(newDiamondData.order);
-        _isLoadingMore = false;
-      });
-    }
+    orderData = orderFatchApi(widget.token, searchQuerry:widget.querryUrl);
   }
 
 
 
-  void _toggleExpanded() {
-    setState(() {
-      _isExpanded = !_isExpanded;
-    });
+
+String getOrderStatus(String status) {
+  switch (status) {
+    case "2":
+      return 'Waiting For Pic';
+    case "3":
+      return 'Picked Up';
+    case "4":
+      return 'Completed';
+    case "20":
+      return 'Cancel';
+    case "21":
+      return 'Return';
+    default:
+      return 'Unknown Status';
   }
+}
+  
 
   @override
   Widget build(BuildContext context) {
@@ -97,16 +71,237 @@ class _OrderResultState extends State<OrderResult> {
             color: Colors.black, // Customize the color of the back button
           ),
         ),
-        title: Text("Result"),
+        title: Text(widget.headinAppBar),
         centerTitle: true,
       ),
-      body: FutureBuilder(future: _order, builder: (context, snapshot) {
+      body: FutureBuilder(future: orderData, builder: (context, snapshot) {
         if(snapshot.connectionState == ConnectionState.waiting){
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
+        }else if(snapshot.data!.order.isEmpty){
+          return const Center(child: Text("No Data Available"),);
         }else{
-          return Text("data");
+          return ListView.builder(
+              itemCount: snapshot.data!.order.length,
+              itemBuilder: (context, index) {
+                
+                final orderData = snapshot.data!.order[index];
+                return InkWell(
+                  onTap: () {
+                    // Navigator.push(context, MaterialPageRoute(builder: (context)=> SearchDetail(diamondDetail: diamond,)));
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(paddingCard),
+                    child: Card.filled(
+                      color: Colors.white,
+                      elevation: 7,
+                      borderOnForeground: false,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              // **********ClickBox and Star ************//
+                              Padding(
+                                padding: const EdgeInsets.only(right: paddingCard, left: paddingCard),
+                                child: Container(
+                                    child: Row(
+                                  children: [
+                                    StyledText(text:"Status: "),
+                                        
+                                    StyledText(text:getOrderStatus(orderData.ord_status))
+                                       
+                                    
+                                   
+                                  ],
+                                )),
+                              ),
+                              // ********** cert camera video ************//
+                              Padding(
+                                padding: const EdgeInsets.only(right:paddingCard, left: paddingCard),
+                                child: Container(
+                                  child: Row(
+                                    children: [
+                                      InkWell(
+                                        onTap: () {},
+                                        child: const SizedBox(
+                                          width: widthOfSearchResultCard,
+                                          height: heighOfSearchResultCard,
+                                          child: Card.filled(
+                                            color: Colors.white,
+                                            elevation: 7,
+                                            child: Icon(Icons.web_outlined),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              // Navigator.of(context).pop();
+                                              return ImagePopup(
+                                                  imageUrl:
+                                                      "https://kdna-image.starjew.com/${orderData.imageUrl}.jpg?imageView2/2/w/800/h/800/q/100/");
+                                            },
+                                          );
+                                        },
+                                        child: const SizedBox(
+                                          width: widthOfSearchResultCard,
+                                          height: heighOfSearchResultCard,
+                                          child: Card.filled(
+                                            color: Colors.white,
+                                            elevation: 7,
+                                            child:
+                                                Icon(Icons.camera_alt_outlined),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      InkWell(
+                                        onTap: () {},
+                                        child: const SizedBox(
+                                          width: widthOfSearchResultCard,
+                                          height: heighOfSearchResultCard,
+                                          child: Card.filled(
+                                            color: Colors.white,
+                                            elevation: 7,
+                                            child:
+                                                Icon(Icons.video_call_outlined),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Divider(color: Colors.grey),
+                          Padding(
+                            padding: const EdgeInsets.all(paddingCard),
+                            child: Table(
+                              defaultVerticalAlignment:
+                                  TableCellVerticalAlignment.intrinsicHeight,
+                              children: [
+                                TableRow(children: [
+                                  TableCell(
+                                      child: StyledText(
+                                          text:
+                                              "Order Id: ${orderData.ord_id}")),
+                                  TableCell(
+                                      child: StyledText(
+                                    text: "Disc%: ${orderData.back}",
+                                    color: Colors.redAccent,
+                                  )),
+                                ]),
+                                TableRow(children: [
+                                  TableCell(
+                                      child: StyledText(
+                                          text:
+                                              "${orderData.diaReport}: ${orderData.diaReportNo}")),
+                                  TableCell(
+                                      child: StyledText(
+                                    text: "Amount: ${orderData.dollar1}",
+                                    color: Colors.red,
+                                  )),
+                                ]),
+                              ],
+                            ),
+                          ),
+                          const Divider(color: Colors.grey),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: paddingCard,
+                                right: paddingCard,
+                                ),
+                            child: Table(
+                              defaultVerticalAlignment:
+                                  TableCellVerticalAlignment.middle,
+                              children: [
+                                TableRow(children: [
+                                  TableCell(
+                                      child: StyledText(
+                                          text: "Shp: ${orderData.diaShape}")),
+                                  TableCell(
+                                      child: StyledText(
+                                          text: "Carat: ${orderData.diaCarat}")),
+                                  TableCell(
+                                      child: StyledText(
+                                          text: "Color: ${orderData.diaColor}")),
+                                  TableCell(
+                                      child: StyledText(
+                                          text: "Clarity: ${orderData.diaClarity}")),
+                                ]),
+                                TableRow(children: [
+                                  TableCell(
+                                      child: StyledText(
+                                          text: "Cut: ${orderData.diaCut}")),
+                                  TableCell(
+                                      child: StyledText(
+                                          text: "Polish: ${orderData.diaPolish}")),
+                                  TableCell(
+                                      child: StyledText(
+                                          text: "Symm: ${orderData.diaSymmetry}")),
+                                  TableCell(
+                                      child: StyledText(
+                                          text:
+                                              "Fluoro: ${orderData.diaFluorescence}")),
+                                ]),
+                                TableRow(children: [
+                                  TableCell(
+                                      child: StyledText(
+                                          text: "Loc: ${orderData.diaPlace}")),
+                                  TableCell(
+                                      child: StyledText(
+                                          text: "Tbl : ${orderData.diaTable}")),
+                                  TableCell(
+                                      child: StyledText(
+                                          text: "Td: ${orderData.diaDepth}")),
+                                  TableCell(
+                                    child: StyledText(
+                                      text: "Rap: ${orderData.rap}",
+                                    ),
+                                  ),
+                                ]),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: paddingCard,
+                                right: paddingCard,
+                                bottom: paddingCard),
+                            child: Table(
+                              defaultVerticalAlignment:
+                                  TableCellVerticalAlignment.middle,
+                              children: [
+                                TableRow(children: [
+                                  TableCell(
+                                      child: StyledText(
+                                          text:
+                                              "Measurement: ${orderData.diaDiameter}")),
+                                ]),
+                              ],
+                            ),
+                          ),
+                         ],
+                ),
+              ),
+            ),
+          );
+        },
+      );
         }
       }),
       bottomNavigationBar: Padding(
@@ -141,9 +336,9 @@ class _OrderResultState extends State<OrderResult> {
                   ],
                 ),
               ),
-              TextButton(
+              const TextButton(
                 onPressed: null,
-                child: const Column(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.save_rounded),
@@ -177,3 +372,4 @@ class _OrderResultState extends State<OrderResult> {
     );
   }
 }
+

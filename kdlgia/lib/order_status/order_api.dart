@@ -4,10 +4,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:kdlgia/order_status/order_data.dart';
 
-Future<OrderData> orderFatchApi(String token) async {
+Future<OrderData> orderFatchApi(String token, {String searchQuerry = ""}) async {
   String url =
-      'https://www.kdlgia.com/consumer/order/?q_id_type=dia_report_no&q_ord_sn=&q_ord_tm1=&q_ord_tm2=&q_place=&q_ord_st=&q_perpage=25';
-
+      'https://www.kdlgia.com/consumer/order/?$searchQuerry&q_perpage=200';
+  print(url);
   try {
     http.Response response = await http.post(
       Uri.parse(url),
