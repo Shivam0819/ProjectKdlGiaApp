@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:kdlgia/navigation_pages/home_page.dart';
 import 'package:kdlgia/search/apiDiamondSerach.dart';
 import 'package:kdlgia/search/diamondData.dart';
 import 'package:kdlgia/search/diamondDataDetail.dart';
@@ -3591,6 +3592,23 @@ class _SearchUiState extends State<SearchUi> {
             children: [
               TextButton(
                 onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              HomePage(token: widget.token)));
+                },
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.home),
+                    SizedBox(height: 2),
+                    Text('Home'),
+                  ],
+                ),
+              ),
+              TextButton(
+                onPressed: () {
                   fetchDataSearchDiamond(widget.token, searchQuerry: buildQueryString())
                                         .then((diamondData) {
 
@@ -3652,21 +3670,7 @@ class _SearchUiState extends State<SearchUi> {
                   ],
                 ),
               ),
-              const TextButton(
-                onPressed: null,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-
-                  children: [
-
-                    Icon(Icons.save_rounded),
-                    SizedBox(
-                      height: 2,
-                    ), // Add some space between the icon and text
-                    Text('Save Search'),
-                  ],
-                ),
-              ),
+              
               TextButton(
                 onPressed: () {
                   // Add your onPressed callback here

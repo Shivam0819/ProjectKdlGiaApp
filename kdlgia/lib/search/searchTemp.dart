@@ -3,12 +3,15 @@ import 'package:kdlgia/api_assets_popup/imagePopup.dart';
 import 'package:kdlgia/cart/cartApi.dart';
 import 'package:kdlgia/diamond_search/searchDetail.dart';
 import 'package:kdlgia/navigation_pages/cart_page.dart';
+import 'package:kdlgia/navigation_pages/home_page.dart';
+import 'package:kdlgia/order_status/orderPage.dart';
 import 'package:kdlgia/search/apiDiamondSerach.dart';
 import 'package:kdlgia/search/diamondData.dart';
 import 'package:kdlgia/search/diamondDataDetail.dart';
 
 import 'package:kdlgia/style/search_card_ui.dart';
 import 'package:kdlgia/style/styleTextSearchResult.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SearchResultsTemp extends StatefulWidget {
   final DiamondData diamondData;
@@ -111,6 +114,14 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
     });
   }
 
+  _launchURL(String stockId) async {
+    final Uri url =
+        Uri.parse('https://www.gia.edu/report-check?reportno=$stockId');
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not launch');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -196,7 +207,6 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                                     } else {
                                       addToCart(diamond.id, widget.token);
                                       print("Called me to add!!");
-
                                     }
                                     setState(() {
                                       isStaredMap[index] = !isStared;
@@ -227,14 +237,16 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                             child: Row(
                               children: [
                                 InkWell(
-                                  onTap: () {},
+                                  onTap: () {
+                                    _launchURL(diamond.diaReportNo);
+                                  },
                                   child: const SizedBox(
                                     width: widthOfSearchResultCard,
                                     height: heighOfSearchResultCard,
                                     child: Card.filled(
                                       color: Colors.white,
                                       elevation: 7,
-                                      child: Icon(Icons.web_outlined),
+                                      child: Icon(Icons.class_rounded),
                                     ),
                                   ),
                                 ),
@@ -248,7 +260,6 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                                             imageUrl: diamond.imageUrl);
                                       },
                                     );
-                                    print(diamond.imageUrl);
                                   },
                                   child: const SizedBox(
                                     width: widthOfSearchResultCard,
@@ -408,7 +419,29 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
             children: [
               TextButton(
                 onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              HomePage(token: widget.token)));
+                },
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.home),
+                    SizedBox(height: 2),
+                    Text('Home'),
+                  ],
+                ),
+              ),
+              TextButton(
+                onPressed: () {
                   // Add functionality here
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              OrderPage(token: widget.token)));
                 },
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -416,17 +449,6 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                     Icon(Icons.shopify),
                     SizedBox(height: 2),
                     Text('Order'),
-                  ],
-                ),
-              ),
-              TextButton(
-                onPressed: null,
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.save_rounded),
-                    SizedBox(height: 2),
-                    Text('Save Search'),
                   ],
                 ),
               ),

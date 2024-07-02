@@ -4,6 +4,7 @@ import 'package:kdlgia/api_assets_popup/imagePopup.dart';
 import 'package:kdlgia/cart/cartApi.dart';
 import 'package:kdlgia/cart/cartData.dart';
 import 'package:kdlgia/diamond_search/searchDetail.dart';
+import 'package:kdlgia/navigation_pages/home_page.dart';
 import 'package:kdlgia/search/apiDiamondSerach.dart';
 import 'package:kdlgia/search/diamondData.dart';
 import 'package:kdlgia/style/search_card_ui.dart';
@@ -135,6 +136,23 @@ class _CartPageState extends State<CartPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
+               TextButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              HomePage(token: widget.token)));
+                },
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.home),
+                    SizedBox(height: 2),
+                    Text('Home'),
+                  ],
+                ),
+              ),
               TextButton(
                 onPressed: () {
                   _showOrderDialog(context, widget.token,checkItem.join(','), _futureCartResponse);
@@ -149,32 +167,20 @@ class _CartPageState extends State<CartPage> {
                   ],
                 ),
               ),
-              TextButton(
-                onPressed: () {
-                  // Add functionality here
-                },
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.save_rounded),
-                    SizedBox(height: 2),
-                    Text('Save Search'),
-                  ],
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  setState(() {});
-                },
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.delete),
-                    SizedBox(height: 2),
-                    Text('Cart'),
-                  ],
-                ),
-              ),
+             
+              // TextButton(
+              //   onPressed: () {
+              //     setState(() {});
+              //   },
+              //   child: const Column(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: [
+              //       Icon(Icons.delete),
+              //       SizedBox(height: 2),
+              //       Text('Remove'),
+              //     ],
+              //   ),
+              // ),
             ],
           ),
         ),

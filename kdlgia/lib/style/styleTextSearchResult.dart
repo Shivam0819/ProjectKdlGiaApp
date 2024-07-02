@@ -62,8 +62,8 @@ class StyledTextSearchDetail
   ({
     super.key,
     required this.text,
-    this.color = mainColor,
-    this.fontSize = 15,
+    this.color = const Color.fromARGB(175, 7, 0, 1),
+    this.fontSize = 12,
     this.fontWeight = FontWeight.normal,
     this.textAlign = TextAlign.start,
     this.textDecoration = TextDecoration.none,

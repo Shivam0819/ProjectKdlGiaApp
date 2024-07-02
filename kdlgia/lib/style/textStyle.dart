@@ -10,9 +10,9 @@ class TextStyleHeader extends StatelessWidget {
 
   const TextStyleHeader({super.key, 
     required this.text,
-    this.fontSizeIs = 18,
+    this.fontSizeIs = 14,
     this.colors = mainColor,
-    this.fontWeight = FontWeight.bold,
+    this.fontWeight = FontWeight.normal,
     this.textAlign = TextAlign.center
   });
 
