@@ -83,7 +83,7 @@ Future<String> removeFromCart(String itemId, String token) async {
 
 
 
-Future<void> submitOrder(String token, String subids, String cart_receiver, String cart_phone,  {String cart_note = ""}) async {
+Future<String> submitOrder(String token, String subids, String cart_receiver, String cart_phone,  {String cart_note = ""}) async {
   final url = Uri.parse('https://www.kdlgia.com/consumer/submit_order');
   final headers = {
     'Mob-Token': token,
@@ -108,10 +108,9 @@ Future<void> submitOrder(String token, String subids, String cart_receiver, Stri
     final parsed = jsonDecode(response.body.toString());
 
     print(parsed);
-    print('Order submitted successfully');
+    return 'Order submitted successfully';
   } else {
-    print('Failed to submit order: ${response.statusCode}');
-    print('Response body: ${response.body}');
+    return 'Failed to submit order: ${response.statusCode}';
   }
 }
 
@@ -127,12 +126,12 @@ Future<String> Order(String token) async {
 
     if (response.statusCode == 200) {
       // Handle success response
-      return 'Cart submitted successfully';
+      return 'Orders  successfully';
     } else {
       // Handle error response
-      throw Exception('Failed to submit cart');
+      throw Exception('Failed to submit orders');
     }
   } catch (e) {
-    throw Exception('Error submitting cart: $e');
+    throw Exception('Error submitting order: $e');
   }
 }

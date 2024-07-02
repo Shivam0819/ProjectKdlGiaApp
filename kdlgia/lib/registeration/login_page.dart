@@ -69,12 +69,11 @@ class LoginPage extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Card(
                 child: Image.asset(
                   'assets/Images/company_logo.png',
-                  height: 30,
+                  height: 40,
                 ),
-              ),
+          
             ),
             const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,7 +87,7 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "kdlgia17@gmail.com",
+                  "kdlsales18@gmail.com",
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 14,

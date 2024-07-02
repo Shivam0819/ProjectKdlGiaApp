@@ -79,6 +79,12 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
       });
     }
   }
+   _launchURLVideo(String videoUrl) async {
+   final Uri url = Uri.parse(videoUrl);
+   if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+        throw Exception('Could not launch');
+    }
+}
 
   // Future<List<Diamond>> fetchDiamondsFromApi(String url, int page, String token) async {
   //   // Your API call logic here
@@ -273,7 +279,9 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                                 ),
                                 const SizedBox(width: 10),
                                 InkWell(
-                                  onTap: () {},
+                                  onTap: () {
+                                     _launchURLVideo(diamond.movieUrl);
+                                  },
                                   child: const SizedBox(
                                     width: widthOfSearchResultCard,
                                     height: heighOfSearchResultCard,
@@ -419,18 +427,20 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
             children: [
               TextButton(
                 onPressed: () {
-                  Navigator.push(
+                 Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              HomePage(token: widget.token)));
+                          builder: (context) => HomePage(
+                                token: widget.token,
+                              )),(route) => false,);
                 },
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.home),
+                    Icon(Icons.home,),
                     SizedBox(height: 2),
                     Text('Home'),
+                    
                   ],
                 ),
               ),

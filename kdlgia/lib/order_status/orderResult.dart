@@ -8,6 +8,7 @@ import 'package:kdlgia/order_status/order_api.dart';
 import 'package:kdlgia/order_status/order_data.dart';
 import 'package:kdlgia/style/search_card_ui.dart';
 import 'package:kdlgia/style/styleTextSearchResult.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OrderResult extends StatefulWidget {
   final String token;
@@ -37,7 +38,13 @@ class _OrderResultState extends State<OrderResult> {
   }
 
 
-
+ _launchURL(String stockId) async {
+    final Uri url =
+        Uri.parse('https://www.gia.edu/report-check?reportno=$stockId');
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not launch');
+    }
+  }
 
 String getOrderStatus(String status) {
   switch (status) {
@@ -55,7 +62,12 @@ String getOrderStatus(String status) {
       return 'Unknown Status';
   }
 }
-  
+   _launchURLVideo(String videoUrl) async {
+   final Uri url = Uri.parse(videoUrl);
+   if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+        throw Exception('Could not launch');
+    }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -125,14 +137,16 @@ String getOrderStatus(String status) {
                                   child: Row(
                                     children: [
                                       InkWell(
-                                        onTap: () {},
+                                        onTap: () {
+                                          _launchURL(orderData.diaReportNo);
+                                        },
                                         child: const SizedBox(
                                           width: widthOfSearchResultCard,
                                           height: heighOfSearchResultCard,
                                           child: Card.filled(
                                             color: Colors.white,
                                             elevation: 7,
-                                            child: Icon(Icons.web_outlined),
+                                            child: Icon(Icons.class_rounded),
                                           ),
                                         ),
                                       ),
@@ -147,7 +161,7 @@ String getOrderStatus(String status) {
                                               // Navigator.of(context).pop();
                                               return ImagePopup(
                                                   imageUrl:
-                                                      "https://kdna-image.starjew.com/${orderData.imageUrl}.jpg?imageView2/2/w/800/h/800/q/100/");
+                                                      orderData.imageUrl);
                                             },
                                           );
                                         },
@@ -166,7 +180,9 @@ String getOrderStatus(String status) {
                                         width: 10,
                                       ),
                                       InkWell(
-                                        onTap: () {},
+                                        onTap: () {
+                                          _launchURLVideo(orderData.movieUrl);
+                                        },
                                         child: const SizedBox(
                                           width: widthOfSearchResultCard,
                                           height: heighOfSearchResultCard,

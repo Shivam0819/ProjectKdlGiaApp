@@ -1,7 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:kdlgia/navigation_pages/home_page.dart';
+import 'package:kdlgia/navigation_pages/search_page.dart';
 import 'package:kdlgia/search/apiDiamondSerach.dart';
 import 'package:kdlgia/search/diamondData.dart';
 import 'package:kdlgia/search/diamondDataDetail.dart';
@@ -95,8 +95,33 @@ class SearchUi extends StatefulWidget {
   String? shortCut3EXN;
   String? shortCut3VGN;
   String? locTransit;
+  String noBgm = "";
+  String avaiable = "";
+  String imageAvailable = "";
+  String movieAvaible = "";
+  String holdLoanDiamond = "";
+  String holdDiamond = "";
+  String loanDiamond = "";
+
+  String certificateAvailable = "";
+  String onBlackList = "";
+  String? priceFrom;
+  String? priceTo;
+  String? tableFrom;
+  String? tableTo;
+  String? depthFrom;
+  String? depthTo;
 
   // Define the corresponding isSelected properties as bool
+  bool noBgmboool = false;
+  bool isAvaiable = false;
+  bool isImage = false;
+  bool isMovie = false;
+  bool isCertificate = false;
+  bool isOnBlackList = false;
+  bool isHoldLoanDiamond = false;
+  bool isHoldDiamond = false;
+  bool isLoanDiamond = false;
 
   bool roundShpIsSelected = false;
   bool princeShpIsSelected = false;
@@ -186,6 +211,12 @@ class _SearchUiState extends State<SearchUi> {
 
   late TextEditingController _controllerCaratFrom;
   late TextEditingController _controllerCaratTo;
+  late TextEditingController _controllerPriceFrom;
+  late TextEditingController _controllerPriceTo;
+  late TextEditingController _controllerTableFrom;
+  late TextEditingController _controllerTableTo;
+  late TextEditingController _controllerDepthFrom;
+  late TextEditingController _controllerDepthTo;
   List<Diamond> resultFilterDiamond = [];
   String buildQueryString() {
     List<String?> shapes = [
@@ -321,12 +352,18 @@ class _SearchUiState extends State<SearchUi> {
         .where((shortcut) => shortcut != null && shortcut!.isNotEmpty)
         .join(',');
 
+    print(
+        "************************************************************************************");
+    print(widget.caratFrom);
+    print(
+        "************************************************************************************");
+
     String? querr =
-        'q_is_schv=1&q_shp=${shapesParam}&q_co=${colorsParam}&q_cl=${claritiesParam}&q_lab=${certsParam}&q_places=${locationsParam}&q_pol=${polishesParam}&q_sym=${symmetriesParam}&q_fl=${fluorParam}&q_carat1=${widget.caratFrom.toString()}&q_carat2=${widget.caratTo.toString()}&q_perpage=25&q_price1=&q_price2=&q_price_type=dollar&q_depth1=&q_depth2=&q_table1=&q_table2=';
+        'q_is_schv=1&q_shp=$shapesParam&q_co=$colorsParam&q_cl=$claritiesParam&q_lab=$certsParam&q_places=$locationsParam&q_pol=$polishesParam&q_sym=$symmetriesParam&q_fl=$fluorParam&q_carat1=${widget.caratFrom.toString()}&q_carat2=${widget.caratTo.toString()}&q_is_nobgm=${widget.noBgm}&q_is_available=${widget.avaiable}&q_is_image=${widget.imageAvailable}&q_is_movie=${widget.movieAvaible}&q_is_budget=${widget.certificateAvailable}&q_bkl=${widget.onBlackList}&q_ms=${widget.holdDiamond},${widget.loanDiamond}&q_price1=${widget.priceFrom == null ? "" : widget.priceFrom}&q_price2=${widget.priceTo == null ? "" : widget.priceTo}&q_price_type=dollar&q_depth1=${widget.depthFrom}&q_depth2=${widget.depthTo}&q_table1=${widget.tableFrom}&q_table2=${widget.tableTo}&q_perpage=25';
 
     //  "q_is_schv=1"
     // // "&q_shp=${shapesParam}"
-    // "&q_co=${colorsParam}"
+    // "&q_co=${colorsParam}"ms
     // // "&q_cl=${claritiesParam}"
     // // "&q_lab=${certsParam}"
     // // "&q_carat1=${widget.caratFrom ?? ''}"
@@ -353,6 +390,12 @@ class _SearchUiState extends State<SearchUi> {
     super.initState();
     _controllerCaratFrom = TextEditingController();
     _controllerCaratTo = TextEditingController();
+    _controllerPriceFrom = TextEditingController();
+    _controllerPriceTo = TextEditingController();
+    _controllerTableFrom = TextEditingController();
+    _controllerTableTo = TextEditingController();
+    _controllerDepthFrom = TextEditingController();
+    _controllerDepthTo = TextEditingController();
     diamondsFuture = fetchDataSearchDiamond(widget.token);
   }
 
@@ -360,6 +403,12 @@ class _SearchUiState extends State<SearchUi> {
   void dispose() {
     _controllerCaratFrom.dispose();
     _controllerCaratTo.dispose();
+    _controllerPriceFrom.dispose();
+    _controllerPriceTo.dispose();
+    _controllerTableFrom.dispose();
+    _controllerTableTo.dispose();
+    _controllerDepthFrom.dispose();
+    _controllerDepthTo.dispose();
     super.dispose();
   }
 
@@ -3174,145 +3223,101 @@ class _SearchUiState extends State<SearchUi> {
                       ),
                     ),
                   ),
-                  //************BGM **************//
-                  SizedBox(
-                    height:
-                        textSingleContainerHight, // Provide a fixed height or other constraints
-                    child: Container(
-                      height: textSingleCardHight,
-                      padding: const EdgeInsets.all(paddingCard),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "BGM",
-                            style: TextStyle(
-                                fontSize: fontSizeHeading,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 5),
-                          Expanded(
-                            child: ListView(
-                              padding: const EdgeInsets.all(2),
-                              scrollDirection: Axis.horizontal,
-                              children: [
-                                //********* YES *********//
-                                SizedBox(
-                                  width: commonCardWidth4Latter,
-                                  child: Card(
-                                    elevation: elevationOfCard,
-                                    margin: const EdgeInsets.all(paddingCard),
-                                    color: widget.bjmYesIsSelected
-                                        ? mainColor
-                                        : null, // Set color based on isSelected flag
-                                    child: InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          widget.bjmYesIsSelected = !widget
-                                              .bjmYesIsSelected; // Toggle isSelected flag
-                                        });
-                                        widget.bjmYes = widget.bjmYesIsSelected
-                                            ? "BGM"
-                                            : null;
-                                        fetchDataSearchDiamond(widget.token,
-                                            searchQuerry: buildQueryString());
-                                      },
-                                      child: const Padding(
-                                        padding: EdgeInsets.all(
-                                            paddingFullSearchWidget),
-                                        child: Center(
-                                          child:
-                                              // Changed to height for vertical spacing
-                                              Text(
-                                            "BGM",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                //********* NO *********//
-                                SizedBox(
-                                  width: commonCardWidth4Latter,
-                                  child: Card(
-                                    elevation: elevationOfCard,
-                                    margin: const EdgeInsets.all(paddingCard),
-                                    color: widget.bjmNoIsSelected
-                                        ? mainColor
-                                        : null, // Set color based on isSelected flag
-                                    child: InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          widget.bjmNoIsSelected = !widget
-                                              .bjmNoIsSelected; // Toggle isSelected flag
-                                        });
-                                        widget.bjmNo = widget.bjmNoIsSelected
-                                            ? "BGM NO"
-                                            : null;
-                                        fetchDataSearchDiamond(widget.token,
-                                            searchQuerry: buildQueryString());
-                                      },
-                                      child: const Padding(
-                                        padding: EdgeInsets.all(
-                                            paddingFullSearchWidget),
-                                        child: Center(
-                                          child:
-                                              // Changed to height for vertical spacing
-                                              Text(
-                                            "BGM NO",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
 
-                                // //********* NONE *********//
-                                // Container(
-                                //   width: commonCardWidth2Latter,
-                                //   child: Card(
-                                //     elevation: 7,
-                                //     margin: EdgeInsets.all(paddingCard),
-                                //     color: widget.cutNoneIsSelected
-                                //         ? mainColor
-                                //         : null, // Set color based on isSelected flag
-                                //     child: InkWell(
-                                //       onTap: () {
-                                //         setState(() {
-                                //           widget.cutNoneIsSelected = !widget
-                                //               .cutNoneIsSelected; // Toggle isSelected flag
-                                //         });
-                                //         widget.cutNone = widget.cutNoneIsSelected
-                                //             ? "NN"
-                                //             : null;
-                                //       },
-                                //       child: Padding(
-                                //         padding: const EdgeInsets.all(
-                                //             paddingFullSearchWidget),
-                                //         child: Center(
-                                //           child:
-                                //               // Changed to height for vertical spacing
-                                //               Text(
-                                //             "NN",
-                                //             style: TextStyle(
-                                //                 fontWeight: FontWeight.bold),
-                                //           ),
-                                //         ),
-                                //       ),
-                                //     ),
-                                //   ),
-                                // ),
+                  //************Image,Video & certificate**************//
+                  Card(
+                      elevation: elevationOfCard,
+                      margin: const EdgeInsets.all(paddingCard),
+                      // Set color based on isSelected flag
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(paddingCard),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                //             image Available
+
+                                const Text(
+                                  "Image",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(width: 5),
+                                Checkbox(
+                                  value: widget.isImage,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      widget.isImage = value!;
+                                      widget.imageAvailable =
+                                          widget.isImage ? "1" : "";
+                                      fetchDataSearchDiamond(widget.token,
+                                          searchQuerry: buildQueryString());
+                                    });
+                                  },
+                                )
+                              ],
+                            ),
+                          ),
+                          //             Video Available
+
+                          Container(
+                            padding: const EdgeInsets.all(paddingCard),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  "Video",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(width: 5),
+                                Checkbox(
+                                  value: widget.isMovie,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      widget.isMovie = value!;
+                                      widget.movieAvaible =
+                                          widget.isMovie ? "1" : "";
+                                      fetchDataSearchDiamond(widget.token,
+                                          searchQuerry: buildQueryString());
+                                    });
+                                  },
+                                )
+                              ],
+                            ),
+                          ),
+                          //             Certificate available
+                          Container(
+                            padding: const EdgeInsets.all(paddingCard),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  "Cert",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(width: 5),
+                                Checkbox(
+                                  value: widget.isCertificate,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      widget.isCertificate = value!;
+                                      widget.certificateAvailable =
+                                          widget.noBgmboool ? "1" : "";
+                                      fetchDataSearchDiamond(widget.token,
+                                          searchQuerry: buildQueryString());
+                                    });
+                                  },
+                                )
                               ],
                             ),
                           ),
                         ],
-                      ),
-                    ),
-                  ),
+                      )),
+
                   //************Location **************//
                   SizedBox(
                     height:
@@ -3564,6 +3569,425 @@ class _SearchUiState extends State<SearchUi> {
                       ),
                     ),
                   ),
+
+                  // Hello world
+
+//************BGM & Not in Black list**************//
+
+                  Card(
+                      elevation: elevationOfCard,
+                      margin: const EdgeInsets.all(paddingCard),
+                      // Set color based on isSelected flag
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          // NoBGm
+                          Container(
+                            padding: const EdgeInsets.all(paddingCard),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  "No BGM",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(width: 5),
+                                Checkbox(
+                                  value: widget.noBgmboool,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      widget.noBgmboool = value!;
+                                      widget.noBgm =
+                                          widget.noBgmboool ? "1" : "";
+                                      fetchDataSearchDiamond(widget.token,
+                                          searchQuerry: buildQueryString());
+                                    });
+                                  },
+                                )
+                              ],
+                            ),
+                          ),
+                          //Not in blacklist
+
+                          Container(
+                            padding: const EdgeInsets.all(paddingCard),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  "Not BlackList",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(width: 5),
+                                Checkbox(
+                                  value: widget.isOnBlackList,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      widget.isOnBlackList = value!;
+                                      widget.onBlackList =
+                                          widget.noBgmboool ? "1" : "";
+                                      fetchDataSearchDiamond(widget.token,
+                                          searchQuerry: buildQueryString());
+                                    });
+                                  },
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      )),
+                  //************Hold and Loan Diamond**************//
+                  Card(
+                      elevation: elevationOfCard,
+                      margin: const EdgeInsets.all(paddingCard),
+                      // Set color based on isSelected flag
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(paddingCard),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                //Hold Diamond
+
+                                const Text(
+                                  "My Hold",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(width: 5),
+                                Checkbox(
+                                  value: widget.isHoldDiamond,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      widget.isHoldDiamond = value!;
+                                      widget.holdDiamond =
+                                          widget.isHoldDiamond ? "3" : "";
+                                      fetchDataSearchDiamond(widget.token,
+                                          searchQuerry: buildQueryString());
+                                    });
+                                  },
+                                )
+                              ],
+                            ),
+                          ),
+                          //             Video Available
+
+                          Container(
+                            padding: const EdgeInsets.all(paddingCard),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  "My Memo",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(width: 5),
+                                Checkbox(
+                                  value: widget.isLoanDiamond,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      widget.isLoanDiamond = value!;
+                                      widget.loanDiamond =
+                                          widget.isLoanDiamond ? "2" : "";
+                                      fetchDataSearchDiamond(widget.token,
+                                          searchQuerry: buildQueryString());
+                                    });
+                                  },
+                                )
+                              ],
+                            ),
+                          ),
+                          //             Certificate available
+                        ],
+                      )),
+
+                  // Price
+                  SizedBox(
+                    height: 130,
+                    child: Padding(
+                      padding: const EdgeInsets.all(paddingCard),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Price",
+                            style: TextStyle(
+                              fontSize: fontSizeHeading,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Card(
+                                  elevation: elevationOfCard,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: TextField(
+                                      controller: _controllerPriceFrom,
+                                      cursorWidth: 2.0,
+                                      keyboardType:
+                                          const TextInputType.numberWithOptions(
+                                              decimal: true),
+                                      decoration: const InputDecoration(
+                                        border: InputBorder.none,
+                                        labelText: 'From',
+                                        hintText: '0.0',
+                                      ),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          widget.priceFrom =
+                                              _controllerPriceFrom.text
+                                                  .toString();
+                                          print(widget.priceFrom);
+                                          fetchDataSearchDiamond(widget.token,
+                                              searchQuerry: buildQueryString());
+                                          ; // Trigger filter function after updating the value
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Card(
+                                  elevation: elevationOfCard,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: TextField(
+                                      controller: _controllerPriceTo,
+                                      cursorWidth: 2.0,
+                                      keyboardType:
+                                          const TextInputType.numberWithOptions(
+                                              decimal: true),
+                                      decoration: const InputDecoration(
+                                        border: InputBorder.none,
+                                        labelText: 'To',
+                                        hintText: '0.0',
+                                      ),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          widget.priceTo = _controllerPriceTo
+                                              .text
+                                              .toString();
+                                          fetchDataSearchDiamond(widget.token,
+                                              searchQuerry: buildQueryString());
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // Table
+                  SizedBox(
+                    height: 130,
+                    child: Padding(
+                      padding: const EdgeInsets.all(paddingCard),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Table %",
+                            style: TextStyle(
+                              fontSize: fontSizeHeading,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Card(
+                                  elevation: elevationOfCard,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: TextField(
+                                      controller: _controllerTableFrom,
+                                      cursorWidth: 2.0,
+                                      keyboardType:
+                                          const TextInputType.numberWithOptions(
+                                              decimal: true),
+                                      decoration: const InputDecoration(
+                                        border: InputBorder.none,
+                                        labelText: 'From',
+                                        hintText: '0.0',
+                                      ),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          widget.tableFrom =
+                                              _controllerTableFrom.text
+                                                  .toString();
+                                          fetchDataSearchDiamond(widget.token,
+                                              searchQuerry: buildQueryString());
+                                          ; // Trigger filter function after updating the value
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Card(
+                                  elevation: elevationOfCard,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: TextField(
+                                      controller: _controllerTableTo,
+                                      cursorWidth: 2.0,
+                                      keyboardType:
+                                          const TextInputType.numberWithOptions(
+                                              decimal: true),
+                                      decoration: const InputDecoration(
+                                        border: InputBorder.none,
+                                        labelText: 'To',
+                                        hintText: '0.0',
+                                      ),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          widget.tableTo = _controllerTableTo
+                                              .text
+                                              .toString();
+                                          fetchDataSearchDiamond(widget.token,
+                                              searchQuerry: buildQueryString());
+                                          ;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // Depth
+                  SizedBox(
+                    height: 130,
+                    child: Padding(
+                      padding: const EdgeInsets.all(paddingCard),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Depth %",
+                            style: TextStyle(
+                              fontSize: fontSizeHeading,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Card(
+                                  elevation: elevationOfCard,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: TextField(
+                                      controller: _controllerDepthFrom,
+                                      cursorWidth: 2.0,
+                                      keyboardType:
+                                          const TextInputType.numberWithOptions(
+                                              decimal: true),
+                                      decoration: const InputDecoration(
+                                        border: InputBorder.none,
+                                        labelText: 'From',
+                                        hintText: '0.0',
+                                      ),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          widget.depthFrom =
+                                              _controllerDepthFrom.text
+                                                  .toString();
+                                          fetchDataSearchDiamond(widget.token,
+                                              searchQuerry: buildQueryString());
+                                          ; // Trigger filter function after updating the value
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Card(
+                                  elevation: elevationOfCard,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: TextField(
+                                      controller: _controllerDepthTo,
+                                      cursorWidth: 2.0,
+                                      keyboardType:
+                                          const TextInputType.numberWithOptions(
+                                              decimal: true),
+                                      decoration: const InputDecoration(
+                                        border: InputBorder.none,
+                                        labelText: 'To',
+                                        hintText: '0.0',
+                                      ),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          widget.depthTo = _controllerDepthTo
+                                              .text
+                                              .toString();
+                                          fetchDataSearchDiamond(widget.token,
+                                              searchQuerry: buildQueryString());
+                                          ;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -3592,11 +4016,14 @@ class _SearchUiState extends State<SearchUi> {
             children: [
               TextButton(
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              HomePage(token: widget.token)));
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HomePage(
+                              token: widget.token,
+                            )),
+                    (route) => false,
+                  );
                 },
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -3609,33 +4036,33 @@ class _SearchUiState extends State<SearchUi> {
               ),
               TextButton(
                 onPressed: () {
-                  fetchDataSearchDiamond(widget.token, searchQuerry: buildQueryString())
-                                        .then((diamondData) {
-
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => SearchResultsTemp(
-                                            diamondData: diamondData, token: widget.token, querryUrl: buildQueryString(),
-                                          ),
-                                        ),
-                                      );
-                                    }).catchError((error) {
-                                      // Handle error
-                                      print('Error: $error');
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                              'An error occurred. Please try again later.'),
-                                        ),
-                                      );
-                                    });
+                  fetchDataSearchDiamond(widget.token,
+                          searchQuerry: buildQueryString())
+                      .then((diamondData) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SearchResultsTemp(
+                          diamondData: diamondData,
+                          token: widget.token,
+                          querryUrl: buildQueryString(),
+                        ),
+                      ),
+                    );
+                  }).catchError((error) {
+                    // Handle error
+                    print('Error: $error');
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content:
+                            Text('An error occurred. Please try again later.'),
+                      ),
+                    );
+                  });
                   // Add your onPressed callback here
                 },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-
                   children: [
                     const Icon(Icons.search_rounded),
                     const SizedBox(
@@ -3650,15 +4077,12 @@ class _SearchUiState extends State<SearchUi> {
                             return const Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                 Text("Search("),
-
+                                  Text("Search("),
                                   Center(
                                     child: CircularProgressIndicator(
                                         strokeWidth: 3.0),
                                   ),
-                                Text(")"),
-
-                                  
+                                  Text(")"),
                                 ]);
                           } else if (snapshot.hasError) {
                             return Text('Error: ${snapshot.error}');
@@ -3670,170 +4094,198 @@ class _SearchUiState extends State<SearchUi> {
                   ],
                 ),
               ),
-              
               TextButton(
                 onPressed: () {
+                  Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SearchPage(
+                                  token: widget.token,
+                                )));
                   // Add your onPressed callback here
-                  setState(() {
-                    widget.roundShpIsSelected = false;
-                    widget.roundShp = null;
-                    widget.princeShpIsSelected = false;
-                    widget.princeShp = null;
-                    widget.emraldShpIsSelected = false;
-                    widget.emraldShp = null;
-                    widget.ovalShpIsSelected = false;
-                    widget.ovalShp = null;
-                    widget.radiantShpIsSelected = false;
-                    widget.radiantShp = null;
-                    widget.pearShpIsSelected = false;
-                    widget.pearShp = null;
-                    widget.marquiseShpIsSelected = false;
-                    widget.marquiseShp = null;
-                    widget.heartShpIsSelected = false;
-                    widget.heartShp = null;
-                    widget.cushionShpIsSelected = false;
-                    widget.cushionShp = null;
-                    widget.othersShpIsSelected = false;
-                    widget.othersShp = null;
-                    widget.triangleShpIsSelected = false;
-                    widget.triangleShp = null;
-                    widget.caratIsSelected = false;
-                    widget.carat = null;
-                    widget.caratFromIsSelected = false;
-                    widget.caratFrom = null;
-                    widget.caratToIsSelected = false;
-                    widget.caratTo = null;
-                    widget.colDIsSelected = false;
-                    widget.colD = null;
-                    widget.colEIsSelected = false;
-                    widget.colE = null;
-                    widget.colFIsSelected = false;
-                    widget.colF = null;
-                    widget.colGIsSelected = false;
-                    widget.colG = null;
-                    widget.colHIsSelected = false;
-                    widget.colH = null;
-                    widget.colIIsSelected = false;
-                    widget.colI = null;
-                    widget.colJIsSelected = false;
-                    widget.colJ = null;
-                    widget.colKIsSelected = false;
-                    widget.colK = null;
-                    widget.colLIsSelected = false;
-                    widget.colL = null;
-                    widget.colMIsSelected = false;
-                    widget.colM = null;
-                    widget.colNIsSelected = false;
-                    widget.colN = null;
-                    widget.colO_PIsSelected = false;
-                    widget.colO_P = null;
-                    widget.colQ_RIsSelected = false;
-                    widget.colQ_R = null;
-                    widget.colS_TIsSelected = false;
-                    widget.colS_T = null;
-                    widget.colU_VIsSelected = false;
-                    widget.colU_V = null;
-                    widget.colW_ZIsSelected = false;
-                    widget.colW_Z = null;
-                    widget.claFlIsSelected = false;
-                    widget.claFl = null;
-                    widget.claIfIsSelected = false;
-                    widget.claIf = null;
-                    widget.claVvs1IsSelected = false;
-                    widget.claVvs1 = null;
-                    widget.claVvs2IsSelected = false;
-                    widget.claVvs2 = null;
-                    widget.claVs1IsSelected = false;
-                    widget.claVs1 = null;
-                    widget.claVs2IsSelected = false;
-                    widget.claVs2 = null;
-                    widget.claSi1IsSelected = false;
-                    widget.claSi1 = null;
-                    widget.claSi2IsSelected = false;
-                    widget.claSi2 = null;
-                    widget.claSi3IsSelected = false;
-                    widget.claSi3 = null;
-                    widget.claI1IsSelected = false;
-                    widget.claI1 = null;
-                    widget.claI2IsSelected = false;
-                    widget.claI2 = null;
-                    widget.cutExIsSelected = false;
-                    widget.cutEx = null;
-                    widget.cutVgIsSelected = false;
-                    widget.cutVg = null;
-                    widget.cutGdIsSelected = false;
-                    widget.cutGd = null;
-                    widget.cutFrIsSelected = false;
-                    widget.cutFr = null;
-                    widget.cutPrIsSelected = false;
-                    widget.cutPr = null;
-                    widget.cutNoneIsSelected = false;
-                    widget.cutNone = null;
-                    widget.polExIsSelected = false;
-                    widget.polEx = null;
-                    widget.polVgIsSelected = false;
-                    widget.polVg = null;
-                    widget.polGdIsSelected = false;
-                    widget.polGd = null;
-                    widget.polFrIsSelected = false;
-                    widget.polFr = null;
-                    widget.polPrIsSelected = false;
-                    widget.polPr = null;
-                    widget.symExIsSelected = false;
-                    widget.symEx = null;
-                    widget.symVgIsSelected = false;
-                    widget.symVg = null;
-                    widget.symGdIsSelected = false;
-                    widget.symGd = null;
-                    widget.symFrIsSelected = false;
-                    widget.symFr = null;
-                    widget.symPrIsSelected = false;
-                    widget.symPr = null;
-                    widget.flNIsSelected = false;
-                    widget.flN = null;
-                    widget.flFIsSelected = false;
-                    widget.flF = null;
-                    widget.flMIsSelected = false;
-                    widget.flM = null;
-                    widget.flSIsSelected = false;
-                    widget.flS = null;
-                    widget.flVsIsSelected = false;
-                    widget.flVs = null;
-                    widget.certGiaIsSelected = false;
-                    widget.certGia = null;
-                    widget.certIgiIsSelected = false;
-                    widget.certIgi = null;
-                    widget.certHrdIsSelected = false;
-                    widget.certHrd = null;
-                    widget.certNgtcIsSelected = false;
-                    widget.certNgtc = null;
-                    widget.bjmYesIsSelected = false;
-                    widget.bjmYes = null;
-                    widget.bjmNoIsSelected = false;
-                    widget.bjmNo = null;
-                    widget.locIndiaIsSelected = false;
-                    widget.locIndia = null;
-                    widget.locChinaIsSelected = false;
-                    widget.locChina = null;
-                    widget.locHkIsSelected = false;
-                    widget.locHk = null;
-                    widget.locSzIsSelected = false;
-                    widget.locSz = null;
-                    widget.locH_KIsSelected = false;
-                    widget.locH_K = null;
-                    widget.locTransitIsSelected = false;
-                    widget.locTransit = null;
-                    widget.shortCut3EXNIsSelected = false;
-                    widget.shortCut3EXN = null;
-                    widget.shortCut3VGNIsSelected = false;
-                    widget.shortCut3VGN = null;
-                    fetchDataSearchDiamond(widget.token,
-                        searchQuerry: buildQueryString());
-                  });
+                  // setState(() {
+                  //   widget.roundShpIsSelected = false;
+                  //   widget.roundShp = null;
+                  //   widget.princeShpIsSelected = false;
+                  //   widget.princeShp = null;
+                  //   widget.emraldShpIsSelected = false;
+                  //   widget.emraldShp = null;
+                  //   widget.ovalShpIsSelected = false;
+                  //   widget.ovalShp = null;
+                  //   widget.radiantShpIsSelected = false;
+                  //   widget.radiantShp = null;
+                  //   widget.pearShpIsSelected = false;
+                  //   widget.pearShp = null;
+                  //   widget.marquiseShpIsSelected = false;
+                  //   widget.marquiseShp = null;
+                  //   widget.heartShpIsSelected = false;
+                  //   widget.heartShp = null;
+                  //   widget.cushionShpIsSelected = false;
+                  //   widget.cushionShp = null;
+                  //   widget.othersShpIsSelected = false;
+                  //   widget.othersShp = null;
+                  //   widget.triangleShpIsSelected = false;
+                  //   widget.triangleShp = null;
+                  //   widget.caratIsSelected = false;
+                  //   widget.carat = null;
+                  //   widget.caratFromIsSelected = false;
+                  //   widget.caratFrom = null;
+                  //   widget.caratToIsSelected = false;
+                  //   widget.caratTo = null;
+                  //   widget.colDIsSelected = false;
+                  //   widget.colD = null;
+                  //   widget.colEIsSelected = false;
+                  //   widget.colE = null;
+                  //   widget.colFIsSelected = false;
+                  //   widget.colF = null;
+                  //   widget.colGIsSelected = false;
+                  //   widget.colG = null;
+                  //   widget.colHIsSelected = false;
+                  //   widget.colH = null;
+                  //   widget.colIIsSelected = false;
+                  //   widget.colI = null;
+                  //   widget.colJIsSelected = false;
+                  //   widget.colJ = null;
+                  //   widget.colKIsSelected = false;
+                  //   widget.colK = null;
+                  //   widget.colLIsSelected = false;
+                  //   widget.colL = null;
+                  //   widget.colMIsSelected = false;
+                  //   widget.colM = null;
+                  //   widget.colNIsSelected = false;
+                  //   widget.colN = null;
+                  //   widget.colO_PIsSelected = false;
+                  //   widget.colO_P = null;
+                  //   widget.colQ_RIsSelected = false;
+                  //   widget.colQ_R = null;
+                  //   widget.colS_TIsSelected = false;
+                  //   widget.colS_T = null;
+                  //   widget.colU_VIsSelected = false;
+                  //   widget.colU_V = null;
+                  //   widget.colW_ZIsSelected = false;
+                  //   widget.colW_Z = null;
+                  //   widget.claFlIsSelected = false;
+                  //   widget.claFl = null;
+                  //   widget.claIfIsSelected = false;
+                  //   widget.claIf = null;
+                  //   widget.claVvs1IsSelected = false;
+                  //   widget.claVvs1 = null;
+                  //   widget.claVvs2IsSelected = false;
+                  //   widget.claVvs2 = null;
+                  //   widget.claVs1IsSelected = false;
+                  //   widget.claVs1 = null;
+                  //   widget.claVs2IsSelected = false;
+                  //   widget.claVs2 = null;
+                  //   widget.claSi1IsSelected = false;
+                  //   widget.claSi1 = null;
+                  //   widget.claSi2IsSelected = false;
+                  //   widget.claSi2 = null;
+                  //   widget.claSi3IsSelected = false;
+                  //   widget.claSi3 = null;
+                  //   widget.claI1IsSelected = false;
+                  //   widget.claI1 = null;
+                  //   widget.claI2IsSelected = false;
+                  //   widget.claI2 = null;
+                  //   widget.cutExIsSelected = false;
+                  //   widget.cutEx = null;
+                  //   widget.cutVgIsSelected = false;
+                  //   widget.cutVg = null;
+                  //   widget.cutGdIsSelected = false;
+                  //   widget.cutGd = null;
+                  //   widget.cutFrIsSelected = false;
+                  //   widget.cutFr = null;
+                  //   widget.cutPrIsSelected = false;
+                  //   widget.cutPr = null;
+                  //   widget.cutNoneIsSelected = false;
+                  //   widget.cutNone = null;
+                  //   widget.polExIsSelected = false;
+                  //   widget.polEx = null;
+                  //   widget.polVgIsSelected = false;
+                  //   widget.polVg = null;
+                  //   widget.polGdIsSelected = false;
+                  //   widget.polGd = null;
+                  //   widget.polFrIsSelected = false;
+                  //   widget.polFr = null;
+                  //   widget.polPrIsSelected = false;
+                  //   widget.polPr = null;
+                  //   widget.symExIsSelected = false;
+                  //   widget.symEx = null;
+                  //   widget.symVgIsSelected = false;
+                  //   widget.symVg = null;
+                  //   widget.symGdIsSelected = false;
+                  //   widget.symGd = null;
+                  //   widget.symFrIsSelected = false;
+                  //   widget.symFr = null;
+                  //   widget.symPrIsSelected = false;
+                  //   widget.symPr = null;
+                  //   widget.flNIsSelected = false;
+                  //   widget.flN = null;
+                  //   widget.flFIsSelected = false;
+                  //   widget.flF = null;
+                  //   widget.flMIsSelected = false;
+                  //   widget.flM = null;
+                  //   widget.flSIsSelected = false;
+                  //   widget.flS = null;
+                  //   widget.flVsIsSelected = false;
+                  //   widget.flVs = null;
+                  //   widget.certGiaIsSelected = false;
+                  //   widget.certGia = null;
+                  //   widget.certIgiIsSelected = false;
+                  //   widget.certIgi = null;
+                  //   widget.certHrdIsSelected = false;
+                  //   widget.certHrd = null;
+                  //   widget.certNgtcIsSelected = false;
+                  //   widget.certNgtc = null;
+                  //   widget.bjmYesIsSelected = false;
+                  //   widget.bjmYes = null;
+                  //   widget.bjmNoIsSelected = false;
+                  //   widget.bjmNo = null;
+                  //   widget.locIndiaIsSelected = false;
+                  //   widget.locIndia = null;
+                  //   widget.locChinaIsSelected = false;
+                  //   widget.locChina = null;
+                  //   widget.locHkIsSelected = false;
+                  //   widget.locHk = null;
+                  //   widget.locSzIsSelected = false;
+                  //   widget.locSz = null;
+                  //   widget.locH_KIsSelected = false;
+                  //   widget.locH_K = null;
+                  //   widget.locTransitIsSelected = false;
+                  //   widget.locTransit = null;
+                  //   widget.shortCut3EXNIsSelected = false;
+                  //   widget.shortCut3EXN = null;
+                  //   widget.shortCut3VGNIsSelected = false;
+                  //   widget.shortCut3VGN = null;
+
+                  //   widget.noBgmboool = false;
+                  //   widget.noBgm = "";
+                  //   widget.isOnBlackList = false;
+                  //   widget.onBlackList = "";
+                  //   widget.isImage = false;
+                  //   widget.imageAvailable = "";
+                  //   widget.isMovie = false;
+                  //   widget.movieAvaible = "";
+                  //   widget.isCertificate = false;
+                  //   widget.certificateAvailable = "";
+                  //   widget.isHoldDiamond = false;
+                  //   widget.holdDiamond = "";
+                  //   widget.isLoanDiamond = false;
+                  //   widget.loanDiamond = "";
+
+
+                  //   widget.priceFrom = null;
+                  //   widget.priceTo = null;
+                  //   widget.tableFrom = null;
+                  //   widget.tableTo = null;
+                  //   widget.depthFrom =null;
+                  //   widget.depthTo = null;
+                    
+                  //   fetchDataSearchDiamond(widget.token,
+                  //       searchQuerry: buildQueryString());
+                  // });
                 },
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-
                   children: [
                     Icon(Icons.border_clear_rounded),
                     SizedBox(

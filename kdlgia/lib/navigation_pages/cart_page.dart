@@ -25,13 +25,12 @@ class _CartPageState extends State<CartPage> {
   late Future<CartResponse> _futureCartResponse;
   late Future<DiamondData> _diamondSearchDate;
   late Future<UserProfile> _userProfileFuture;
-   late Map<int, bool> isCheckedMap =
+  late Map<int, bool> isCheckedMap =
       {}; // Map to store isChecked state for each Diamond item
   late Map<int, bool> isStaredMap = {};
   final ScrollController _scrollController = ScrollController();
   late List<dynamic> checkItem = [];
 
-  
   @override
   void initState() {
     super.initState();
@@ -40,13 +39,14 @@ class _CartPageState extends State<CartPage> {
     _futureCartResponse = showCarts(widget.token);
 
     // Chain the future to handle the response and fetch diamond search data
-    
+
     _diamondSearchDate = _futureCartResponse.then((value) {
       // Construct the query string by joining item IDs with commas
       // if(value.cart == 0){
-      //   return 
+      //   return
       // }
-      String query = "q_perpage=200&q_id=01,${value.cart?.item.join(',')}&q_id_type=id";
+      String query =
+          "q_perpage=200&q_id=01,${value.cart?.item.join(',')}&q_id_type=id";
 
       // Print the constructed query for debugging purposes
       print(query);
@@ -87,20 +87,21 @@ class _CartPageState extends State<CartPage> {
     return Scaffold(
       appBar: AppBar(
         title: FutureBuilder(
-        future: _futureCartResponse,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            print(snapshot.error);
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.hasData) {
-            return Text("${snapshot.data!.cart?.total} Cost of ${snapshot.data!.cart?.amount}");
-          } else {
-            return Center(child: Text('No cart data available.'));
-          }
-        },
-      ),
+          future: _futureCartResponse,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              print(snapshot.error);
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (snapshot.hasData) {
+              return Text(
+                  "${snapshot.data!.cart?.total} Cost of ${snapshot.data!.cart?.amount}");
+            } else {
+              return Center(child: Text('No cart data available.'));
+            }
+          },
+        ),
         centerTitle: true,
       ),
       body: FutureBuilder(
@@ -136,13 +137,16 @@ class _CartPageState extends State<CartPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-               TextButton(
+              TextButton(
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              HomePage(token: widget.token)));
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HomePage(
+                              token: widget.token,
+                            )),
+                    (route) => false,
+                  );
                 },
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -155,7 +159,8 @@ class _CartPageState extends State<CartPage> {
               ),
               TextButton(
                 onPressed: () {
-                  _showOrderDialog(context, widget.token,checkItem.join(','), _futureCartResponse);
+                  _showOrderDialog(context, widget.token, checkItem.join(','),
+                      _futureCartResponse);
                   // Add functionality here
                 },
                 child: const Column(
@@ -167,7 +172,7 @@ class _CartPageState extends State<CartPage> {
                   ],
                 ),
               ),
-             
+
               // TextButton(
               //   onPressed: () {
               //     setState(() {});
@@ -190,278 +195,272 @@ class _CartPageState extends State<CartPage> {
 
   Widget _buildCartContent(DiamondData diamondData) {
     return ListView.builder(
-        itemCount: diamondData.diamonds.length,
-        itemBuilder: (context, index) {
-          
+      itemCount: diamondData.diamonds.length,
+      itemBuilder: (context, index) {
+        bool isChecked = isCheckedMap[index] ?? false;
+        bool isStared =
+            isStaredMap[index] ?? diamondData.diamonds[index].inCart == "Y";
+        final diamond = diamondData.diamonds[index];
 
-          bool isChecked = isCheckedMap[index] ?? false;
-          bool isStared = isStaredMap[index] ?? diamondData.diamonds[index].inCart == "Y";
-          final diamond = diamondData.diamonds[index];
+        return InkWell(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => SearchDetail(
+                          diamondDetail: diamond,
+                        )));
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(paddingCard),
+            child: Card.filled(
+              color: Colors.white,
+              elevation: 7,
+              borderOnForeground: false,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            right: paddingCard, left: paddingCard),
+                        child: Container(
+                          child: Row(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  isCheckedMap[index] = !isChecked;
 
-          return InkWell(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => SearchDetail(
-                            diamondDetail: diamond,
-                          )));
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(paddingCard),
-              child: Card.filled(
-                color: Colors.white,
-                elevation: 7,
-                borderOnForeground: false,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  if (!isChecked) {
+                                    checkItem.add(diamond.id);
+                                  } else {
+                                    checkItem.remove(diamond.id);
+                                  }
+                                  print(checkItem.join(','));
+                                  setState(() {
+                                    // Update isChecked state in the map
+                                  });
+                                },
+                                child: SizedBox(
+                                  width: widthOfSearchResultCard,
+                                  height: heighOfSearchResultCard,
+                                  child: Card.filled(
+                                    color: Colors.white,
+                                    elevation: 7,
+                                    child: isChecked
+                                        ? Image.asset(
+                                            "assets/app_icons/check.png")
+                                        : Container(),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              InkWell(
+                                onTap: () {
+                                  if (isStared) {
+                                    removeFromCart(diamond.id, widget.token);
+                                    print("Called me to remoce!!");
+                                  } else {
+                                    addToCart(diamond.id, widget.token);
+                                    print("Called me to add!!");
+                                  }
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => CartPage(
+                                                token: widget.token,
+                                              )));
+                                },
+                                child: SizedBox(
+                                  width: widthOfSearchResultCard,
+                                  height: heighOfSearchResultCard,
+                                  child: Card.filled(
+                                    color: Colors.white,
+                                    elevation: 7,
+                                    child: isStared
+                                        ? const Icon(Icons.star,
+                                            color: Color.fromRGBO(
+                                                33, 98, 238, 1)) //#2162E0
+                                        : const Icon(Icons.star_border),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            right: paddingCard, left: paddingCard),
+                        child: Container(
+                          child: Row(
+                            children: [
+                              InkWell(
+                                onTap: () {},
+                                child: const SizedBox(
+                                  width: widthOfSearchResultCard,
+                                  height: heighOfSearchResultCard,
+                                  child: Card.filled(
+                                    color: Colors.white,
+                                    elevation: 7,
+                                    child: Icon(Icons.web_outlined),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              InkWell(
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return ImagePopup(
+                                          imageUrl: diamond.imageUrl);
+                                    },
+                                  );
+                                  print(diamond.imageUrl);
+                                },
+                                child: const SizedBox(
+                                  width: widthOfSearchResultCard,
+                                  height: heighOfSearchResultCard,
+                                  child: Card.filled(
+                                    color: Colors.white,
+                                    elevation: 7,
+                                    child: Icon(Icons.camera_alt_outlined),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              InkWell(
+                                onTap: () {},
+                                child: const SizedBox(
+                                  width: widthOfSearchResultCard,
+                                  height: heighOfSearchResultCard,
+                                  child: Card.filled(
+                                    color: Colors.white,
+                                    elevation: 7,
+                                    child: Icon(Icons.video_call_outlined),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Divider(color: Colors.grey),
+                  Padding(
+                    padding: const EdgeInsets.all(paddingCard),
+                    child: Table(
+                      defaultVerticalAlignment:
+                          TableCellVerticalAlignment.intrinsicHeight,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              right: paddingCard, left: paddingCard),
-                          child: Container(
-                            child: Row(
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                     isCheckedMap[index] =
-                                          !isChecked; 
-                                                                              
-
-
-                                    if(!isChecked){
-                                      checkItem.add(diamond.id);
-                                    }else{
-                                      checkItem.remove(diamond.id);
-                                    }
-                                    print(checkItem.join(','));
-                                    setState(() {
-                                     // Update isChecked state in the map
-                                    });
-                                  },
-                                  child: SizedBox(
-                                    width: widthOfSearchResultCard,
-                                    height: heighOfSearchResultCard,
-                                    child: Card.filled(
-                                      color: Colors.white,
-                                      elevation: 7,
-                                      child: isChecked
-                                          ? Image.asset(
-                                              "assets/app_icons/check.png")
-                                          : Container(),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                InkWell(
-                                  onTap: () {
-                                    if (isStared) {
-                                      removeFromCart(diamond.id, widget.token);
-                                      print("Called me to remoce!!");
-                                    } else {
-                                      addToCart(diamond.id, widget.token);
-                                      print("Called me to add!!");
-
-                                    }
-                                   Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                CartPage(token: widget.token,)));
-                                  },
-                                  child: SizedBox(
-                                    width: widthOfSearchResultCard,
-                                    height: heighOfSearchResultCard,
-                                    child: Card.filled(
-                                      color: Colors.white,
-                                      elevation: 7,
-                                      child: isStared
-                                          ? const Icon(Icons.star,
-                                              color: Color.fromRGBO(
-                                                  33, 98, 238, 1)) //#2162E0
-                                          : const Icon(Icons.star_border),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              right: paddingCard, left: paddingCard),
-                          child: Container(
-                            child: Row(
-                              children: [
-                                InkWell(
-                                  onTap: () {},
-                                  child: const SizedBox(
-                                    width: widthOfSearchResultCard,
-                                    height: heighOfSearchResultCard,
-                                    child: Card.filled(
-                                      color: Colors.white,
-                                      elevation: 7,
-                                      child: Icon(Icons.web_outlined),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                InkWell(
-                                  onTap: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return ImagePopup(
-                                            imageUrl: diamond.imageUrl);
-                                      },
-                                    );
-                                    print(diamond.imageUrl);
-                                  },
-                                  child: const SizedBox(
-                                    width: widthOfSearchResultCard,
-                                    height: heighOfSearchResultCard,
-                                    child: Card.filled(
-                                      color: Colors.white,
-                                      elevation: 7,
-                                      child: Icon(Icons.camera_alt_outlined),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                InkWell(
-                                  onTap: () {},
-                                  child: const SizedBox(
-                                    width: widthOfSearchResultCard,
-                                    height: heighOfSearchResultCard,
-                                    child: Card.filled(
-                                      color: Colors.white,
-                                      elevation: 7,
-                                      child: Icon(Icons.video_call_outlined),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                              ],
-                            ),
-                          ),
-                        ),
+                        TableRow(children: [
+                          TableCell(
+                              child:
+                                  StyledText(text: "Stock No.: ${diamond.id}")),
+                          TableCell(
+                              child: StyledText(
+                                  text: "Disc%: ${diamond.back}",
+                                  color: Colors.redAccent)),
+                        ]),
+                        TableRow(children: [
+                          TableCell(
+                              child: StyledText(
+                                  text:
+                                      "${diamond.diaReport}: ${diamond.diaReportNo}")),
+                          TableCell(
+                              child: StyledText(
+                                  text: "Amount: ${diamond.dollar1}",
+                                  color: Colors.red)),
+                        ]),
                       ],
                     ),
-                    const Divider(color: Colors.grey),
-                    Padding(
-                      padding: const EdgeInsets.all(paddingCard),
-                      child: Table(
-                        defaultVerticalAlignment:
-                            TableCellVerticalAlignment.intrinsicHeight,
-                        children: [
-                          TableRow(children: [
-                            TableCell(
-                                child: StyledText(
-                                    text: "Stock No.: ${diamond.id}")),
-                            TableCell(
-                                child: StyledText(
-                                    text: "Disc%: ${diamond.back}",
-                                    color: Colors.redAccent)),
-                          ]),
-                          TableRow(children: [
-                            TableCell(
-                                child: StyledText(
-                                    text:
-                                        "${diamond.diaReport}: ${diamond.diaReportNo}")),
-                            TableCell(
-                                child: StyledText(
-                                    text: "Amount: ${diamond.dollar1}",
-                                    color: Colors.red)),
-                          ]),
-                        ],
-                      ),
+                  ),
+                  const Divider(color: Colors.grey),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: paddingCard, right: paddingCard),
+                    child: Table(
+                      defaultVerticalAlignment:
+                          TableCellVerticalAlignment.middle,
+                      children: [
+                        TableRow(children: [
+                          TableCell(
+                              child:
+                                  StyledText(text: "Shp: ${diamond.diaShape}")),
+                          TableCell(
+                              child: StyledText(
+                                  text: "Carat: ${diamond.diaCarat}")),
+                          TableCell(
+                              child: StyledText(
+                                  text: "Color: ${diamond.diaColor}")),
+                          TableCell(
+                              child: StyledText(
+                                  text: "Clarity: ${diamond.diaClarity}")),
+                        ]),
+                        TableRow(children: [
+                          TableCell(
+                              child:
+                                  StyledText(text: "Cut: ${diamond.diaCut}")),
+                          TableCell(
+                              child: StyledText(
+                                  text: "Polish: ${diamond.diaPolish}")),
+                          TableCell(
+                              child: StyledText(
+                                  text: "Symm: ${diamond.diaSymmetry}")),
+                          TableCell(
+                              child: StyledText(
+                                  text: "Fluoro: ${diamond.diaFluorescence}")),
+                        ]),
+                        TableRow(children: [
+                          TableCell(
+                              child:
+                                  StyledText(text: "Loc: ${diamond.diaPlace}")),
+                          TableCell(
+                              child: StyledText(
+                                  text: "Tbl : ${diamond.diaTable}")),
+                          TableCell(
+                              child:
+                                  StyledText(text: "Td: ${diamond.diaDepth}")),
+                          TableCell(
+                              child: StyledText(text: "Rap: ${diamond.rap}")),
+                        ]),
+                      ],
                     ),
-                    const Divider(color: Colors.grey),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: paddingCard, right: paddingCard),
-                      child: Table(
-                        defaultVerticalAlignment:
-                            TableCellVerticalAlignment.middle,
-                        children: [
-                          TableRow(children: [
-                            TableCell(
-                                child: StyledText(
-                                    text: "Shp: ${diamond.diaShape}")),
-                            TableCell(
-                                child: StyledText(
-                                    text: "Carat: ${diamond.diaCarat}")),
-                            TableCell(
-                                child: StyledText(
-                                    text: "Color: ${diamond.diaColor}")),
-                            TableCell(
-                                child: StyledText(
-                                    text: "Clarity: ${diamond.diaClarity}")),
-                          ]),
-                          TableRow(children: [
-                            TableCell(
-                                child:
-                                    StyledText(text: "Cut: ${diamond.diaCut}")),
-                            TableCell(
-                                child: StyledText(
-                                    text: "Polish: ${diamond.diaPolish}")),
-                            TableCell(
-                                child: StyledText(
-                                    text: "Symm: ${diamond.diaSymmetry}")),
-                            TableCell(
-                                child: StyledText(
-                                    text:
-                                        "Fluoro: ${diamond.diaFluorescence}")),
-                          ]),
-                          TableRow(children: [
-                            TableCell(
-                                child: StyledText(
-                                    text: "Loc: ${diamond.diaPlace}")),
-                            TableCell(
-                                child: StyledText(
-                                    text: "Tbl : ${diamond.diaTable}")),
-                            TableCell(
-                                child: StyledText(
-                                    text: "Td: ${diamond.diaDepth}")),
-                            TableCell(
-                                child: StyledText(text: "Rap: ${diamond.rap}")),
-                          ]),
-                        ],
-                      ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: paddingCard,
+                        right: paddingCard,
+                        bottom: paddingCard),
+                    child: Table(
+                      defaultVerticalAlignment:
+                          TableCellVerticalAlignment.middle,
+                      children: [
+                        TableRow(children: [
+                          TableCell(
+                              child: StyledText(
+                                  text: "Measurement: ${diamond.diaDiameter}")),
+                        ]),
+                      ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: paddingCard,
-                          right: paddingCard,
-                          bottom: paddingCard),
-                      child: Table(
-                        defaultVerticalAlignment:
-                            TableCellVerticalAlignment.middle,
-                        children: [
-                          TableRow(children: [
-                            TableCell(
-                                child: StyledText(
-                                    text:
-                                        "Measurement: ${diamond.diaDiameter}")),
-                          ]),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          );
-        },
-      );
+          ),
+        );
+      },
+    );
   }
 }
 
-
-void _showOrderDialog(BuildContext context, String token, String subide, Future<CartResponse> cartResponse) {
+void _showOrderDialog(BuildContext context, String token, String subide,
+    Future<CartResponse> cartResponse) {
   final TextEditingController receiverController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
 
@@ -497,8 +496,16 @@ void _showOrderDialog(BuildContext context, String token, String subide, Future<
 
               // Validate inputs and submit order
               if (receiverName.isNotEmpty && phone.isNotEmpty) {
-                submitOrder(token, subide, receiverName,phone);
+                    submitOrder(token, subide, receiverName, phone);
+                var snackBar = SnackBar(content: Text("Order Placed Successfully"));
+
                 Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HomePage(token: token)),(route)=>false);
               } else {
                 // Show error if inputs are invalid
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -519,5 +526,3 @@ void _showOrderDialog(BuildContext context, String token, String subide, Future<
     },
   );
 }
-
-

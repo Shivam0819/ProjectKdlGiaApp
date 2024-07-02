@@ -1,6 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:kdlgia/api_assets_popup/imagePopup.dart';
 import 'package:kdlgia/cart/cartApi.dart';
 import 'package:kdlgia/cart/cartData.dart';
+import 'package:kdlgia/diamond_search/searchDetail.dart';
+import 'package:kdlgia/search/diamondDataDetail.dart';
 import 'package:kdlgia/navigation_pages/cart_page.dart';
 import 'package:kdlgia/navigation_pages/search_page.dart';
 import 'package:kdlgia/order_status/orderPage.dart';
@@ -14,7 +19,8 @@ import 'package:kdlgia/style/search_card_ui.dart';
 import 'package:kdlgia/style/textStyle.dart';
 import 'package:kdlgia/user/apiUserInfo.dart';
 import 'package:kdlgia/user/profile.dart';
-import 'package:kdlgia/user/userProfile.dart'; // Import the search page
+import 'package:kdlgia/user/userProfile.dart';
+import 'package:url_launcher/url_launcher.dart'; // Import the search page
 
 class HomePage extends StatefulWidget {
   final String token;
@@ -53,6 +59,34 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  Diamond exclusiveDiamond(List<Diamond> diamond) {
+    late Diamond exclusiveDiamond = diamond[0];
+
+    for (var data in diamond) {
+      if (int.parse(exclusiveDiamond.back) > int.parse(data.back)) {
+        exclusiveDiamond = data;
+      }
+    }
+    print("Exclusinve diamond");
+    print(exclusiveDiamond);
+    return exclusiveDiamond;
+  }
+
+  _launchURLVideo(String videoUrl) async {
+    final Uri url = Uri.parse(videoUrl);
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not launch');
+    }
+  }
+
+  _launchURL(String stockId) async {
+    final Uri url =
+        Uri.parse('https://www.gia.edu/report-check?reportno=$stockId');
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not launch');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,11 +97,9 @@ class _HomePageState extends State<HomePage> {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Card(
-                child: Image.asset(
-                  'assets/Images/company_logo.png',
-                  height: 30,
-                ),
+              child: Image.asset(
+                'assets/Images/company_logo.png',
+                height: 40,
               ),
             ),
             const Column(
@@ -213,7 +245,7 @@ class _HomePageState extends State<HomePage> {
                                   token: widget.token,
                                 )));
                   },
-                  child: const Padding(
+                  child: Padding(
                     padding: EdgeInsets.all(paddingCard),
                     child: Card(
                       child: Center(
@@ -221,30 +253,13 @@ class _HomePageState extends State<HomePage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.shopping_cart_checkout_outlined,
+                          const Icon(Icons.shopping_cart_checkout_outlined,
                               size: 60, color: mainColor),
-                          TextStyleHeader(
+                          const TextStyleHeader(
                             text: "Cart",
                             colors: mainColor,
                             fontWeight: FontWeight.normal,
                           ),
-                          // FutureBuilder(future: cartResponse, builder: (context, snapshot){
-                          //     if(snapshot.connectionState == ConnectionState.waiting){
-                          //       return const Center(
-                          //         child: CircularProgressIndicator(),
-                          //       );
-
-                          //     }else{
-                          //       return TextStyleHeader(
-                          //     text: snapshot.data!.cart.item.length.toString(),
-                          //     colors: mainColor,
-                          //     fontWeight: FontWeight.normal,
-                          //   );
-
-                          //     }
-                          //   }
-
-                          //   )
                         ],
                       )),
                     ),
@@ -418,18 +433,236 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     children: [
                       const TextStyleHeader(text: "KDL Gia Exclusive Diamond"),
-                      GridView.count(
-                        crossAxisCount: 2,
-                        shrinkWrap:
-                            true, // Ensure the GridView occupies only the space it needs
-                        physics: const NeverScrollableScrollPhysics(),
-                        children: [
-                          Image.asset("assets/Images/company_logo.png"),
-                          Container(
-                            child: const Text("All the api Data"),
-                          )
-                        ],
+
+                      FutureBuilder(
+                        future: diamondsFuture,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else {
+                            Diamond? data; // Declare as nullable
+
+                            if (snapshot.hasData) {
+                              // Initialize temp with the first diamond
+                              var temp = snapshot.data!.diamonds[0];
+
+                              for (var diam in snapshot.data!.diamonds) {
+                                // Compare using double.parse for decimal numbers
+                                if (double.parse(temp.back) <
+                                    double.parse(diam.back)) {
+                                  if (double.parse(temp.diaCarat) <
+                                      double.parse(diam.diaCarat)) {
+                                    temp = diam;
+                                  }
+                                }
+                              }
+
+                              data = temp; // Assign the found diamond to data
+                              print(data.movieUrl);
+                            }
+
+                            return InkWell(
+                              onTap: () {
+                                var stok_no = data!.diaReportNo;
+                                String querry =
+                                    "q_id=${stok_no}&q_id_type=report_no";
+                                print(querry);
+                                // showCarts(widget.token);
+                                fetchDataSearchDiamond(widget.token,
+                                        searchQuerry: querry)
+                                    .then((diamondData) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => SearchResultsTemp(
+                                        diamondData: diamondData,
+                                        token: widget.token,
+                                        querryUrl: querry,
+                                      ),
+                                    ),
+                                  );
+                                });
+                              },
+                              child: GridView.count(
+                                  crossAxisCount: 2,
+                                  shrinkWrap:
+                                      true, // Ensure the GridView occupies only the space it needs
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(12.0),
+                                      child: Image.network(
+                                        data!.imageUrl,
+                                        fit: BoxFit.fill,
+                                        loadingBuilder:
+                                            (context, child, loadingProgress) {
+                                          if (loadingProgress == null)
+                                            return child;
+                                          return CircularProgressIndicator(
+                                            value: loadingProgress
+                                                        .expectedTotalBytes !=
+                                                    null
+                                                ? loadingProgress
+                                                        .cumulativeBytesLoaded /
+                                                    loadingProgress
+                                                        .expectedTotalBytes!
+                                                : null,
+                                          );
+                                        },
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return Text('Failed to load image');
+                                        },
+                                      ),
+                                    ),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            Text(data.diaShape),
+                                            Text(data.diaCarat)
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Text(data.diaColor),
+                                            Text(data.diaClarity),
+                                            Text(data.diaReport)
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Text(data.diaCut),
+                                            Text(data.diaPolish),
+                                            Text(data.diaSymmetry),
+                                            Text(data.diaFluorescence)
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [Text(data.diaReportNo)],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: paddingCard,
+                                                    left: paddingCard),
+                                                child: Container(
+                                                    child: Row(
+                                                  children: [
+                                                    InkWell(
+                                                      onTap: () {
+                                                        _launchURL(
+                                                            data!.diaReportNo);
+                                                      },
+                                                      child: const SizedBox(
+                                                        width:
+                                                            widthOfSearchResultCard,
+                                                        height:
+                                                            heighOfSearchResultCard,
+                                                        child: Card.filled(
+                                                          color: Colors.white,
+                                                          elevation: 7,
+                                                          child: Icon(Icons
+                                                              .class_rounded),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        showDialog(
+                                                          context: context,
+                                                          builder: (BuildContext
+                                                              context) {
+                                                            // Navigator.of(context).pop();
+                                                            return ImagePopup(
+                                                                imageUrl: data!
+                                                                    .imageUrl);
+                                                          },
+                                                        );
+                                                      },
+                                                      child: const SizedBox(
+                                                        width:
+                                                            widthOfSearchResultCard,
+                                                        height:
+                                                            heighOfSearchResultCard,
+                                                        child: Card.filled(
+                                                          color: Colors.white,
+                                                          elevation: 7,
+                                                          child: Icon(Icons
+                                                              .camera_alt_outlined),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        _launchURLVideo(
+                                                            data!.movieUrl);
+                                                      },
+                                                      child: const SizedBox(
+                                                        width:
+                                                            widthOfSearchResultCard,
+                                                        height:
+                                                            heighOfSearchResultCard,
+                                                        child: Card.filled(
+                                                          color: Colors.white,
+                                                          elevation: 7,
+                                                          child: Icon(Icons
+                                                              .video_call_outlined),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                  ],
+                                                )))
+                                          ],
+                                        )
+                                      ],
+                                    )
+                                  ]),
+                            );
+                          }
+                        },
                       )
+
+                      // FutureBuilder(future: diamondsFuture, builder:(context, snapshot) {
+                      //           if (snapshot.connectionState ==
+                      //               ConnectionState.waiting) {
+                      //             return const Center(
+                      //               child: CircularProgressIndicator(),
+                      //             );
+                      //           } else {
+
+                      //             return TextStyleHeader(
+                      //               text: snapshot.data!.total.toString(),
+                      //               colors: mainColor,
+                      //               fontWeight: FontWeight.normal,
+                      //             );
+                      //           }
+                      //         })
                     ],
                   ),
                 ),
@@ -441,26 +674,44 @@ class _HomePageState extends State<HomePage> {
                   true, // Ensure the GridView occupies only the space it needs
               physics:
                   const NeverScrollableScrollPhysics(), // Disable scrolling if needed
-              children:  [
-                Padding(
-                  padding: EdgeInsets.all(paddingCard),
-                  child: Card(
-                    child: Center(child: TextStyleHeader(text: "Flewless")),
+              children: [
+                const InkWell(
+                  onTap: null,
+                  child: Padding(
+                    padding: EdgeInsets.all(paddingCard),
+                    child: Card(
+                      child: Center(child: TextStyleHeader(text: "Flewless")),
+                    ),
                   ),
                 ),
+
                 InkWell(
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>OrderPage(token: widget.token)));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                OrderPage(token: widget.token)));
                   },
-                  child: Padding(
-                  padding: EdgeInsets.all(paddingCard),
-                  child: Card(
-                    child: Center(
-                        child: TextStyleHeader(
-                      text: "Order Status",
-                    )),
+                  child: const Padding(
+                    padding: EdgeInsets.all(paddingCard),
+                    child: Card(
+                      child: Center(
+                          child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.delivery_dining_rounded,
+                              size: 60, color: mainColor),
+                          TextStyleHeader(
+                            text: "Order Status",
+                            colors: mainColor,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ],
+                      )),
+                    ),
                   ),
-                ),
                 )
 
                 // Add more children as needed
@@ -608,7 +859,16 @@ class _HomePageState extends State<HomePage> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const TextStyleHeader(text: "Key Account Manager"),
+                          Center(
+                            child: const Text(
+                              "Key Account Manager",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: mainColor,
+                                  fontSize: 15),
+                            ),
+                          ),
+
                           const SizedBox(
                             height: 10,
                           ),
@@ -619,12 +879,13 @@ class _HomePageState extends State<HomePage> {
                               Padding(
                                   padding: const EdgeInsets.all(paddingCard),
                                   child: SizedBox(
-                                      height: 60,
-                                      width: 60,
-                                      child: Card(
-                                        child: Image.asset(
-                                            "assets/Images/user.png"),
-                                      ))),
+                                    height: 60,
+                                    width: 60,
+                                    child: Image.asset(
+                                      "assets/Images/user.png",
+                                      color: mainColor,
+                                    ),
+                                  )),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -642,20 +903,20 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                           const SizedBox(
-                            height: 10,
+                            height: 5,
                           ),
                           // Mail******************
                           InsideShadowCard(
                               child: Row(
                             children: [
                               SizedBox(
-                                width: 60,
-                                height: 60,
+                                width: 40,
+                                height: 40,
                                 child: Padding(
                                   padding: EdgeInsets.all(paddingCard),
-                                  child: Card(
-                                    child: Image.asset("assets/logo/telephone.png"),
-                                  ),
+                                  child: Image.asset(
+                                      "assets/logo/telephone.png",
+                                      color: mainColor),
                                 ),
                               ),
                               Padding(
@@ -668,20 +929,19 @@ class _HomePageState extends State<HomePage> {
                             ],
                           )),
                           const SizedBox(
-                            height: 10,
+                            height: 5,
                           ),
                           // WhatSup ******************
                           InsideShadowCard(
                               child: Row(
                             children: [
                               SizedBox(
-                                width: 60,
-                                height: 60,
+                                width: 40,
+                                height: 40,
                                 child: Padding(
                                   padding: EdgeInsets.all(paddingCard),
-                                  child: Card(
-                                    child: Image.asset("assets/logo/whatsapp.png"),
-                                  ),
+                                  child: Image.asset("assets/logo/whatsapp.png",
+                                      color: mainColor),
                                 ),
                               ),
                               Padding(
@@ -693,21 +953,18 @@ class _HomePageState extends State<HomePage> {
                               )
                             ],
                           )),
-                          const SizedBox(
-                            height: 10,
-                          ),
+                          const SizedBox(height: 5),
                           // Whatsup
                           InsideShadowCard(
                               child: Row(
                             children: [
                               SizedBox(
-                                width: 60,
-                                height: 60,
+                                width: 40,
+                                height: 40,
                                 child: Padding(
                                   padding: EdgeInsets.all(paddingCard),
-                                  child: Card(
-                                    child: Image.asset("assets/logo/wechat.png"),
-                                  ),
+                                  child: Image.asset("assets/logo/wechat.png",
+                                      color: mainColor),
                                 ),
                               ),
                               Padding(
@@ -720,19 +977,18 @@ class _HomePageState extends State<HomePage> {
                             ],
                           )),
                           const SizedBox(
-                            height: 10,
+                            height: 5,
                           ),
                           InsideShadowCard(
                             child: Row(
                               children: [
                                 SizedBox(
-                                  width: 60,
-                                  height: 60,
+                                  width: 40,
+                                  height: 40,
                                   child: Padding(
                                     padding: EdgeInsets.all(paddingCard),
-                                    child: Card(
-                                      child: Image.asset("assets/logo/skype.png"),
-                                    ),
+                                    child: Image.asset("assets/logo/skype.png",
+                                        color: mainColor),
                                   ),
                                 ),
                                 Expanded(
@@ -784,12 +1040,14 @@ class _HomePageState extends State<HomePage> {
             children: [
               TextButton(
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => HomePage(
-                                token: widget.token,
-                              )));
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HomePage(
+                              token: widget.token,
+                            )),
+                    (route) => false,
+                  );
                 },
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,

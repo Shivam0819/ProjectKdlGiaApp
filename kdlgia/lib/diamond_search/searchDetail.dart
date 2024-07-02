@@ -34,6 +34,12 @@ class _SearchDetailState extends State<SearchDetail> {
         throw Exception('Could not launch');
     }
 }
+ _launchURLVideo(String videoUrl) async {
+   final Uri url = Uri.parse(videoUrl);
+   if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+        throw Exception('Could not launch');
+    }
+}
   @override
   Widget build(BuildContext context) {
     Widget content;
@@ -112,6 +118,7 @@ class _SearchDetailState extends State<SearchDetail> {
                   onTap: () {
                     setState(() {
                       selectedOption = "video";
+                      _launchURLVideo(widget.diamondDetail.movieUrl);
                     });
                   },
                   child: SizedBox(

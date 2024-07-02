@@ -7,6 +7,7 @@ import 'package:kdlgia/diamond_search/searchDetail.dart';
 import 'package:kdlgia/style/search_card_ui.dart';
 import 'package:kdlgia/style/styleTextSearchResult.dart';
 
+
 class Diamond {
   final String stockNo;
   final String place;
