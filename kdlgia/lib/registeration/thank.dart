@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kdlgia/registeration/login_page.dart';
+import 'package:kdlgia/style/search_card_ui.dart';
 
 class ThankYouPage extends StatelessWidget {
   @override
@@ -9,40 +10,41 @@ class ThankYouPage extends StatelessWidget {
         title: Text('Thank You'),
       ),
       body: Center(
-        child: Column(
+        child:Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.check_circle_outline,
-              color: Colors.green,
-              size: 100,
+              color: mainColor,
+              size: 50,
             ),
-            SizedBox(height: 20),
-            Text(
-              'Thank You!',
+            const SizedBox(height: 20),
+            const Text(
+              'Thank you for registeration!',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 10),
-            Text(
-              'Your registration is successful.',
+            const SizedBox(height: 10),
+            const Text(
+              'Your account is temporarily unavailable.\nPlease wait patiently to be allowed.',
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 15,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 // Navigate back to the previous page or any other action
                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginPage()), (route) => false);
               },
-              child: Text('Go Back'),
+              child:const Text('Log Out'),
             ),
           ],
         ),
-      ),
-    );
+        )
+      );
+    
   }
 }

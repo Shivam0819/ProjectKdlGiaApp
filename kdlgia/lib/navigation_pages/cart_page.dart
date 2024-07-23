@@ -11,6 +11,7 @@ import 'package:kdlgia/style/search_card_ui.dart';
 import 'package:kdlgia/style/styleTextSearchResult.dart';
 import 'package:kdlgia/user/apiUserInfo.dart';
 import 'package:kdlgia/user/userProfile.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CartPage extends StatefulWidget {
   final String token;
@@ -60,6 +61,12 @@ class _CartPageState extends State<CartPage> {
     _userProfileFuture = ApiService.fetchUserProfile(widget.token);
   }
 
+  _launchURLVideo(String videoUrl) async {
+    final Uri url = Uri.parse(videoUrl);
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not launch');
+    }
+  }
   // Future<CartResponse> showCarts(String token) async {
   //   String url = 'https://www.kdlgia.com/consumer/cart';
 
@@ -229,49 +236,45 @@ class _CartPageState extends State<CartPage> {
                         child: Container(
                           child: Row(
                             children: [
-                              InkWell(
-                                onTap: () {
-                                  isCheckedMap[index] = !isChecked;
+                              // InkWell(
+                              //   onTap: () {
+                              //     isCheckedMap[index] = !isChecked;
 
-                                  if (!isChecked) {
-                                    checkItem.add(diamond.id);
-                                  } else {
-                                    checkItem.remove(diamond.id);
-                                  }
-                                  print(checkItem.join(','));
-                                  setState(() {
-                                    // Update isChecked state in the map
-                                  });
-                                },
-                                child: SizedBox(
-                                  width: widthOfSearchResultCard,
-                                  height: heighOfSearchResultCard,
-                                  child: Card.filled(
-                                    color: Colors.white,
-                                    elevation: 7,
-                                    child: isChecked
-                                        ? Image.asset(
-                                            "assets/app_icons/check.png")
-                                        : Container(),
-                                  ),
-                                ),
-                              ),
+                              //     if (!isChecked) {
+                              //       checkItem.add(diamond.id);
+                              //     } else {
+                              //       checkItem.remove(diamond.id);
+                              //     }
+                              //     print(checkItem.join(','));
+                              //     setState(() {
+                              //       // Update isChecked state in the map
+                              //     });
+                              //   },
+                              //   child: SizedBox(
+                              //     width: widthOfSearchResultCard,
+                              //     height: heighOfSearchResultCard,
+                              //     child: Card.filled(
+                              //       color: Colors.white,
+                              //       elevation: 7,
+                              //       child: isChecked
+                              //           ? Image.asset(
+                              //               "assets/app_icons/check.png")
+                              //           : Container(),
+                              //     ),
+                              //   ),
+                              // ),
                               const SizedBox(width: 10),
                               InkWell(
                                 onTap: () {
-                                  if (isStared) {
                                     removeFromCart(diamond.id, widget.token);
-                                    print("Called me to remoce!!");
-                                  } else {
-                                    addToCart(diamond.id, widget.token);
-                                    print("Called me to add!!");
-                                  }
-                                  Navigator.push(
+                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Diamond remove from cart")));
+                                   
+                                  Navigator.pushAndRemoveUntil(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => CartPage(
                                                 token: widget.token,
-                                              )));
+                                              )),(route)=>false);
                                 },
                                 child: SizedBox(
                                   width: widthOfSearchResultCard,
@@ -280,10 +283,9 @@ class _CartPageState extends State<CartPage> {
                                     color: Colors.white,
                                     elevation: 7,
                                     child: isStared
-                                        ? const Icon(Icons.star,
-                                            color: Color.fromRGBO(
-                                                33, 98, 238, 1)) //#2162E0
-                                        : const Icon(Icons.star_border),
+                                        ? const Icon(Icons.shopping_cart,
+                                            color: mainColor) //#2162E0
+                                        : const Icon(Icons.shopping_cart_outlined),
                                   ),
                                 ),
                               ),
@@ -333,7 +335,9 @@ class _CartPageState extends State<CartPage> {
                               ),
                               const SizedBox(width: 10),
                               InkWell(
-                                onTap: () {},
+                                onTap: () {
+                                  _launchURLVideo(diamond.movieUrl);
+                                },
                                 child: const SizedBox(
                                   width: widthOfSearchResultCard,
                                   height: heighOfSearchResultCard,
@@ -496,8 +500,9 @@ void _showOrderDialog(BuildContext context, String token, String subide,
 
               // Validate inputs and submit order
               if (receiverName.isNotEmpty && phone.isNotEmpty) {
-                    submitOrder(token, subide, receiverName, phone);
-                var snackBar = SnackBar(content: Text("Order Placed Successfully"));
+                submitOrder(token, subide, receiverName, phone);
+                var snackBar =
+                    SnackBar(content: Text("Order Placed Successfully"));
 
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -505,7 +510,8 @@ void _showOrderDialog(BuildContext context, String token, String subide,
                 Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => HomePage(token: token)),(route)=>false);
+                        builder: (context) => HomePage(token: token)),
+                    (route) => false);
               } else {
                 // Show error if inputs are invalid
                 ScaffoldMessenger.of(context).showSnackBar(

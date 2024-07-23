@@ -184,36 +184,38 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                           child: Container(
                             child: Row(
                               children: [
-                                InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      isCheckedMap[index] =
-                                          !isChecked; // Update isChecked state in the map
-                                    });
-                                  },
-                                  child: SizedBox(
-                                    width: widthOfSearchResultCard,
-                                    height: heighOfSearchResultCard,
-                                    child: Card.filled(
-                                      color: Colors.white,
-                                      elevation: 7,
-                                      child: isChecked
-                                          ? Image.asset(
-                                              "assets/app_icons/check.png")
-                                          : Container(),
-                                    ),
-                                  ),
-                                ),
+                                // InkWell(
+                                //   onTap: () {
+                                //     setState(() {
+                                //       isCheckedMap[index] =
+                                //           !isChecked; // Update isChecked state in the map
+                                //     });
+                                //   },
+                                //   child: SizedBox(
+                                //     width: widthOfSearchResultCard,
+                                //     height: heighOfSearchResultCard,
+                                //     child: Card.filled(
+                                //       color: Colors.white,
+                                //       elevation: 7,
+                                //       child: isChecked
+                                //           ? Image.asset(
+                                //               "assets/app_icons/check.png")
+                                //           : Container(),
+                                //     ),
+                                //   ),
+                                // ),
                                 const SizedBox(width: 10),
                                 InkWell(
                                   onTap: () {
+                                    SnackBar statusCard;
                                     if (isStared) {
                                       removeFromCart(diamond.id, widget.token);
-                                      print("Called me to remoce!!");
+                                      statusCard = const SnackBar(content: Text("Diamond remove from cart"),);
                                     } else {
                                       addToCart(diamond.id, widget.token);
-                                      print("Called me to add!!");
+                                      statusCard = const SnackBar(content: Text("Diamond added to cart"));
                                     }
+                                    ScaffoldMessenger.of(context).showSnackBar(statusCard);
                                     setState(() {
                                       isStaredMap[index] = !isStared;
                                     });
@@ -225,10 +227,9 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                                       color: Colors.white,
                                       elevation: 7,
                                       child: isStared
-                                          ? const Icon(Icons.star,
-                                              color: Color.fromRGBO(
-                                                  33, 98, 238, 1)) //#2162E0
-                                          : const Icon(Icons.star_border),
+                                          ? const Icon(Icons.shopping_cart,
+                                              color: mainColor) //#2162E0
+                                          : const Icon(Icons.shopping_cart_outlined),
                                     ),
                                   ),
                                 ),
@@ -456,9 +457,9 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.shopify),
+                    Icon(Icons.delivery_dining_rounded),
                     SizedBox(height: 2),
-                    Text('Order'),
+                    Text('Order Status'),
                   ],
                 ),
               ),

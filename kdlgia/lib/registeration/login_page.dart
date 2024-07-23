@@ -239,79 +239,67 @@ class LoginPage extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(
-            paddingCard), // Adjust the bottom padding as needed
-        child: Container(
-          height: 80, // Adjust the height as needed
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20), // Add rounded corners
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: const Offset(0, 3), // changes position of shadow
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              TextButton(
-                onPressed: () {
-                  // setState(() {});
-                  // Add your onPressed callback here
-                },
-                child: const Column(
-                  children: [
-                    Icon(Icons.info_outline),
-                    SizedBox(
-                      height: 2,
-                    ), // Add some space between the icon and text
-                    Text('About Us'),
-                  ],
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  // setState(() {});
-                  // Add your onPressed callback here
-                },
-                child: const Column(
-                  children: [
-                    Icon(Icons.emoji_events_outlined),
-                    SizedBox(
-                      height: 2,
-                    ), // Add some space between the icon and text
-                    Text('Achievements'),
-                  ],
-                ),
-              ),
+      // bottomNavigationBar: Padding(
+      //   padding: const EdgeInsets.all(
+      //       paddingCard), // Adjust the bottom padding as needed
+      //   child: Container(
+      //     height: 80, // Adjust the height as needed
+      //     decoration: BoxDecoration(
+      //       color: Colors.white,
+      //       borderRadius: BorderRadius.circular(20), // Add rounded corners
+      //       boxShadow: [
+      //         BoxShadow(
+      //           color: Colors.grey.withOpacity(0.5),
+      //           spreadRadius: 2,
+      //           blurRadius: 5,
+      //           offset: const Offset(0, 3), // changes position of shadow
+      //         ),
+      //       ],
+      //     ),
+      //     child: const Row(
+      //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //       children: [
+      //         TextButton(
+      //           onPressed: null,
+      //           child: Column(
+      //             children: [
+      //               Icon(Icons.info_outline),
+      //               SizedBox(
+      //                 height: 2,
+      //               ), // Add some space between the icon and text
+      //               Text('About Us'),
+      //             ],
+      //           ),
+      //         ),
+      //         TextButton(
+      //           onPressed:null,
+      //           child: Column(
+      //             children: [
+      //               Icon(Icons.emoji_events_outlined),
+      //               SizedBox(
+      //                 height: 2,
+      //               ), // Add some space between the icon and text
+      //               Text('Achievements'),
+      //             ],
+      //           ),
+      //         ),
               
-              TextButton(
-                onPressed: () {
-                  // Add your onPressed callback here
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => SearchPage(diamondsFuture: diamondsFuture,)),
-                  // );
-                },
-                child: const Column(
-                  children: [
-                    Icon(Icons.call),
-                    SizedBox(
-                      height: 2,
-                    ), // Add some space between the icon and text
-                    Text('Contact Us'),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      //         TextButton(
+      //           onPressed: null,
+      //           child: Column(
+      //             children: [
+      //               Icon(Icons.call),
+      //               SizedBox(
+      //                 height: 2,
+      //               ), // Add some space between the icon and text
+      //               Text('Contact Us'),
+      //             ],
+      //           ),
+      //         ),
+      //       ],
+      //     ),
+      //   ),
+      // ),
     );
   }
 }

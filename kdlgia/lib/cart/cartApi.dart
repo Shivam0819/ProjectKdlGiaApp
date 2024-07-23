@@ -28,6 +28,8 @@ Future<void> addToCart(String itemId, String token) async {
 }
 
 Future<CartResponse> showCarts(String token) async {
+  await Future.delayed( const Duration(seconds: 2));
+  
   String url = 'https://www.kdlgia.com/consumer/cart';
 
   try {
@@ -35,8 +37,7 @@ Future<CartResponse> showCarts(String token) async {
       Uri.parse(url),
       headers: {'Mob-Token': token},
     );
-    print("*********************************Show Carts detail");
-    print(response.body);
+ 
 
     if (response.statusCode == 200) {
       // Handle success response
@@ -62,7 +63,7 @@ Future<String> removeFromCart(String itemId, String token) async {
       Uri.parse(url),
       headers: {'Mob-Token': token},
     );
-    print(response.body);
+    // print(response.body);
 
     if (response.statusCode == 200) {
       print("******************************Item Remove to cart successfully");

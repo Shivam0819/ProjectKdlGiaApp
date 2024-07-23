@@ -1,8 +1,17 @@
 import 'dart:convert';
+import 'dart:math';
 import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 
-Future<void> registerUser(String token,  String userRealName, String userName, String userPwd, String userPwd2, String userPhone,String company, String userCode) async {
+class SignUpMessage {
+  var message;
+  var status;
+  SignUpMessage(var message,var status){
+    this.message = message;
+    this.status = status;
+  }
+}
+Future<SignUpMessage> registerUser(String token,  String userRealName, String userName, String userPwd, String userPwd2, String userPhone,String company, String userCode) async {
   final String url = 'https://www.kdlgia.com/register?is_json=1';
   final Map<String, String> headers = {
     'Cookie': token,
@@ -26,11 +35,17 @@ Future<void> registerUser(String token,  String userRealName, String userName, S
 
   if (response.statusCode == 200) {
     final responseData = json.decode(response.body);
+    SignUpMessage signUpMessage = new SignUpMessage(responseData['m'], responseData['s']);
+    print(responseData['m']);
     print('Response data: $responseData');
+    return signUpMessage;
     // Handle the response data as needed
   } else {
-    print('Request failed with status: ${response.statusCode}');
-    // Handle the error as needed
+ final responseData = json.decode(response.body);
+    SignUpMessage signUpMessage = new SignUpMessage(responseData['m'], responseData['s']);
+    print(responseData['m']);
+    print('Response data: $responseData');
+    return signUpMessage;    // Handle the error as needed
   }
 }
 

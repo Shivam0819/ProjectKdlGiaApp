@@ -15,11 +15,7 @@ if (localPropertiesFile.exists()) {
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
     flutterVersionCode = '1'
-}else{
-       flutterVersionCode = '2'
- 
 }
-
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
     flutterVersionName = '1.0'
@@ -33,7 +29,7 @@ def keystoreProperties = new Properties()
 
 android {
     namespace "com.example.kdlgia"
-    compileSdk flutter.compileSdkVersion
+    compileSdk 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -54,10 +50,10 @@ android {
         applicationId "com.shivam.kdlgia"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
-        targetSdkVersion flutter.targetSdkVersion
-        versionCode 3
-        versionName "1.0.1"
+        minSdkVersion 19 //19
+        targetSdkVersion 34
+        versionCode 8
+        versionName "1.0.0"
     }
 
     signingConfigs {
@@ -84,3 +80,4 @@ flutter {
 }
 
 dependencies {}
+ 

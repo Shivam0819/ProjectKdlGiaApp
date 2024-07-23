@@ -207,7 +207,7 @@ class _SearchDetailState extends State<SearchDetail> {
             
             StyledText(
               text:
-                  "${widget.diamondDetail.diaReport.toUpperCase()} ${widget.diamondDetail.diaReportNo}",
+                  "${widget.diamondDetail.diaShape.toUpperCase()} ${widget.diamondDetail.id}",
               fontSize: 15,
               fontWeight: FontWeight.bold,
               color: Colors.black87,

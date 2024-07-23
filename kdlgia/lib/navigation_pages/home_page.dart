@@ -32,7 +32,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool isExpanded = false;
+  bool isExpanded = true;
   bool isStockNoSelected = true;
   bool orderSummaryDetailIsSelected = false;
   bool userSummaruIsSelected = false;
@@ -188,6 +188,38 @@ class _HomePageState extends State<HomePage> {
                 //     child: Center(child: TextStyleHeader(text: "Pair")),
                 //   ),
                 // ),
+                //cart page
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CartPage(
+                                token: widget.token,
+                              )),
+                    );
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.all(paddingCard),
+                    child: Card(
+                      child: Center(
+                          child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.shopping_cart,
+                              size: 60, color: mainColor),
+                          TextStyleHeader(
+                            text: "Cart",
+                            colors: mainColor,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ],
+                      )),
+                    ),
+                  ),
+                ),
+                // Add more children as needed
                 InkWell(
                   onTap: () {
                     Navigator.push(
@@ -236,36 +268,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CartPage(
-                                  token: widget.token,
-                                )));
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.all(paddingCard),
-                    child: Card(
-                      child: Center(
-                          child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.shopping_cart_checkout_outlined,
-                              size: 60, color: mainColor),
-                          const TextStyleHeader(
-                            text: "Cart",
-                            colors: mainColor,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ],
-                      )),
-                    ),
-                  ),
-                )
-                // Add more children as needed
               ],
             ),
             Column(
@@ -432,7 +434,14 @@ class _HomePageState extends State<HomePage> {
                 child: Card(
                   child: Column(
                     children: [
-                      const TextStyleHeader(text: "KDL Gia Exclusive Diamond"),
+                      const TextStyleHeader(
+                        text: "KDL Gia Exclusive Diamond",
+                        fontSizeIs: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
 
                       FutureBuilder(
                         future: diamondsFuture,
@@ -522,41 +531,94 @@ class _HomePageState extends State<HomePage> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            Text(data.diaShape),
-                                            Text(data.diaCarat)
-                                          ],
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              right: paddingCard,
+                                              left: paddingCard),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                               const SizedBox(
+                                                      width: 10,
+                                                    ),
+                                              Text(data.diaShape,style: const TextStyle(fontWeight: FontWeight.normal),),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(data.diaCarat)
+                                            ],
+                                          ),
                                         ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Text(data.diaColor),
-                                            Text(data.diaClarity),
-                                            Text(data.diaReport)
-                                          ],
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              right: paddingCard,
+                                              left: paddingCard),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                               const SizedBox(
+                                                      width: 10,
+                                                    ),
+                                              Text(data.diaColor),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(data.diaClarity),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(data.diaReport)
+                                            ],
+                                          ),
                                         ),
-                                        Row(
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              right: paddingCard,
+                                              left: paddingCard),
+                                          child:Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
+                                              MainAxisAlignment.start,
                                           children: [
+                                             const SizedBox(
+                                                      width: 10,
+                                                    ),
                                             Text(data.diaCut),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
                                             Text(data.diaPolish),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
                                             Text(data.diaSymmetry),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
                                             Text(data.diaFluorescence)
                                           ],
                                         ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [Text(data.diaReportNo)],
                                         ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              right: paddingCard,
+                                              left: paddingCard),
+                                          child:Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                             const SizedBox(
+                                                      width: 10,
+                                                    ),
+                                            Text(data.diaReportNo)],
+                                        ),
+                                        ),
+                                        
+                                        
                                         Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
+                                              MainAxisAlignment.start,
                                           children: [
                                             Padding(
                                                 padding: const EdgeInsets.only(
@@ -865,7 +927,7 @@ class _HomePageState extends State<HomePage> {
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: mainColor,
-                                  fontSize: 15),
+                                  fontSize: 18),
                             ),
                           ),
 
@@ -1083,11 +1145,12 @@ class _HomePageState extends State<HomePage> {
               TextButton(
                 onPressed: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CartPage(
-                                token: widget.token,
-                              )));
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CartPage(
+                              token: widget.token,
+                            )),
+                  );
                 },
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -1107,3 +1170,4 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
