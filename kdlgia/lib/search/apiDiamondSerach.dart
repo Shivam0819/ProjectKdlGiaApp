@@ -14,16 +14,16 @@ Future<DiamondData> fetchDataSearchDiamond(
       headers: {'Mob-Token': token},
     );
 
-    print(response.body);
-    print(response.statusCode);
+    // print(response.body);
+    // print(response.statusCode);
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonData = jsonDecode(response.body);
 
       // Check if the data is empty
       if (jsonData['total'] == 0 || jsonData['csv'] == "") {
-        print("************************************************Data is here");
-        print("No data found.");
+        // print("************************************************Data is here");
+        // print("No data found.");
         return DiamondData(
           s: jsonData['s'],
           m: jsonData['m'],
@@ -54,8 +54,8 @@ Future<DiamondData> fetchDataSearchDiamond(
         diamonds: diamondList,
       );
 
-      print("********************************************************************");
-      print(diamondData.total);
+      // print("********************************************************************");
+      // print(diamondData.total);
 
       return diamondData;
     } else {

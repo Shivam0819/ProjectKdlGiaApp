@@ -79,12 +79,13 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
       });
     }
   }
-   _launchURLVideo(String videoUrl) async {
-   final Uri url = Uri.parse(videoUrl);
-   if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-        throw Exception('Could not launch');
+
+  _launchURLVideo(String videoUrl) async {
+    final Uri url = Uri.parse(videoUrl);
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not launch');
     }
-}
+  }
 
   // Future<List<Diamond>> fetchDiamondsFromApi(String url, int page, String token) async {
   //   // Your API call logic here
@@ -120,9 +121,15 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
     });
   }
 
-  _launchURL(String stockId) async {
-    final Uri url =
-        Uri.parse('https://www.gia.edu/report-check?reportno=$stockId');
+
+  _launchURL(String stockId, String lab) async {
+    Uri url;
+    if (lab == "GIA") {
+      url = Uri.parse('https://www.gia.edu/report-check?reportno=$stockId');
+    } else {
+      url = Uri.parse('https://www.igi.org/verify-your-report/?r=$stockId');
+    }
+
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
       throw Exception('Could not launch');
     }
@@ -210,12 +217,18 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                                     SnackBar statusCard;
                                     if (isStared) {
                                       removeFromCart(diamond.id, widget.token);
-                                      statusCard = const SnackBar(content: Text("Diamond remove from cart"),);
+                                      statusCard = const SnackBar(
+                                        content:
+                                            Text("Diamond remove from cart"),
+                                      );
                                     } else {
                                       addToCart(diamond.id, widget.token);
-                                      statusCard = const SnackBar(content: Text("Diamond added to cart"));
+                                      statusCard = const SnackBar(
+                                          content:
+                                              Text("Diamond added to cart"));
                                     }
-                                    ScaffoldMessenger.of(context).showSnackBar(statusCard);
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(statusCard);
                                     setState(() {
                                       isStaredMap[index] = !isStared;
                                     });
@@ -229,7 +242,8 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                                       child: isStared
                                           ? const Icon(Icons.shopping_cart,
                                               color: mainColor) //#2162E0
-                                          : const Icon(Icons.shopping_cart_outlined),
+                                          : const Icon(
+                                              Icons.shopping_cart_outlined),
                                     ),
                                   ),
                                 ),
@@ -245,7 +259,16 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                               children: [
                                 InkWell(
                                   onTap: () {
-                                    _launchURL(diamond.diaReportNo);
+                                    if (diamond.diaReport == "GIA" ||
+                                        diamond.diaReport == "IGI") {
+                                      _launchURL(diamond.diaReportNo,
+                                          diamond.diaReport);
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                              content:
+                                                  Text("Sorry Not Available")));
+                                    }
                                   },
                                   child: const SizedBox(
                                     width: widthOfSearchResultCard,
@@ -281,7 +304,7 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                                 const SizedBox(width: 10),
                                 InkWell(
                                   onTap: () {
-                                     _launchURLVideo(diamond.movieUrl);
+                                    _launchURLVideo(diamond.movieUrl);
                                   },
                                   child: const SizedBox(
                                     width: widthOfSearchResultCard,
@@ -326,6 +349,7 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                                     text: "Amount: ${diamond.dollar1}",
                                     color: Colors.red)),
                           ]),
+                          
                         ],
                       ),
                     ),
@@ -428,20 +452,23 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
             children: [
               TextButton(
                 onPressed: () {
-                 Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => HomePage(
-                                token: widget.token,
-                              )),(route) => false,);
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HomePage(
+                              token: widget.token,
+                            )),
+                    (route) => false,
+                  );
                 },
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.home,),
+                    Icon(
+                      Icons.home,
+                    ),
                     SizedBox(height: 2),
                     Text('Home'),
-                    
                   ],
                 ),
               ),

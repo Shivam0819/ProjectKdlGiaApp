@@ -61,6 +61,19 @@ class _CartPageState extends State<CartPage> {
     _userProfileFuture = ApiService.fetchUserProfile(widget.token);
   }
 
+  _launchURL(String stockId, String lab) async {
+    Uri url;
+    if (lab == "GIA") {
+      url = Uri.parse('https://www.gia.edu/report-check?reportno=$stockId');
+    } else {
+      url = Uri.parse('https://www.igi.org/verify-your-report/?r=$stockId');
+    }
+
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not launch');
+    }
+  }
+
   _launchURLVideo(String videoUrl) async {
     final Uri url = Uri.parse(videoUrl);
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
@@ -236,45 +249,49 @@ class _CartPageState extends State<CartPage> {
                         child: Container(
                           child: Row(
                             children: [
-                              // InkWell(
-                              //   onTap: () {
-                              //     isCheckedMap[index] = !isChecked;
+                              InkWell(
+                                onTap: () {
+                                  isCheckedMap[index] = !isChecked;
 
-                              //     if (!isChecked) {
-                              //       checkItem.add(diamond.id);
-                              //     } else {
-                              //       checkItem.remove(diamond.id);
-                              //     }
-                              //     print(checkItem.join(','));
-                              //     setState(() {
-                              //       // Update isChecked state in the map
-                              //     });
-                              //   },
-                              //   child: SizedBox(
-                              //     width: widthOfSearchResultCard,
-                              //     height: heighOfSearchResultCard,
-                              //     child: Card.filled(
-                              //       color: Colors.white,
-                              //       elevation: 7,
-                              //       child: isChecked
-                              //           ? Image.asset(
-                              //               "assets/app_icons/check.png")
-                              //           : Container(),
-                              //     ),
-                              //   ),
-                              // ),
+                                  if (!isChecked) {
+                                    checkItem.add(diamond.id);
+                                  } else {
+                                    checkItem.remove(diamond.id);
+                                  }
+                                  print(checkItem.join(','));
+                                  setState(() {
+                                    // Update isChecked state in the map
+                                  });
+                                },
+                                child: SizedBox(
+                                  width: widthOfSearchResultCard,
+                                  height: heighOfSearchResultCard,
+                                  child: Card.filled(
+                                    color: Colors.white,
+                                    elevation: 7,
+                                    child: isChecked
+                                        ? Image.asset(
+                                            "assets/app_icons/check.png")
+                                        : Container(),
+                                  ),
+                                ),
+                              ),
                               const SizedBox(width: 10),
                               InkWell(
                                 onTap: () {
-                                    removeFromCart(diamond.id, widget.token);
-                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Diamond remove from cart")));
-                                   
+                                  removeFromCart(diamond.id, widget.token);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              "Diamond remove from cart")));
+
                                   Navigator.pushAndRemoveUntil(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => CartPage(
                                                 token: widget.token,
-                                              )),(route)=>false);
+                                              )),
+                                      (route) => false);
                                 },
                                 child: SizedBox(
                                   width: widthOfSearchResultCard,
@@ -285,7 +302,8 @@ class _CartPageState extends State<CartPage> {
                                     child: isStared
                                         ? const Icon(Icons.shopping_cart,
                                             color: mainColor) //#2162E0
-                                        : const Icon(Icons.shopping_cart_outlined),
+                                        : const Icon(
+                                            Icons.shopping_cart_outlined),
                                   ),
                                 ),
                               ),
@@ -300,14 +318,25 @@ class _CartPageState extends State<CartPage> {
                           child: Row(
                             children: [
                               InkWell(
-                                onTap: () {},
+                                onTap: () {
+                                  if (diamond.diaReport == "GIA" ||
+                                      diamond.diaReport == "IGI") {
+                                    _launchURL(
+                                        diamond.diaReportNo, diamond.diaReport);
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text(
+                                                "Sorry!!! Not Available")));
+                                  }
+                                },
                                 child: const SizedBox(
                                   width: widthOfSearchResultCard,
                                   height: heighOfSearchResultCard,
                                   child: Card.filled(
                                     color: Colors.white,
                                     elevation: 7,
-                                    child: Icon(Icons.web_outlined),
+                                    child: Icon(Icons.class_rounded),
                                   ),
                                 ),
                               ),
@@ -321,7 +350,6 @@ class _CartPageState extends State<CartPage> {
                                           imageUrl: diamond.imageUrl);
                                     },
                                   );
-                                  print(diamond.imageUrl);
                                 },
                                 child: const SizedBox(
                                   width: widthOfSearchResultCard,
@@ -467,6 +495,7 @@ void _showOrderDialog(BuildContext context, String token, String subide,
     Future<CartResponse> cartResponse) {
   final TextEditingController receiverController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
+  final TextEditingController note = TextEditingController();
 
   showDialog(
     context: context,
@@ -489,6 +518,13 @@ void _showOrderDialog(BuildContext context, String token, String subide,
               ),
               keyboardType: TextInputType.phone,
             ),
+            TextField(
+              controller: note,
+              decoration: InputDecoration(
+                labelText: 'Note',
+              ),
+              keyboardType: TextInputType.phone,
+            ),
           ],
         ),
         actions: [
@@ -497,10 +533,10 @@ void _showOrderDialog(BuildContext context, String token, String subide,
               // Handle submission here
               String receiverName = receiverController.text;
               String phone = phoneController.text;
-
+              String user_note= note.text;
               // Validate inputs and submit order
               if (receiverName.isNotEmpty && phone.isNotEmpty) {
-                submitOrder(token, subide, receiverName, phone);
+                submitOrder(token, subide, receiverName, phone,cart_note: user_note);
                 var snackBar =
                     SnackBar(content: Text("Order Placed Successfully"));
 

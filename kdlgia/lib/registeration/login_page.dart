@@ -5,14 +5,44 @@ import 'package:kdlgia/registeration/signup_page.dart';
 import 'package:kdlgia/style/constant.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import 'package:kdlgia/style/search_card_ui.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  LoginPage({super.key});
+  @override
+  void initState() {
+    super.initState();
+    _loadCredentials();
+  }
+
+  Future<void> _loadCredentials() async {
+    final prefs = await SharedPreferences.getInstance();
+    final username = prefs.getString('username');
+    final password = prefs.getString('password');
+
+    if (username != null && password != null) {
+      setState(() {
+        _usernameController.text = username;
+        _passwordController.text = password;
+      });
+    }
+  }
+
+  Future<void> _saveCredentials(String username, String password) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('username', username);
+    await prefs.setString('password', password);
+  }
 
   Future<Map<String, String>> login(String username, String password) async {
     String url = 'https://www.kdlgia.com/login';
@@ -32,16 +62,10 @@ class LoginPage extends StatelessWidget {
 
       Map<String, dynamic> jsonResponse = json.decode(response.body);
 
-      // Now you can access individual fields of the decoded response
       String message = jsonResponse['m']; // "Login successful"
       int status = jsonResponse['s']; // 1
       String urlR = jsonResponse['url']; // "/user/"
       String mobToken = jsonResponse['data']['Mob-Token'];
-
-      // print('Message: $message');
-      // print('Status: $status');
-      // print('URL: $url_r');
-      // print('Mob Token: $mobToken');
 
       Map<String, String> results = {
         "Message": message,
@@ -52,9 +76,7 @@ class LoginPage extends StatelessWidget {
 
       return results;
     } catch (e) {
-      // An error occurred during the HTTP request, handle it here
       print('Error: $e');
-      // You can return an error response or re-throw the exception here
       rethrow;
     }
   }
@@ -62,18 +84,17 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     appBar: AppBar(
+      appBar: AppBar(
         backgroundColor: Colors.white,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-                child: Image.asset(
-                  'assets/Images/company_logo.png',
-                  height: 40,
-                ),
-          
+              child: Image.asset(
+                'assets/Images/company_logo.png',
+                height: 40,
+              ),
             ),
             const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,7 +118,6 @@ class LoginPage extends StatelessWidget {
             ),
           ],
         ),
-        
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -145,32 +165,40 @@ class LoginPage extends StatelessWidget {
                         if (username.isNotEmpty && password.isNotEmpty) {
                           login(username, password).then((response) {
                             if (response["Status"] == "1") {
+                              _saveCredentials(username, password); // Save credentials
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => HomePage(
-                                        token:
-                                            response["MobToken"].toString())),
+                                  builder: (context) => HomePage(
+                                    token: response["MobToken"].toString(),
+                                  ),
+                                ),
                               );
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                    content: Text(
-                                        'Login failed. Please try again.')),
+                                  content: Text(
+                                    'Login failed. Please try again.',
+                                  ),
+                                ),
                               );
                             }
                           }).catchError((error) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                  content: Text(
-                                      'An error occurred. Please try again later.')),
+                                content: Text(
+                                  'An error occurred. Please try again later.',
+                                ),
+                              ),
                             );
                           });
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                                content: Text(
-                                    'Please enter username and password.')),
+                              content: Text(
+                                'Please enter username and password.',
+                              ),
+                            ),
                           );
                         }
                       },
@@ -193,15 +221,17 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 10), // Adjust the width as needed
+                  const SizedBox(width: 10),
                   Expanded(
                     child: InkWell(
                       onTap: () {
                         fetchCaptcha().then((value) => {
-                          Navigator.push(context, MaterialPageRoute(builder: (context){
-                         return SignUpPage(imageToken: value,);
-                          
-                        }))
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SignUpPage(imageToken: value),
+                            ),
+                          )
                         });
                       },
                       child: const Card.filled(
@@ -215,7 +245,7 @@ class LoginPage extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: mainColor
+                                color: mainColor,
                               ),
                             ),
                           ),
@@ -232,74 +262,16 @@ class LoginPage extends StatelessWidget {
                   onPressed: () {
                     // Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPasswordPage()));
                   },
-                  child: const Text('Forgot password?', style: TextStyle(color: mainColor),),
+                  child: const Text(
+                    'Forgot password?',
+                    style: TextStyle(color: mainColor),
+                  ),
                 ),
               ),
             ],
           ),
         ),
       ),
-      // bottomNavigationBar: Padding(
-      //   padding: const EdgeInsets.all(
-      //       paddingCard), // Adjust the bottom padding as needed
-      //   child: Container(
-      //     height: 80, // Adjust the height as needed
-      //     decoration: BoxDecoration(
-      //       color: Colors.white,
-      //       borderRadius: BorderRadius.circular(20), // Add rounded corners
-      //       boxShadow: [
-      //         BoxShadow(
-      //           color: Colors.grey.withOpacity(0.5),
-      //           spreadRadius: 2,
-      //           blurRadius: 5,
-      //           offset: const Offset(0, 3), // changes position of shadow
-      //         ),
-      //       ],
-      //     ),
-      //     child: const Row(
-      //       mainAxisAlignment: MainAxisAlignment.spaceAround,
-      //       children: [
-      //         TextButton(
-      //           onPressed: null,
-      //           child: Column(
-      //             children: [
-      //               Icon(Icons.info_outline),
-      //               SizedBox(
-      //                 height: 2,
-      //               ), // Add some space between the icon and text
-      //               Text('About Us'),
-      //             ],
-      //           ),
-      //         ),
-      //         TextButton(
-      //           onPressed:null,
-      //           child: Column(
-      //             children: [
-      //               Icon(Icons.emoji_events_outlined),
-      //               SizedBox(
-      //                 height: 2,
-      //               ), // Add some space between the icon and text
-      //               Text('Achievements'),
-      //             ],
-      //           ),
-      //         ),
-              
-      //         TextButton(
-      //           onPressed: null,
-      //           child: Column(
-      //             children: [
-      //               Icon(Icons.call),
-      //               SizedBox(
-      //                 height: 2,
-      //               ), // Add some space between the icon and text
-      //               Text('Contact Us'),
-      //             ],
-      //           ),
-      //         ),
-      //       ],
-      //     ),
-      //   ),
-      // ),
     );
   }
 }

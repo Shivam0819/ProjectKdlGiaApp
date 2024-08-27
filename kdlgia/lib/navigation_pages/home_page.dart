@@ -41,6 +41,8 @@ class _HomePageState extends State<HomePage> {
   late Future<UserProfile> _userProfileFuture;
 
   late Future<DiamondData> diamondsFuture;
+  late Future<DiamondData> diamondsFutureExclusiveDiamond;
+
   late Future<CartResponse> cartResponse;
   late int stockWehave;
   @override
@@ -49,6 +51,8 @@ class _HomePageState extends State<HomePage> {
     diamondsFuture = fetchDataSearchDiamond(
       widget.token,
     );
+    diamondsFutureExclusiveDiamond = fetchDataSearchDiamond(widget.token,
+        searchQuerry: "q_lab=GIA,IGI&q_perpage=200&q_carat1=2");
     cartResponse = showCarts(widget.token);
     _userProfileFuture = ApiService.fetchUserProfile(widget.token);
   }
@@ -79,9 +83,14 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  _launchURL(String stockId) async {
-    final Uri url =
-        Uri.parse('https://www.gia.edu/report-check?reportno=$stockId');
+  _launchURL(String stockId, String lab) async {
+    Uri url;
+    if (lab == "GIA") {
+      url = Uri.parse('https://www.gia.edu/report-check?reportno=$stockId');
+    } else {
+      url = Uri.parse('https://www.igi.org/verify-your-report/?r=$stockId');
+    }
+
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
       throw Exception('Could not launch');
     }
@@ -92,37 +101,9 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset(
-                'assets/Images/company_logo.png',
-                height: 40,
-              ),
-            ),
-            const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "KDL Gia",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  "kdlgia17@gmail.com",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 14,
-                  ),
-                ),
-              ],
-            ),
-          ],
+        title: Center(
+          child: Text("Home"),
+
         ),
         actions: [
           PopupMenuButton<String>(
@@ -207,8 +188,7 @@ class _HomePageState extends State<HomePage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.shopping_cart,
-                              size: 60, color: mainColor),
+                          Icon(Icons.shopping_cart, size: 60, color: mainColor),
                           TextStyleHeader(
                             text: "Cart",
                             colors: mainColor,
@@ -444,7 +424,7 @@ class _HomePageState extends State<HomePage> {
                       ),
 
                       FutureBuilder(
-                        future: diamondsFuture,
+                        future: diamondsFutureExclusiveDiamond,
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -456,21 +436,39 @@ class _HomePageState extends State<HomePage> {
 
                             if (snapshot.hasData) {
                               // Initialize temp with the first diamond
-                              var temp = snapshot.data!.diamonds[0];
+                              var temp;
+                              var temp1 = [];
 
+                              print(snapshot.data!.diamonds.length);
+                              var source = [
+                                "PARTH",
+                                "LU",
+                                "LDD",
+                                "KT",
+                                "YD",
+                                "H"
+                              ];
                               for (var diam in snapshot.data!.diamonds) {
+                                if (source.contains(diam.diaSource)) {
+                                  temp1.add(diam);
+                                }
+                              }
+                              temp = temp1[0];
+                              for (var diam in temp1) {
                                 // Compare using double.parse for decimal numbers
-                                if (double.parse(temp.back) <
-                                    double.parse(diam.back)) {
-                                  if (double.parse(temp.diaCarat) <
-                                      double.parse(diam.diaCarat)) {
-                                    temp = diam;
-                                  }
+
+                                print(diam.diaSource);
+
+                                if (double.parse(temp.diaCarat) <
+                                    double.parse(diam.diaCarat)) {
+                                  temp = diam;
+                                    // double? val = double.tryParse(diam.dollar1.replaceAll(RegExp(r'[^\d.]'), ''));
+                                    // print(val);
+
                                 }
                               }
 
                               data = temp; // Assign the found diamond to data
-                              print(data.movieUrl);
                             }
 
                             return InkWell(
@@ -539,10 +537,15 @@ class _HomePageState extends State<HomePage> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.start,
                                             children: [
-                                               const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                              Text(data.diaShape,style: const TextStyle(fontWeight: FontWeight.normal),),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(
+                                                data.diaShape,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.normal),
+                                              ),
                                               const SizedBox(
                                                 width: 10,
                                               ),
@@ -558,9 +561,9 @@ class _HomePageState extends State<HomePage> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.start,
                                             children: [
-                                               const SizedBox(
-                                                      width: 10,
-                                                    ),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
                                               Text(data.diaColor),
                                               const SizedBox(
                                                 width: 10,
@@ -577,45 +580,44 @@ class _HomePageState extends State<HomePage> {
                                           padding: const EdgeInsets.only(
                                               right: paddingCard,
                                               left: paddingCard),
-                                          child:Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                             const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                            Text(data.diaCut),
-                                            const SizedBox(
-                                              width: 10,
-                                            ),
-                                            Text(data.diaPolish),
-                                            const SizedBox(
-                                              width: 10,
-                                            ),
-                                            Text(data.diaSymmetry),
-                                            const SizedBox(
-                                              width: 10,
-                                            ),
-                                            Text(data.diaFluorescence)
-                                          ],
-                                        ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(data.diaCut),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(data.diaPolish),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(data.diaSymmetry),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(data.diaFluorescence)
+                                            ],
+                                          ),
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.only(
                                               right: paddingCard,
                                               left: paddingCard),
-                                          child:Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                             const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                            Text(data.diaReportNo)],
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(data.diaReportNo)
+                                            ],
+                                          ),
                                         ),
-                                        ),
-                                        
-                                        
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
@@ -629,8 +631,20 @@ class _HomePageState extends State<HomePage> {
                                                   children: [
                                                     InkWell(
                                                       onTap: () {
-                                                        _launchURL(
-                                                            data!.diaReportNo);
+                                                        if (data!.diaReport ==
+                                                                "GIA" ||
+                                                            data.diaReport ==
+                                                                "IGI") {
+                                                          _launchURL(
+                                                              data.diaReportNo,
+                                                              data.diaReport);
+                                                        } else {
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(const SnackBar(
+                                                                  content: Text(
+                                                                      "Sorry!!! Not Available")));
+                                                        }
                                                       },
                                                       child: const SizedBox(
                                                         width:
@@ -1170,4 +1184,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-

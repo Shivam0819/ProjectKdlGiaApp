@@ -109,7 +109,7 @@ class Diamond {
       diaPlace: json[4],
       diaStatus: json[5],
       canToCart: json[6],
-      diaShape: json[7],
+      diaShape: json[7].toString().toUpperCase(),
       diaCarat: json[8],
       diaColor: json[9],
       diaColorIntensity: json[10],

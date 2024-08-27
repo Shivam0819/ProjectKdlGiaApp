@@ -8,6 +8,7 @@ import 'package:kdlgia/style/search_card_ui.dart';
 import 'package:kdlgia/style/styleTextSearchResult.dart';
 import 'package:kdlgia/style/textStyle.dart';
 // ignore: depend_on_referenced_packages
+
 import 'package:url_launcher/url_launcher.dart';
 
 class SearchDetail extends StatefulWidget {
@@ -28,18 +29,26 @@ class _SearchDetailState extends State<SearchDetail> {
   bool videoSelected = false;
   bool certificateSelected = false;
   bool shareSelected = false;
- _launchURL(String stockId) async {
-   final Uri url = Uri.parse('https://www.gia.edu/report-check?reportno=$stockId');
-   if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-        throw Exception('Could not launch');
+  _launchURL(String stockId, String lab) async {
+    Uri url;
+    if (lab == "GIA") {
+      url = Uri.parse('https://www.gia.edu/report-check?reportno=$stockId');
+    } else {
+      url = Uri.parse('https://www.igi.org/verify-your-report/?r=$stockId');
     }
-}
- _launchURLVideo(String videoUrl) async {
-   final Uri url = Uri.parse(videoUrl);
-   if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-        throw Exception('Could not launch');
+
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not launch');
     }
-}
+  }
+
+  _launchURLVideo(String videoUrl) async {
+    final Uri url = Uri.parse(videoUrl);
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not launch');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget content;
@@ -106,10 +115,9 @@ class _SearchDetailState extends State<SearchDetail> {
                   child: SizedBox(
                     width: widthOfSearchResultCard,
                     height: heighOfSearchResultCard,
-                    child: Card(
-                      color: selectedOption == "image" ? mainColor:Colors.white,
+                    child: Card(                     
                       elevation: 7,
-                      child: Icon(Icons.image),
+                      child: Icon(Icons.image, color: selectedOption == "image" ? mainColor : Colors.white,),
                     ),
                   ),
                 ),
@@ -125,9 +133,9 @@ class _SearchDetailState extends State<SearchDetail> {
                     width: widthOfSearchResultCard,
                     height: heighOfSearchResultCard,
                     child: Card(
-                      color: selectedOption == "video" ? mainColor:Colors.white,
+                      
                       elevation: 7,
-                      child: Icon(Icons.video_call_sharp),
+                      child: Icon(Icons.video_call_sharp, color: selectedOption == "video" ? mainColor : Colors.white,),
                     ),
                   ),
                 ),
@@ -136,17 +144,25 @@ class _SearchDetailState extends State<SearchDetail> {
                   onTap: () {
                     setState(() {
                       selectedOption = "certificate";
-                      _launchURL(widget.diamondDetail.diaReportNo);
-                      
+                      if (widget.diamondDetail.diaReport == "GIA" ||
+                          widget.diamondDetail.diaReport == "IGI") {
+                        _launchURL(widget.diamondDetail.diaReportNo,
+                            widget.diamondDetail.diaReport);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Sorry!!! Not Available")));
+                      }
                     });
                   },
                   child: SizedBox(
                     width: widthOfSearchResultCard,
                     height: heighOfSearchResultCard,
                     child: Card(
-                      color: selectedOption == "certificate" ? mainColor:Colors.white,
                       elevation: 7,
-                      child: Icon(Icons.class_rounded),
+                      child: Icon(Icons.class_rounded, color: selectedOption == "certificate"
+                          ? mainColor
+                          : Colors.white,),
                     ),
                   ),
                 ),
@@ -170,11 +186,36 @@ class _SearchDetailState extends State<SearchDetail> {
                   onTap: () {
                     setState(() {
                       selectedOption = "image";
-                      const snackBar = SnackBar(content: Text("Copy to Clipboard"),duration: Duration(seconds: 5),);
-                      
-                      Clipboard.setData(ClipboardData(text: "Url: https://www.kdlgia.com/diamond/?q_id=${widget.diamondDetail.diaReportNo}&q_id-type=report_no\nCertificate No: ${widget.diamondDetail.diaReportNo}"));
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      const snackBar = SnackBar(
+                        content: Text("Copy to Clipboard"),
+                        duration: Duration(seconds: 5),
+                      );
+                      String pastDetail = """
+Thank you for using KDLGia.com
 
+Diamond Details:
+
+Stone Id: ${widget.diamondDetail.id}
+Lab: ${widget.diamondDetail.diaReport}
+Shape: ${widget.diamondDetail.diaShape.toString().toUpperCase()}
+Carat: ${widget.diamondDetail.diaCarat}
+Clarity: ${widget.diamondDetail.diaClarity}
+Color: ${widget.diamondDetail.diaColor}
+Color Shade: ${widget.diamondDetail.diaColsh}
+Cut/Pol/Sym: ${widget.diamondDetail.diaCut}/${widget.diamondDetail.diaPolish}/${widget.diamondDetail.diaSymmetry}
+Measurement: ${widget.diamondDetail.diaDiameter}
+Table: ${widget.diamondDetail.diaTable}
+Depth: ${widget.diamondDetail.diaDepth}
+
+Video: ${widget.diamondDetail.movieUrl}
+
+Image: ${widget.diamondDetail.imageUrl}
+""";
+
+                      Clipboard.setData(ClipboardData(
+                          text:
+                              pastDetail));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     });
                   },
                   child: const SizedBox(
@@ -188,23 +229,23 @@ class _SearchDetailState extends State<SearchDetail> {
                   ),
                 ),
                 // Add to cart icon
-            //     InkWell(
-            //       onTap: () {
-            //         setState(() {});
-            //       },
-            //       child: const SizedBox(
-            //         width: widthOfSearchResultCard,
-            //         height: heighOfSearchResultCard,
-            //         child: Card(
-            //           color: Colors.white,
-            //           elevation: 7,
-            //           child: Icon(Icons.shopping_cart),
-            //         ),
-            //       ),
-            //     ),
-               ],
-             ),
-            
+                //     InkWell(
+                //       onTap: () {
+                //         setState(() {});
+                //       },
+                //       child: const SizedBox(
+                //         width: widthOfSearchResultCard,
+                //         height: heighOfSearchResultCard,
+                //         child: Card(
+                //           color: Colors.white,
+                //           elevation: 7,
+                //           child: Icon(Icons.shopping_cart),
+                //         ),
+                //       ),
+                //     ),
+              ],
+            ),
+
             StyledText(
               text:
                   "${widget.diamondDetail.diaShape.toUpperCase()} ${widget.diamondDetail.id}",
@@ -219,7 +260,7 @@ class _SearchDetailState extends State<SearchDetail> {
               color: mainColor,
             ),
             StyledText(
-              text: "Price: ${widget.diamondDetail.dollar1}",
+              text: "Amount: ${widget.diamondDetail.dollar1}",
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: mainColor,
@@ -616,13 +657,11 @@ class _SearchDetailState extends State<SearchDetail> {
                         child: StyledTextSearchDetail(
                             text: widget.diamondDetail.diaHna)),
                   ]),
-                  
                 ],
               ),
           ],
         ),
       ),
-      
     );
   }
 }

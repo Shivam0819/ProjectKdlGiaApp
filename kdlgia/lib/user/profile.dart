@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:kdlgia/style/search_card_ui.dart';
 import 'package:kdlgia/user/apiUserInfo.dart';
 import 'package:kdlgia/user/userProfile.dart'; // Import ApiService
 
@@ -99,6 +100,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
+                      color: mainColor
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -125,7 +127,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: _updateProfile,
-                    child: const Text('Update'),
+                    child: const Text('Update', style: TextStyle(color: mainColor)),
                   ),
                 ],
               ),
@@ -148,6 +150,7 @@ class _ProfilePageState extends State<ProfilePage> {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
+        labelStyle: TextStyle(color: mainColor),
         border: const OutlineInputBorder(),
       ),
     );
