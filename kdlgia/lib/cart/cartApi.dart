@@ -37,13 +37,22 @@ Future<CartResponse> showCarts(String token) async {
       Uri.parse(url),
       headers: {'Mob-Token': token},
     );
- 
+    // print("******************************************");
+    //   print(response.statusCode);
+    //   print("******************************************");
 
     if (response.statusCode == 200) {
       // Handle success response
 
       final parsed = jsonDecode(response.body.toString());
+      print("******************************************");
+      print(parsed);
+      print("******************************************");
       CartResponse cartResponse = CartResponse.fromJson(parsed);
+      print("******************************************");
+      print(cartResponse);
+      print("******************************************");
+
       
       return cartResponse;
     } else {

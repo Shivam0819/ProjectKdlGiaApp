@@ -38,27 +38,22 @@ class _CartPageState extends State<CartPage> {
 
     // Fetch cart data and store the future
     _futureCartResponse = showCarts(widget.token);
-
+    // Fetch the user profile and store the future
+    _userProfileFuture = ApiService.fetchUserProfile(widget.token);
     // Chain the future to handle the response and fetch diamond search data
-
     _diamondSearchDate = _futureCartResponse.then((value) {
-      // Construct the query string by joining item IDs with commas
-      // if(value.cart == 0){
-      //   return
-      // }
+      print("***********************************************************");
+      print(value);
+      print("***********************************************************");
+      
       String query =
           "q_perpage=200&q_id=01,${value.cart?.item.join(',')}&q_id_type=id";
-
-      // Print the constructed query for debugging purposes
-      print(query);
-
       // Fetch the diamond search data using the constructed query
       // Ensure this method returns Future<DiamondData>
       return fetchDataSearchDiamond(widget.token, searchQuerry: query);
     });
 
-    // Fetch the user profile and store the future
-    _userProfileFuture = ApiService.fetchUserProfile(widget.token);
+    
   }
 
   _launchURL(String stockId, String lab) async {
@@ -80,27 +75,7 @@ class _CartPageState extends State<CartPage> {
       throw Exception('Could not launch');
     }
   }
-  // Future<CartResponse> showCarts(String token) async {
-  //   String url = 'https://www.kdlgia.com/consumer/cart';
 
-  //   try {
-  //     http.Response response = await http.get(
-  //       Uri.parse(url),
-  //       headers: {'Mob-Token': token},
-  //     );
-  //     print("*********************************Show Carts detail");
-  //     print(response.body);
-
-  //     if (response.statusCode == 200) {
-  //       final parsed = jsonDecode(response.body.toString());
-  //       return CartResponse.fromJson(parsed);
-  //     } else {
-  //       throw Exception('Failed to fetch cart details');
-  //     }
-  //   } catch (e) {
-  //     throw Exception('Error fetching cart details: $e');
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +87,6 @@ class _CartPageState extends State<CartPage> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
-              print(snapshot.error);
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (snapshot.hasData) {
               return Text(
