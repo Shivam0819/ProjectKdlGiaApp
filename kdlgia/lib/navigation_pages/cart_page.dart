@@ -42,9 +42,7 @@ class _CartPageState extends State<CartPage> {
     _userProfileFuture = ApiService.fetchUserProfile(widget.token);
     // Chain the future to handle the response and fetch diamond search data
     _diamondSearchDate = _futureCartResponse.then((value) {
-      print("***********************************************************");
-      print(value);
-      print("***********************************************************");
+   
       
       String query =
           "q_perpage=200&q_id=01,${value.cart?.item.join(',')}&q_id_type=id";
@@ -232,7 +230,6 @@ class _CartPageState extends State<CartPage> {
                                   } else {
                                     checkItem.remove(diamond.id);
                                   }
-                                  print(checkItem.join(','));
                                   setState(() {
                                     // Update isChecked state in the map
                                   });
@@ -259,13 +256,13 @@ class _CartPageState extends State<CartPage> {
                                           content: Text(
                                               "Diamond remove from cart")));
 
-                                  Navigator.pushAndRemoveUntil(
+                                  Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => CartPage(
                                                 token: widget.token,
                                               )),
-                                      (route) => false);
+                                      );
                                 },
                                 child: SizedBox(
                                   width: widthOfSearchResultCard,

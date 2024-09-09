@@ -45,13 +45,9 @@ Future<CartResponse> showCarts(String token) async {
       // Handle success response
 
       final parsed = jsonDecode(response.body.toString());
-      print("******************************************");
-      print(parsed);
-      print("******************************************");
+
       CartResponse cartResponse = CartResponse.fromJson(parsed);
-      print("******************************************");
-      print(cartResponse);
-      print("******************************************");
+   
 
       
       return cartResponse;

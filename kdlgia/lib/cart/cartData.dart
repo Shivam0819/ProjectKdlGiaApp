@@ -45,7 +45,9 @@ class CartData {
       item: List<String>.from(json['item'] ?? []),
       total: json['total'] ?? 0,
       amount: json['amount'] ?? '',
-      form: json['form'] == null ? null : FormData.fromJson(json['form']),
+      form: (json['form'] == null) || (json['form'].isEmpty)
+          ? null
+          : FormData.fromJson(json['form']),
     );
   }
 }
