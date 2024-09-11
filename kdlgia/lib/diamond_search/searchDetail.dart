@@ -4,12 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kdlgia/search/diamondDataDetail.dart';
+import 'package:kdlgia/share_dna/dan.dart';
 import 'package:kdlgia/style/search_card_ui.dart';
 import 'package:kdlgia/style/styleTextSearchResult.dart';
 import 'package:kdlgia/style/textStyle.dart';
 // ignore: depend_on_referenced_packages
 
 import 'package:url_launcher/url_launcher.dart';
+import 'package:share_plus/share_plus.dart';
 
 class SearchDetail extends StatefulWidget {
   final Diamond diamondDetail;
@@ -29,6 +31,7 @@ class _SearchDetailState extends State<SearchDetail> {
   bool videoSelected = false;
   bool certificateSelected = false;
   bool shareSelected = false;
+
   _launchURL(String stockId, String lab) async {
     Uri url;
     if (lab == "GIA") {
@@ -47,6 +50,64 @@ class _SearchDetailState extends State<SearchDetail> {
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
       throw Exception('Could not launch');
     }
+  }
+
+  void _shareToWhatsApp(messages) async {
+    final message = messages; // Replace with your message
+    final whatsappUrl = Uri.parse("whatsapp://send?text=$message");
+
+    if (await canLaunchUrl(whatsappUrl)) {
+      await launchUrl(
+        whatsappUrl,
+        mode: LaunchMode.externalApplication, // Ensures the phone dialer opens
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('WhatsApp is not installed on your device.')),
+      );
+    }
+  }
+
+  void _showShareOptions(
+      BuildContext context, String pastDetail, SnackBar snackBar) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: Image.asset(
+                "assets/logo/whatsapp.png",
+                color: Colors.green,
+              ),
+              title: Text('Share via WhatsApp'),
+              onTap: () {
+                _shareToWhatsApp(pastDetail);
+                Navigator.pop(context);
+              },
+            ),
+            // ListTile(
+            //   leading: Icon(Icons.chat),
+            //   title: Text('Share via WeChat'),
+            //   onTap: () {
+            //     _shareToWeChat();
+            //     Navigator.pop(context);
+            //   },
+            // ),
+            ListTile(
+              leading: Icon(Icons.copy),
+              title: Text('Copy to Clipboard'),
+              onTap: () {
+                Clipboard.setData(ClipboardData(text: pastDetail));
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -115,9 +176,14 @@ class _SearchDetailState extends State<SearchDetail> {
                   child: SizedBox(
                     width: widthOfSearchResultCard,
                     height: heighOfSearchResultCard,
-                    child: Card(                     
+                    child: Card(
                       elevation: 7,
-                      child: Icon(Icons.image, color: selectedOption == "image" ? mainColor : Colors.white,),
+                      child: Icon(
+                        Icons.image,
+                        color: selectedOption == "image"
+                            ? mainColor
+                            : Colors.black,
+                      ),
                     ),
                   ),
                 ),
@@ -133,9 +199,13 @@ class _SearchDetailState extends State<SearchDetail> {
                     width: widthOfSearchResultCard,
                     height: heighOfSearchResultCard,
                     child: Card(
-                      
                       elevation: 7,
-                      child: Icon(Icons.video_call_sharp, color: selectedOption == "video" ? mainColor : Colors.white,),
+                      child: Icon(
+                        Icons.video_call_sharp,
+                        color: selectedOption == "video"
+                            ? mainColor
+                            : Colors.black,
+                      ),
                     ),
                   ),
                 ),
@@ -160,9 +230,12 @@ class _SearchDetailState extends State<SearchDetail> {
                     height: heighOfSearchResultCard,
                     child: Card(
                       elevation: 7,
-                      child: Icon(Icons.class_rounded, color: selectedOption == "certificate"
-                          ? mainColor
-                          : Colors.white,),
+                      child: Icon(
+                        Icons.class_rounded,
+                        color: selectedOption == "certificate"
+                            ? mainColor
+                            : Colors.black,
+                      ),
                     ),
                   ),
                 ),
@@ -184,13 +257,7 @@ class _SearchDetailState extends State<SearchDetail> {
                 // Share icon
                 InkWell(
                   onTap: () {
-                    setState(() {
-                      selectedOption = "image";
-                      const snackBar = SnackBar(
-                        content: Text("Copy to Clipboard"),
-                        duration: Duration(seconds: 5),
-                      );
-                      String pastDetail = """
+                    String pastDetail = """
 Thank you for using KDLGia.com
 
 Diamond Details:
@@ -211,11 +278,15 @@ Video: ${widget.diamondDetail.movieUrl}
 
 Image: ${widget.diamondDetail.imageUrl}
 """;
+                    const snackBar = SnackBar(
+                      content: Text("Copy to Clipboard"),
+                      duration: Duration(seconds: 5),
+                    );
+                    // fetchDnaData(widget.)
+                    _showShareOptions(context, pastDetail, snackBar);
 
-                      Clipboard.setData(ClipboardData(
-                          text:
-                              pastDetail));
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    setState(() {
+                      selectedOption = "image";
                     });
                   },
                   child: const SizedBox(
@@ -436,6 +507,13 @@ Image: ${widget.diamondDetail.imageUrl}
                     TableCell(
                         child: StyledTextSearchDetail(
                             text: widget.diamondDetail.rap)),
+                  ]),
+                  TableRow(children: [
+                    const TableCell(
+                        child: StyledTextSearchDetail(text: "Key To Symbol:")),
+                    TableCell(
+                        child: StyledTextSearchDetail(
+                            text: widget.diamondDetail.dia_kts))
                   ]),
                   TableRow(children: [
                     const TableCell(

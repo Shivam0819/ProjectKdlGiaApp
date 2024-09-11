@@ -5,17 +5,15 @@ import 'package:kdlgia/search/diamondDataDetail.dart';
 
 Future<DiamondData> fetchDataSearchDiamond(
     String token, {String searchQuerry = ""}) async {
-  String url = 'https://www.kdlgia.com/diamond/?$searchQuerry&out_type=json';
-  print("object:$url ");
-
+  String url = 'https://www.kdlgia.com/diamond/?q_is_schv=1&pdflink=1&cols=dia_kts&$searchQuerry&out_type=json';
+  print(url);
   try {
     http.Response response = await http.get(
       Uri.parse(url),
       headers: {'Mob-Token': token},
     );
 
-    // print(response.body);
-    // print(response.statusCode);
+     // print(response.statusCode);
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonData = jsonDecode(response.body);
@@ -41,7 +39,8 @@ Future<DiamondData> fetchDataSearchDiamond(
       List<Diamond> diamondList = [];
       for (int i = 1; i < data.length; i++) {
         diamondList.add(Diamond.fromJson(data[i]));
-      }
+      }  
+      // print(diamondList[0].dia_kts);
 
       DiamondData diamondData = DiamondData(
         s: jsonData['s'],

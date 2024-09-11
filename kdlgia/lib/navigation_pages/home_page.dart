@@ -96,6 +96,55 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void _sendWhatsAppMessage(String salesManagerPhone) async {
+    final whatsappUrl = Uri.parse(
+        "whatsapp://send?phone=$salesManagerPhone&text=Hello, I would like to inquire about..."); // Customize the message
+    if (await canLaunchUrl(whatsappUrl)) {
+      await launchUrl(
+        whatsappUrl,
+        mode: LaunchMode.externalApplication, // Ensures the phone dialer opens
+      );
+    } else {
+      print('WhatsApp is not installed.');
+    }
+  }
+
+  void _makePhoneCall(String salesManagerPhone) async {
+    final phoneUrl = Uri.parse('tel:$salesManagerPhone');
+    if (await canLaunchUrl(phoneUrl)) {
+      await launchUrl(
+        phoneUrl,
+        mode: LaunchMode.externalApplication, // Ensures the phone dialer opens
+      );
+    } else {
+      print('Could not launch phone call.');
+    }
+  }
+
+void _connectOnSkype(String skypeUsername) async {
+  print(skypeUsername);
+  final skypeUrl = Uri.parse('skype:$skypeUsername?call');
+  if (await canLaunchUrl(skypeUrl)) {
+    await launchUrl(
+      skypeUrl,
+      mode: LaunchMode.externalApplication, // Ensures it opens in an external app
+    );
+  } else {
+    print('Skype is not installed or could not open Skype.');
+  }
+}
+  void _extractAndConnect(String inputString) {
+    // Split the input string by spaces and colons
+    List<String> parts = inputString.split(' ');
+    String skypeChina = parts[1].split('：')[1];
+    // String skypeOversea = parts[3].split('：')[1];
+
+    // print('Skype Oversea: $skypeOversea');
+
+    _connectOnSkype(skypeChina);
+    // _connectOnSkype(skypeOversea);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,7 +152,6 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.white,
         title: Center(
           child: Text("Home"),
-
         ),
         actions: [
           PopupMenuButton<String>(
@@ -462,9 +510,8 @@ class _HomePageState extends State<HomePage> {
                                 if (double.parse(temp.diaCarat) <
                                     double.parse(diam.diaCarat)) {
                                   temp = diam;
-                                    // double? val = double.tryParse(diam.dollar1.replaceAll(RegExp(r'[^\d.]'), ''));
-                                    // print(val);
-
+                                  // double? val = double.tryParse(diam.dollar1.replaceAll(RegExp(r'[^\d.]'), ''));
+                                  // print(val);
                                 }
                               }
 
@@ -641,9 +688,10 @@ class _HomePageState extends State<HomePage> {
                                                         } else {
                                                           ScaffoldMessenger.of(
                                                                   context)
-                                                              .showSnackBar(const SnackBar(
-                                                                  content: Text(
-                                                                      "Sorry!!! Not Available")));
+                                                              .showSnackBar(
+                                                                  const SnackBar(
+                                                                      content: Text(
+                                                                          "Sorry!!! Not Available")));
                                                         }
                                                       },
                                                       child: const SizedBox(
@@ -982,7 +1030,11 @@ class _HomePageState extends State<HomePage> {
                             height: 5,
                           ),
                           // Mail******************
-                          InsideShadowCard(
+                          InkWell(
+                          onTap: (){
+                            _makePhoneCall(salesPersonaPhone);
+                          },
+                          child: InsideShadowCard(
                               child: Row(
                             children: [
                               SizedBox(
@@ -1003,11 +1055,18 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               )
                             ],
-                          )),
+                          ))
+                          ),
                           const SizedBox(
                             height: 5,
                           ),
                           // WhatSup ******************
+                          InkWell(
+                            onTap: (){
+                              _sendWhatsAppMessage(salesPersonWhatsapp);
+                            },
+
+                          child: 
                           InsideShadowCard(
                               child: Row(
                             children: [
@@ -1028,7 +1087,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               )
                             ],
-                          )),
+                          ))),
                           const SizedBox(height: 5),
                           // Whatsup
                           InsideShadowCard(
@@ -1055,6 +1114,13 @@ class _HomePageState extends State<HomePage> {
                           const SizedBox(
                             height: 5,
                           ),
+                          InkWell(
+                            onTap: () {
+                              _extractAndConnect(salesPersonSkype);
+                              
+                            },
+
+                          child: 
                           InsideShadowCard(
                             child: Row(
                               children: [
@@ -1082,7 +1148,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ],
                             ),
-                          )
+                          ))
                         ],
                       );
                     }

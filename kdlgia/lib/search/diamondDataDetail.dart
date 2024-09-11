@@ -49,6 +49,8 @@ class Diamond {
   final String rmbTax;
   final String rap;
   var fieldMore;
+  final String dia_kts;
+
 
   Diamond({
     required this.inCart,
@@ -98,6 +100,7 @@ class Diamond {
     required this.rmbTax,
     required this.rap,
     required this.fieldMore,
+    required this.dia_kts,
   });
 
   factory Diamond.fromJson(List<dynamic> json) {
@@ -149,6 +152,7 @@ class Diamond {
       rmbTax: json[44],
       rap: json[45],
       fieldMore: json[46],
+      dia_kts: json[47],
     );
   }
 }

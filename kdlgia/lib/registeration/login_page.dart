@@ -268,6 +268,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
+              Image.asset("assets/logo/show.jpeg")
             ],
           ),
         ),
