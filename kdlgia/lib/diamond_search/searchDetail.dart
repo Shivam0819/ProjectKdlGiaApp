@@ -15,8 +15,9 @@ import 'package:share_plus/share_plus.dart';
 
 class SearchDetail extends StatefulWidget {
   final Diamond diamondDetail;
+  final String token;
 
-  const SearchDetail({super.key, required this.diamondDetail});
+  const SearchDetail({super.key, required this.diamondDetail, required this.token});
 
   @override
   _SearchDetailState createState() => _SearchDetailState();
@@ -31,6 +32,27 @@ class _SearchDetailState extends State<SearchDetail> {
   bool videoSelected = false;
   bool certificateSelected = false;
   bool shareSelected = false;
+  String dna_link= "";
+  
+
+  @override
+  void initState(){
+    super.initState();
+    fetchDnaLink();
+
+  }
+  
+   Future<void> fetchDnaLink() async {
+    try {
+      // Fetch the data asynchronously
+      String link = await fetchDnaData(widget.token, widget.diamondDetail.id);
+      setState(() {
+        dna_link = link; // Update the state with the fetched link
+      });
+    } catch (e) {
+      print('Error fetching DNA data: $e');
+    }
+  }
 
   _launchURL(String stockId, String lab) async {
     Uri url;
@@ -257,6 +279,7 @@ class _SearchDetailState extends State<SearchDetail> {
                 // Share icon
                 InkWell(
                   onTap: () {
+                    
                     String pastDetail = """
 Thank you for using KDLGia.com
 
@@ -273,17 +296,19 @@ Cut/Pol/Sym: ${widget.diamondDetail.diaCut}/${widget.diamondDetail.diaPolish}/${
 Measurement: ${widget.diamondDetail.diaDiameter}
 Table: ${widget.diamondDetail.diaTable}
 Depth: ${widget.diamondDetail.diaDepth}
+Key To Symbol: ${widget.diamondDetail.dia_kts}
 
-Video: ${widget.diamondDetail.movieUrl}
+X-Ray: ${dna_link}
 
-Image: ${widget.diamondDetail.imageUrl}
+Thank you!
 """;
                     const snackBar = SnackBar(
                       content: Text("Copy to Clipboard"),
                       duration: Duration(seconds: 5),
                     );
                     // fetchDnaData(widget.)
-                    _showShareOptions(context, pastDetail, snackBar);
+                    // _showShareOptions(context, dna_link, snackBar);
+                    _shareContent(context, pastDetail);
 
                     setState(() {
                       selectedOption = "image";
@@ -743,3 +768,13 @@ Image: ${widget.diamondDetail.imageUrl}
     );
   }
 }
+void _shareContent(BuildContext context, String textMessage) {
+    final RenderBox box = context.findRenderObject() as RenderBox;
+
+    Share.share(
+      '$textMessage',
+      subject: 'Look what I found!',
+      sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
+    );
+  }
+

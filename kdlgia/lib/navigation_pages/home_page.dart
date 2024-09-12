@@ -4,7 +4,6 @@ import 'package:flutter/widgets.dart';
 import 'package:kdlgia/api_assets_popup/imagePopup.dart';
 import 'package:kdlgia/cart/cartApi.dart';
 import 'package:kdlgia/cart/cartData.dart';
-import 'package:kdlgia/diamond_search/searchDetail.dart';
 import 'package:kdlgia/search/diamondDataDetail.dart';
 import 'package:kdlgia/navigation_pages/cart_page.dart';
 import 'package:kdlgia/navigation_pages/search_page.dart';
@@ -18,7 +17,7 @@ import 'package:kdlgia/style/constant.dart';
 import 'package:kdlgia/style/search_card_ui.dart';
 import 'package:kdlgia/style/textStyle.dart';
 import 'package:kdlgia/user/apiUserInfo.dart';
-import 'package:kdlgia/user/profile.dart';
+import 'package:kdlgia/user/profile.dart'; 
 import 'package:kdlgia/user/userProfile.dart';
 import 'package:url_launcher/url_launcher.dart'; // Import the search page
 
@@ -48,6 +47,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    // fetchDnaData(widget.token,"10195293");
     diamondsFuture = fetchDataSearchDiamond(
       widget.token,
     );

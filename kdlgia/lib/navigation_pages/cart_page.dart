@@ -200,7 +200,7 @@ class _CartPageState extends State<CartPage> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => SearchDetail(
-                          diamondDetail: diamond,
+                          diamondDetail: diamond, token: widget.token,
                         )));
           },
           child: Padding(
@@ -494,7 +494,6 @@ void _showOrderDialog(BuildContext context, String token, String subide,
               decoration: InputDecoration(
                 labelText: 'Note',
               ),
-              keyboardType: TextInputType.phone,
             ),
           ],
         ),

@@ -121,6 +121,19 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
     });
   }
 
+  String get_querry() {
+    String querry = "";
+
+    isCheckedMap.forEach((key, value) {
+      print(key);
+      if (value) {
+        print(_diamonds[key]);
+        querry = querry + _diamonds[key].id + ",";
+      }
+      print(querry);
+    });
+    return querry;
+  }
 
   _launchURL(String stockId, String lab) async {
     Uri url;
@@ -171,6 +184,7 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                   MaterialPageRoute(
                       builder: (context) => SearchDetail(
                             diamondDetail: diamond,
+                            token: widget.token,
                           )));
             },
             child: Padding(
@@ -196,6 +210,7 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                                 //     setState(() {
                                 //       isCheckedMap[index] =
                                 //           !isChecked; // Update isChecked state in the map
+                                //       // print(isCheckedMap);
                                 //     });
                                 //   },
                                 //   child: SizedBox(
@@ -349,7 +364,6 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                                     text: "Amount: ${diamond.dollar1}",
                                     color: Colors.red)),
                           ]),
-                          
                         ],
                       ),
                     ),
