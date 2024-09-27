@@ -6,7 +6,7 @@ import 'package:kdlgia/search/diamondDataDetail.dart';
 Future<DiamondData> fetchDataSearchDiamond(
     String token, {String searchQuerry = ""}) async {
   String url = 'https://www.kdlgia.com/diamond/?q_is_schv=1&pdflink=1&cols=dia_kts&$searchQuerry&out_type=json';
-  print(url);
+  
   try {
     http.Response response = await http.get(
       Uri.parse(url),

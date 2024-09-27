@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kdlgia/navigation_pages/home_page.dart';
-import 'package:kdlgia/registeration/contact_us.dart';
+// import 'package:kdlgia/registeration/contact_us.dart';
 import 'package:kdlgia/registeration/signUpApi.dart';
 import 'package:kdlgia/registeration/signup_page.dart';
 import 'package:kdlgia/style/constant.dart';
@@ -9,7 +9,11 @@ import 'dart:convert';
 import 'package:kdlgia/style/search_card_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:photo_view/photo_view_gallery.dart';
+// import 'package:photo_view/photo_view_gallery.dart';
+
+// To update the app
+import 'package:in_app_update/in_app_update.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -21,12 +25,38 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  double _currentScale = 1.0; // Current scale of the image
-  bool _isZoomedIn = false; // Flag to track if the image is zoomed in
+  // double _currentScale = 1.0; // Current scale of the image
+  // bool _isZoomedIn = false; // Flag to track if the image is zoomed in
+
+  // Update the app variable 
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> _checkForUpdate() async {
+    try {
+      final appUpdateInfo = await InAppUpdate.checkForUpdate();
+      if (appUpdateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
+        await InAppUpdate.startFlexibleUpdate().then((_) async {
+          await InAppUpdate.completeFlexibleUpdate();
+        });
+      }
+    } catch (e) {
+      print("Error checking for update: $e"); 
+    }
+  }
+
+  void showSnack(String text) {
+    if (_scaffoldKey.currentContext != null) {
+      ScaffoldMessenger.of(_scaffoldKey.currentContext!)
+          .showSnackBar(SnackBar(content: Text(text)));
+    }
+  }
   @override
   void initState() {
     super.initState();
+    
     _loadCredentials();
+    _checkForUpdate();
   }
 
   Future<void> _loadCredentials() async {
