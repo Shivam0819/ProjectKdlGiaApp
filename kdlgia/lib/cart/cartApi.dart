@@ -5,6 +5,7 @@ import 'dart:convert';
 
 Future<void> addToCart(String itemId, String token) async {
   String url = 'https://www.kdlgia.com/consumer/cart/add/$itemId';
+  print(url);
 
   try {
     http.Response response = await http.get(
@@ -47,6 +48,7 @@ Future<CartResponse> showCarts(String token) async {
       final parsed = jsonDecode(response.body.toString());
 
       CartResponse cartResponse = CartResponse.fromJson(parsed);
+      print(response.body);
    
 
       
@@ -99,8 +101,8 @@ Future<String> submitOrder(String token, String subids, String cart_receiver, St
     'subids': subids,
     'depids': '',
     'cart_receiver': cart_receiver,
-    'cart_phone': cart_note,
-    'cart_note': 'a',
+    'cart_phone': cart_phone,
+    'cart_note': cart_note,
   };
 
   final response = await http.post(
@@ -108,6 +110,8 @@ Future<String> submitOrder(String token, String subids, String cart_receiver, St
     headers: headers,
     body: body,
   );
+  print(url.path);
+  print(body);
 
   if (response.statusCode == 200) {
     print(response.body);
