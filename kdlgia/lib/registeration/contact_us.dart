@@ -31,7 +31,7 @@ class _ContactUsState extends State<ContactUs> {
     }
   };
 
-  String show = "Mumbai";
+  String show = "Hong Kong";
   _launchURL(String url_link) async {
     Uri url = Uri.parse(url_link);
     
@@ -139,54 +139,54 @@ _launchURL("https://play.google.com/store/apps/details?id=com.shivam.kdlgia&pcam
             const SizedBox(height: 10),
             Row(
               children: [
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      show = "Mumbai";
-                    });
-                  },
-                  child: Container(
-                    height: 50,
-                    width: 100,
-                    child: Card.outlined(
-                      shadowColor: Colors.black,
-                      surfaceTintColor: Colors.red,
-                      color: (show == "Mumbai") ? mainColor : Colors.white,
-                      child: Center(
-                        child: Text("Mumbai",
-                            style: TextStyle(
-                              color: (show == "Mumbai")
-                                  ? Colors.white
-                                  : Colors.black,
-                            )),
-                      ),
-                    ),
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      show = "Surat";
-                    });
-                  },
-                  child: Container(
-                    height: 50,
-                    width: 100,
-                    child: Card.outlined(
-                      shadowColor: Colors.black,
-                      surfaceTintColor: Colors.red,
-                      color: (show == "Surat") ? mainColor : Colors.white,
-                      child: Center(
-                        child: Text("Surat",
-                            style: TextStyle(
-                              color: (show == "Surat")
-                                  ? Colors.white
-                                  : Colors.black,
-                            )),
-                      ),
-                    ),
-                  ),
-                ),
+                // InkWell(
+                //   onTap: () {
+                //     setState(() {
+                //       show = "Mumbai";
+                //     });
+                //   },
+                //   child: Container(
+                //     height: 50,
+                //     width: 100,
+                //     child: Card.outlined(
+                //       shadowColor: Colors.black,
+                //       surfaceTintColor: Colors.red,
+                //       color: (show == "Mumbai") ? mainColor : Colors.white,
+                //       child: Center(
+                //         child: Text("Mumbai",
+                //             style: TextStyle(
+                //               color: (show == "Mumbai")
+                //                   ? Colors.white
+                //                   : Colors.black,
+                //             )),
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                // InkWell(
+                //   onTap: () {
+                //     setState(() {
+                //       show = "Surat";
+                //     });
+                //   },
+                //   child: Container(
+                //     height: 50,
+                //     width: 100,
+                //     child: Card.outlined(
+                //       shadowColor: Colors.black,
+                //       surfaceTintColor: Colors.red,
+                //       color: (show == "Surat") ? mainColor : Colors.white,
+                //       child: Center(
+                //         child: Text("Surat",
+                //             style: TextStyle(
+                //               color: (show == "Surat")
+                //                   ? Colors.white
+                //                   : Colors.black,
+                //             )),
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 InkWell(
                   onTap: () {
                     setState(() {
