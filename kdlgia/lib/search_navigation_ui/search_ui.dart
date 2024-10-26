@@ -412,6 +412,7 @@ class _SearchUiState extends State<SearchUi> {
     super.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

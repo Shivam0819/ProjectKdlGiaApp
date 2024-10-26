@@ -5,6 +5,7 @@ import 'package:kdlgia/cart/cartApi.dart';
 import 'package:kdlgia/cart/cartData.dart';
 import 'package:kdlgia/diamond_search/searchDetail.dart';
 import 'package:kdlgia/navigation_pages/home_page.dart';
+import 'package:kdlgia/order_status/orderPage.dart';
 import 'package:kdlgia/search/apiDiamondSerach.dart';
 import 'package:kdlgia/search/diamondData.dart';
 import 'package:kdlgia/style/search_card_ui.dart';
@@ -513,11 +514,11 @@ void _showOrderDialog(BuildContext context, String token, String subide,
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
-                Navigator.pushAndRemoveUntil(
+                Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => HomePage(token: token)),
-                    (route) => false);
+                        builder: (context) => OrderPage(token: token)),
+                    );
               } else {
                 // Show error if inputs are invalid
                 ScaffoldMessenger.of(context).showSnackBar(

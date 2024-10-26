@@ -35,6 +35,7 @@ Future<DiamondData> fetchDataSearchDiamond(
       }
 
       List<dynamic> data = jsonData['data']['csv'];
+      print(data[1]);
 
       List<Diamond> diamondList = [];
       for (int i = 1; i < data.length; i++) {
