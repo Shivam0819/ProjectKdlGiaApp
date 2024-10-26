@@ -3,6 +3,10 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:kdlgia/cart/cartApi.dart';
+import 'package:kdlgia/navigation_pages/cart_page.dart';
+import 'package:kdlgia/navigation_pages/home_page.dart';
+import 'package:kdlgia/order_status/orderPage.dart';
 import 'package:kdlgia/search/diamondDataDetail.dart';
 import 'package:kdlgia/share_dna/dan.dart';
 import 'package:kdlgia/style/search_card_ui.dart';
@@ -765,6 +769,95 @@ Thank you!
           ],
         ),
       ),
+    bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(paddingCard),
+        child: Container(
+          height: 80,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 2,
+                blurRadius: 5,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HomePage(
+                              token: widget.token,
+                            )),
+                    (route) => false,
+                  );
+                },
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.home,
+                    ),
+                    SizedBox(height: 2),
+                    Text('Home'),
+                  ],
+                ),
+              ),
+              TextButton(
+                // Add functionality here
+                onPressed: ()  {
+                 addToCart(widget.diamondDetail.id, widget.token);
+
+                  // Wait for all diamonds to be added to the cart
+
+                  // Now you can show the order dialog after all items have been added
+                  _showOrderDialog(context, widget.token, widget.diamondDetail.id);
+                },
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.shopify),
+                    SizedBox(height: 2),
+                    Text('Order'),
+                  ],
+                ),
+              ),
+              TextButton(
+                onPressed: ()  {
+                addToCart(widget.diamondDetail.id, widget.token);
+                  
+
+                  // Wait for all diamonds to be added to the cart
+
+                  // Now you can show the order dialog after all items have been added
+
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CartPage(
+                                token: widget.token,
+                              )));
+                },
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.shopping_cart),
+                    SizedBox(height: 2),
+                    Text('Cart'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -778,3 +871,81 @@ void _shareContent(BuildContext context, String textMessage) {
     );
   }
 
+
+
+void _showOrderDialog(BuildContext context, String token, String subide) {
+  final TextEditingController receiverController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController note = TextEditingController();
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Submit Order'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: receiverController,
+              decoration: const InputDecoration(
+                labelText: 'Cart Receiver Name',
+              ),
+            ),
+            TextField(
+              controller: phoneController,
+              decoration: const InputDecoration(
+                labelText: 'Cart Phone',
+              ),
+              keyboardType: TextInputType.phone,
+            ),
+            TextField(
+              controller: note,
+              decoration: const InputDecoration(
+                labelText: 'Note',
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              // Handle submission here
+              String receiverName = receiverController.text;
+              String phone = phoneController.text;
+              String user_note = note.text;
+              // Validate inputs and submit order
+              if (receiverName.isNotEmpty && phone.isNotEmpty) {
+                submitOrder(token, subide, receiverName, phone,
+                    cart_note: user_note);
+                var snackBar =
+                    SnackBar(content: Text("Order Placed Successfully"));
+
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => OrderPage(token: token)),
+                );
+              } else {
+                // Show error if inputs are invalid
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Please fill in all fields')),
+                );
+              }
+            },
+            child: Text('Submit'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Cancel'),
+          ),
+        ],
+      );
+    },
+  );
+}

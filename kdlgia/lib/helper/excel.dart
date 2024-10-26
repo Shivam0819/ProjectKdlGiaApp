@@ -1,14 +1,41 @@
 import 'dart:io';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kdlgia/search/diamondDataDetail.dart';
-import 'package:kdlgia/share_dna/dan.dart';
 import 'package:syncfusion_flutter_xlsio/xlsio.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:external_path/external_path.dart';     // For Android external directories
+  // For Android external directories
 
-Future<String> createExcelFileAndSave(
-    String token, List<Diamond> diamond) async {
+void showSnackbar(BuildContext context, String message) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(message),
+      duration: Duration(seconds: 3),
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.green,
+    ),
+  );
+}
+
+
+Future<bool> _requestStoragePermission() async {
+  var storageStatus = await Permission.storage.status;
+  print("Storage permission status: $storageStatus");
+
+  if (storageStatus.isGranted) {
+    // Permission is granted
+    return true;
+  } else {
+    // Request permission
+    var result = await Permission.storage.request();
+    print("Storage permission request result: $result");
+    return false;
+  }  // For non-Android platforms, assume permissions are granted.
+}
+
+void createExcelFileAndSave(
+    String token, List<Diamond> diamond, BuildContext context) async {
   // Request storage permission
   var status = await Permission.storage.request();
   if (status.isGranted) {
@@ -334,35 +361,71 @@ sheet.getRangeByIndex(2, 8).cellStyle = cellGlobalStyle;
     workbook.dispose();
 
     // Get the Downloads directory path
-    Directory? directory = await getExternalStorageDirectory();
-    var paths = await ExternalPath.getExternalStorageDirectories();
-    print(paths);
+if (await _requestStoragePermission()) {
+    try {
+      // Ask the user to pick a directory
+      String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
 
-    if (directory != null) {
-      // Specify the path to the Downloads folder
-      String downloadsPath = "${directory.path}/Download";
-      Directory downloadsDir = Directory(downloadsPath);
-
-      // Ensure the directory exists
-      if (!downloadsDir.existsSync()) {
-        downloadsDir.createSync(recursive: true);
+      if (selectedDirectory == null) {
+        // User canceled the operation
+        print("No directory selected");
+        showSnackbar(context, "Directory selection canceled.");
+        return;
       }
 
-      // Specify the file path to save the Excel file
-      String filePath = "$downloadsPath/kdl_gia_data${DateTime.now().day}_${DateTime.now().month}_${DateTime.now().year}_${DateTime.now().hour}_${DateTime.now().minute}_${DateTime.now().second}.xlsx";
-      File file = File(filePath);
+      // Generate a unique filename with date and time
+      String fileName =
+          "kdl_gia_data_${DateTime.now().day}_${DateTime.now().month}_${DateTime.now().year}_"
+          "${DateTime.now().hour}_${DateTime.now().minute}_${DateTime.now().second}.xlsx";
 
-      // Write the bytes to the file
+      // Construct the full path
+      String filePath = "$selectedDirectory/$fileName";
+
+      // Create the file and write bytes
+      File file = File(filePath);
+      await file.writeAsBytes(bytes, flush: true);
+      print('Excel file saved at: $filePath');
+
+      // Show success snackbar
+      showSnackbar(context , "Excel file downloaded successfully.");
+    } catch (e) {
+      print("Error: $e");
+      showSnackbar(context, "Failed to save the Excel file.");
+    }
+  } else {
+    print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++Test");
+    try {
+      // Ask the user to pick a directory
+      String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+
+      if (selectedDirectory == null) {
+        // User canceled the operation
+        print("No directory selected");
+        showSnackbar(context, "Directory selection canceled.");
+        return;
+      }
+
+      // Generate a unique filename with date and time
+      String fileName =
+          "kdl_gia_data_${DateTime.now().day}_${DateTime.now().month}_${DateTime.now().year}_"
+          "${DateTime.now().hour}_${DateTime.now().minute}_${DateTime.now().second}.xlsx";
+
+      // Construct the full path
+      String filePath = "$selectedDirectory/$fileName";
+
+      // Create the file and write bytes
+      File file = File(filePath);
       await file.writeAsBytes(bytes, flush: true);
 
       print('Excel file saved at: $filePath');
-      return "Successfully downloaded Excel File.";
-    } else {
-      print("Couldn't get the downloads directory");
-      return "Couldn't get the downloads directory";
+
+      // Show success snackbar
+      showSnackbar(context, "Excel file downloaded successfully.");
+    } catch (e) {
+      print("Error: $e");
+      showSnackbar(context, "Failed to save the Excel file.");
     }
-  } else {
-    print("Storage permission not granted");
-    return ("Storage permission not granted");
+    showSnackbar(context, "Storage permission denied.");
   }
 }
+    }

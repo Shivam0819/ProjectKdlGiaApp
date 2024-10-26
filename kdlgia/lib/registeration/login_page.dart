@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kdlgia/navigation_pages/home_page.dart';
-<<<<<<< HEAD
-// import 'package:kdlgia/registeration/contact_us.dart';
-=======
+
 import 'package:kdlgia/registeration/about_us.dart';
 import 'package:kdlgia/registeration/contact_us.dart';
->>>>>>> searchResultPageUpdate
 import 'package:kdlgia/registeration/signUpApi.dart';
 import 'package:kdlgia/registeration/signup_page.dart';
 import 'package:kdlgia/style/constant.dart';
@@ -13,15 +10,12 @@ import 'package:http/http.dart' as http;
 import 'package:kdlgia/style/search_card_ui.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-<<<<<<< HEAD
 import 'package:photo_view/photo_view.dart';
 // import 'package:photo_view/photo_view_gallery.dart';
 
 // To update the app
 import 'package:in_app_update/in_app_update.dart';
 
-=======
->>>>>>> searchResultPageUpdate
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -33,11 +27,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-<<<<<<< HEAD
-  // double _currentScale = 1.0; // Current scale of the image
-  // bool _isZoomedIn = false; // Flag to track if the image is zoomed in
 
-  // Update the app variable 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -60,12 +50,11 @@ class _LoginPageState extends State<LoginPage> {
           .showSnackBar(SnackBar(content: Text(text)));
     }
   }
-=======
+
   bool _isLoading = false; // Track loading state
   bool _isPasswordVisible = false; // To toggle password visibility
 
 
->>>>>>> searchResultPageUpdate
   @override
   void initState() {
     super.initState();

@@ -1,8 +1,4 @@
-import 'package:excel/excel.dart';
 import 'package:kdlgia/helper/excel.dart';
-import 'package:kdlgia/helper/file_handler.dart';
-import 'package:kdlgia/share_dna/dan.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:kdlgia/api_assets_popup/imagePopup.dart';
 import 'package:kdlgia/cart/cartApi.dart';
@@ -13,10 +9,8 @@ import 'package:kdlgia/order_status/orderPage.dart';
 import 'package:kdlgia/search/apiDiamondSerach.dart';
 import 'package:kdlgia/search/diamondData.dart';
 import 'package:kdlgia/search/diamondDataDetail.dart';
-import 'dart:io'; // For saving the file
 import 'package:kdlgia/style/search_card_ui.dart';
 import 'package:kdlgia/style/styleTextSearchResult.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SearchResultsTemp extends StatefulWidget {
@@ -390,34 +384,33 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                   icon: const Icon(Icons.sort),
                   label: Text(_isAscendingDiscount ? "Dis% ↑" : "Dis% ↓"),
                 ),
-                TextButton.icon(
-                  onPressed: () async {
-                    List<Diamond> diamondsSelected = await diamond_select;
+                // TextButton.icon(
+                //   onPressed: () async {
+                //     List<Diamond> diamondsSelected = await diamond_select;
 
-                    // Declare a variable to hold the updated list
-                    List<Diamond> updatedDiamonds = [];
+                //     // Declare a variable to hold the updated list
+                //     List<Diamond> updatedDiamonds = [];
 
-                    // If all diamonds are selected, process accordingly
-                    if (_selectAllChecked) {
-                      if (diamondsSelected.length == widget.diamondData.total) {
-                        print(
-                            "********************************************i am in right place");
-                        updatedDiamonds = processDiamonds(
-                            diamondsSelected, true); // Processing with removal
-                      }
-                    } else {
-                      print(
-                          "********************************************i am in right place");
+                //     // If all diamonds are selected, process accordingly
+                //     if (_selectAllChecked) {
+                //       if (diamondsSelected.length == widget.diamondData.total) {
+                //         print(
+                //             "********************************************i am in right place");
+                //         updatedDiamonds = processDiamonds(
+                //             diamondsSelected, true); // Processing with removal
+                //       }
+                //     } else {
+                //       print(
+                //           "********************************************i am in right place");
 
-                      updatedDiamonds = processDiamonds(
-                          diamondsSelected, false); // Processing with addition
-                    }
-createExcelFileAndSave(widget.token, updatedDiamonds);
-                    
-                  },
-                  icon: const Icon(Icons.download),
-                  label: Text(""),
-                ),
+                //       updatedDiamonds = processDiamonds(
+                //           diamondsSelected, false); // Processing with addition
+                //     }
+                //     createExcelFileAndSave(widget.token, updatedDiamonds, context);
+                //   },
+                //   icon: const Icon(Icons.download),
+                //   label: Text(""),
+                // ),
               ],
             ),
           ),
