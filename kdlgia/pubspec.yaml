@@ -42,15 +42,12 @@ dependencies:
   shared_preferences: ^2.0.15
   share_plus: ^10.0.2
   photo_view: ^0.15.0
-<<<<<<< HEAD
-  in_app_update: ^4.2.3
-=======
   excel: ^4.0.6
   path_provider: ^2.1.4
   permission_handler: ^11.3.1
   syncfusion_flutter_xlsio: ^27.1.51
   external_path: ^2.0.1
->>>>>>> searchResultPageUpdate
+
 
 
 
