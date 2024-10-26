@@ -1,8 +1,9 @@
 import 'package:excel/excel.dart';
+import 'package:kdlgia/helper/excel.dart';
 import 'package:kdlgia/helper/file_handler.dart';
 import 'package:kdlgia/share_dna/dan.dart';
 import 'package:path_provider/path_provider.dart';
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:kdlgia/api_assets_popup/imagePopup.dart';
 import 'package:kdlgia/cart/cartApi.dart';
 import 'package:kdlgia/diamond_search/searchDetail.dart';
@@ -235,116 +236,109 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
     }
   }
 
+// Future<void> saveExcelFile(Excel excel) async {
+//   try {
+//     // Request storage permissions (Android)
+//     await Permission.storage.request();
+//     if (await Permission.manageExternalStorage.request().isGranted) {
+//     // Permission granted, you can now access all files
+//   } else {
+//     // Permission denied
+//   }
+//     if (await Permission.storage.request().isGranted) {
+//       // Get the Downloads directory
+//       Directory? directory = await getDownloadsDirectory();
 
+//       if (directory != null) {
+//         String outputFile = '${directory.path}/created_excel_file.xlsx';
 
-Future<void> saveExcelFile(Excel excel) async {
-  try {
-    // Request storage permissions (Android)
-    await Permission.storage.request();
-    if (await Permission.manageExternalStorage.request().isGranted) {
-    // Permission granted, you can now access all files
-  } else {
-    // Permission denied
-  }
-    if (await Permission.storage.request().isGranted) {
-      // Get the Downloads directory
-      Directory? directory = await getDownloadsDirectory();
-      
-      if (directory != null) {
-        String outputFile = '${directory.path}/created_excel_file.xlsx';
-        
-        // Encode the Excel file
-        var fileBytes = excel.encode();
-        
-        // Create the file and write the bytes
-        File(outputFile)
-          ..createSync(recursive: true)
-          ..writeAsBytesSync(fileBytes!);
-        
-        print('Excel file created and saved at $outputFile');
-      } else {
-        print('Unable to get downloads directory.');
-      }
-    } else {
-      print('Storage permission denied.');
-    }
-  } catch (e) {
-    print('Error saving file: $e');
-  }
-}
- Future<void> requestStoragePermission() async {
-    var status = await Permission.storage.status;
+//         // Encode the Excel file
+//         var fileBytes = excel.encode();
 
-    if (status.isGranted) {
-      // Permission is already granted
-      print("Storage permission is already granted");
-    } else if (status.isDenied) {
-      // Request permission
-      var result = await Permission.storage.request();
-      if (result.isGranted) {
-        print("Storage permission granted");
-      } else if (result.isPermanentlyDenied) {
-        // Open app settings if permission is permanently denied
-        openAppSettings();
-      }
-    } else if (status.isPermanentlyDenied) {
-      // Open app settings if permission is permanently denied
-      openAppSettings();
-    }
-  }
-void createExcelFile() async{
-final Excel excel = Excel.createExcel();
-  final Sheet sheetObject = excel['Sheet1'];
-  CellStyle cellStyle = CellStyle(
-    bold: true,
-    italic: true,
-    verticalAlign: VerticalAlign.Center,
-    horizontalAlign: HorizontalAlign.Center,
-    textWrapping: TextWrapping.WrapText,
-    fontFamily: getFontFamily(FontFamily.Comic_Sans_MS),
-    rotation: 0,
-  );
+//         // Create the file and write the bytes
+//         File(outputFile)
+//           ..createSync(recursive: true)
+//           ..writeAsBytesSync(fileBytes!);
 
+//         print('Excel file created and saved at $outputFile');
+//       } else {
+//         print('Unable to get downloads directory.');
+//       }
+//     } else {
+//       print('Storage permission denied.');
+//     }
+//   } catch (e) {
+//     print('Error saving file: $e');
+//   }
+// }
+//  Future<void> requestStoragePermission() async {
+//     var status = await Permission.storage.status;
 
-  // Add data to cells
-  CellIndex celA1 =  CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: 1);
-  CellIndex cellB2 = CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: 1);
-  sheetObject.cell(CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: 2)).value = TextCellValue("Carat");
+//     if (status.isGranted) {
+//       // Permission is already granted
+//       print("Storage permission is already granted");
+//     } else if (status.isDenied) {
+//       // Request permission
+//       var result = await Permission.storage.request();
+//       if (result.isGranted) {
+//         print("Storage permission granted");
+//       } else if (result.isPermanentlyDenied) {
+//         // Open app settings if permission is permanently denied
+//         openAppSettings();
+//       }
+//     } else if (status.isPermanentlyDenied) {
+//       // Open app settings if permission is permanently denied
+//       openAppSettings();
+//     }
+//   }
+// void createExcelFile() async{
+// final Excel excel = Excel.createExcel();
+//   final Sheet sheetObject = excel['Sheet1'];
+//   CellStyle cellStyle = CellStyle(
+//     bold: true,
+//     italic: true,
+//     verticalAlign: VerticalAlign.Center,
+//     horizontalAlign: HorizontalAlign.Center,
+//     textWrapping: TextWrapping.WrapText,
+//     fontFamily: getFontFamily(FontFamily.Comic_Sans_MS),
+//     rotation: 0,
+//   );
 
-  sheetObject.cell(CellIndex.indexByColumnRow(columnIndex: 4, rowIndex: 1)).value = TextCellValue("Rap%");
-  sheetObject.cell(CellIndex.indexByColumnRow(columnIndex: 5, rowIndex: 1)).value = TextCellValue("Per/cts%");
-  sheetObject.cell(CellIndex.indexByColumnRow(columnIndex: 6, rowIndex: 1)).value = TextCellValue("Amount%");
-    sheetObject.merge(celA1,cellB2,customValue: TextCellValue("Total"));
+//   // Add data to cells
+//   CellIndex celA1 =  CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: 1);
+//   CellIndex cellB2 = CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: 1);
+//   sheetObject.cell(CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: 2)).value = TextCellValue("Carat");
 
+//   sheetObject.cell(CellIndex.indexByColumnRow(columnIndex: 4, rowIndex: 1)).value = TextCellValue("Rap%");
+//   sheetObject.cell(CellIndex.indexByColumnRow(columnIndex: 5, rowIndex: 1)).value = TextCellValue("Per/cts%");
+//   sheetObject.cell(CellIndex.indexByColumnRow(columnIndex: 6, rowIndex: 1)).value = TextCellValue("Amount%");
+//     sheetObject.merge(celA1,cellB2,customValue: TextCellValue("Total"));
 
-  // Style the first row (Header row)
-  for (int col = 1; col <= 6; col++) {
-    var cell = sheetObject.cell(CellIndex.indexByColumnRow(columnIndex: col, rowIndex: 1));
-    cell.cellStyle = CellStyle(
-      backgroundColorHex: ExcelColor.amber, // Blue color
-      fontColorHex: ExcelColor.blue, // White font
-      bold: true,
-      horizontalAlign: HorizontalAlign.Center,
+//   // Style the first row (Header row)
+//   for (int col = 1; col <= 6; col++) {
+//     var cell = sheetObject.cell(CellIndex.indexByColumnRow(columnIndex: col, rowIndex: 1));
+//     cell.cellStyle = CellStyle(
+//       backgroundColorHex: ExcelColor.amber, // Blue color
+//       fontColorHex: ExcelColor.blue, // White font
+//       bold: true,
+//       horizontalAlign: HorizontalAlign.Center,
 
-    );
-    List<Diamond> diamonds_ = await diamond_select;
-  List<CellValue> dataList = [TextCellValue('Sr.No.'), TextCellValue('Stock No'), TextCellValue('DNA'), TextCellValue('Image'), TextCellValue('Video'), TextCellValue('Shape'), TextCellValue('Carat'),TextCellValue('Color'), TextCellValue('Clarity'), TextCellValue('Rape Rate'), TextCellValue('Rap%'), TextCellValue('Pr/Ct'), TextCellValue('Amount'), TextCellValue('Location'),TextCellValue('Cut'), TextCellValue('Polish'), TextCellValue('Symmetry'), TextCellValue('Fluorescent'), TextCellValue('Measurement'), TextCellValue('Tab%'), TextCellValue('TD%'), TextCellValue('LAB'), TextCellValue('Luster'), TextCellValue('Eye Clean'), TextCellValue('WT'), TextCellValue('WC'), TextCellValue('Milky'), TextCellValue('Shade'),TextCellValue('Cut'), TextCellValue('BIT'), TextCellValue('BIC'), TextCellValue('Girdle'), TextCellValue('Girdle%'), TextCellValue('Culet'), TextCellValue('Tab%')];
-  sheetObject.insertRowIterables(dataList, 8);
-  
-  for(int i = 0; i<=diamonds_.length; i++){
-    List<CellValue> dataList = [IntCellValue(i), TextCellValue(diamonds_[i].id), TextCellValue(await fetchDnaData(widget.token, diamonds_[i].id)), TextCellValue(diamonds_[i].imageUrl), TextCellValue(diamonds_[i].movieUrl), TextCellValue(diamonds_[i].diaShape), TextCellValue(diamonds_[i].diaCarat),TextCellValue(diamonds_[i].diaColor), TextCellValue(diamonds_[i].diaClarity), TextCellValue(diamonds_[i].diaRap), TextCellValue(diamonds_[i].back), TextCellValue('Pr/Ct'), TextCellValue(diamonds_[i].dollar1), TextCellValue(diamonds_[i].diaPlace),TextCellValue(diamonds_[i].diaCut), TextCellValue(diamonds_[i].diaPolish), TextCellValue(diamonds_[i].diaSymmetry), TextCellValue(diamonds_[i].diaFluorescence), TextCellValue(diamonds_[i].diaDiameter), TextCellValue(diamonds_[i].diaTable), TextCellValue(diamonds_[i].diaDepth), TextCellValue(diamonds_[i].diaRap), TextCellValue('Luster'), TextCellValue(diamonds_[i].diaEyeClean), TextCellValue('WT'), TextCellValue('WC'), TextCellValue('Milky'), TextCellValue('Shade'),TextCellValue('Cut'), TextCellValue('BIT'), TextCellValue('BIC'), TextCellValue('Girdle'), TextCellValue('Girdle%'), TextCellValue('Culet'), TextCellValue('Tab%')];
-  sheetObject.insertRowIterables(dataList, 8);
+//     );
+//     List<Diamond> diamonds_ = await diamond_select;
+//   List<CellValue> dataList = [TextCellValue('Sr.No.'), TextCellValue('Stock No'), TextCellValue('DNA'), TextCellValue('Image'), TextCellValue('Video'), TextCellValue('Shape'), TextCellValue('Carat'),TextCellValue('Color'), TextCellValue('Clarity'), TextCellValue('Rape Rate'), TextCellValue('Rap%'), TextCellValue('Pr/Ct'), TextCellValue('Amount'), TextCellValue('Location'),TextCellValue('Cut'), TextCellValue('Polish'), TextCellValue('Symmetry'), TextCellValue('Fluorescent'), TextCellValue('Measurement'), TextCellValue('Tab%'), TextCellValue('TD%'), TextCellValue('LAB'), TextCellValue('Luster'), TextCellValue('Eye Clean'), TextCellValue('WT'), TextCellValue('WC'), TextCellValue('Milky'), TextCellValue('Shade'),TextCellValue('Cut'), TextCellValue('BIT'), TextCellValue('BIC'), TextCellValue('Girdle'), TextCellValue('Girdle%'), TextCellValue('Culet'), TextCellValue('Tab%')];
+//   sheetObject.insertRowIterables(dataList, 8);
+//   print(_diamonds.length);
+//   for(int i = 0; i<diamonds_.length; i++){
+//     List<CellValue> dataList = [IntCellValue(i), TextCellValue(diamonds_[i].id), TextCellValue(await fetchDnaData(widget.token, diamonds_[i].id)), TextCellValue(diamonds_[i].imageUrl), TextCellValue(diamonds_[i].movieUrl), TextCellValue(diamonds_[i].diaShape), TextCellValue(diamonds_[i].diaCarat),TextCellValue(diamonds_[i].diaColor), TextCellValue(diamonds_[i].diaClarity), TextCellValue(diamonds_[i].diaRap), TextCellValue(diamonds_[i].back), TextCellValue('Pr/Ct'), TextCellValue(diamonds_[i].dollar1), TextCellValue(diamonds_[i].diaPlace),TextCellValue(diamonds_[i].diaCut), TextCellValue(diamonds_[i].diaPolish), TextCellValue(diamonds_[i].diaSymmetry), TextCellValue(diamonds_[i].diaFluorescence), TextCellValue(diamonds_[i].diaDiameter), TextCellValue(diamonds_[i].diaTable), TextCellValue(diamonds_[i].diaDepth), TextCellValue(diamonds_[i].diaRap), TextCellValue('Luster'), TextCellValue(diamonds_[i].diaEyeClean), TextCellValue('WT'), TextCellValue('WC'), TextCellValue('Milky'), TextCellValue('Shade'),TextCellValue('Cut'), TextCellValue('BIT'), TextCellValue('BIC'), TextCellValue('Girdle'), TextCellValue('Girdle%'), TextCellValue('Culet'), TextCellValue('Tab%')];
+//   sheetObject.insertRowIterables(dataList, i + 9);
 
-  }
+//   }
 
+//   }
 
-  }
-
-  
-
-  // Save the Excel file
-  saveExcelFile(excel);
-}
+//   // Save the Excel file
+//   saveExcelFile(excel);
+// }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -397,8 +391,29 @@ final Excel excel = Excel.createExcel();
                   label: Text(_isAscendingDiscount ? "Dis% ↑" : "Dis% ↓"),
                 ),
                 TextButton.icon(
-                  onPressed: (){
-                    createExcelFile();
+                  onPressed: () async {
+                    List<Diamond> diamondsSelected = await diamond_select;
+
+                    // Declare a variable to hold the updated list
+                    List<Diamond> updatedDiamonds = [];
+
+                    // If all diamonds are selected, process accordingly
+                    if (_selectAllChecked) {
+                      if (diamondsSelected.length == widget.diamondData.total) {
+                        print(
+                            "********************************************i am in right place");
+                        updatedDiamonds = processDiamonds(
+                            diamondsSelected, true); // Processing with removal
+                      }
+                    } else {
+                      print(
+                          "********************************************i am in right place");
+
+                      updatedDiamonds = processDiamonds(
+                          diamondsSelected, false); // Processing with addition
+                    }
+createExcelFileAndSave(widget.token, updatedDiamonds);
+                    
                   },
                   icon: const Icon(Icons.download),
                   label: Text(""),
@@ -794,7 +809,7 @@ final Excel excel = Excel.createExcel();
                 ),
               ),
               TextButton(
-                onPressed: () async{
+                onPressed: () async {
                   print(
                       "********************************************i am in right place");
 
@@ -834,7 +849,7 @@ final Excel excel = Excel.createExcel();
                   await Future.wait(addToCartFutures);
 
                   // Now you can show the order dialog after all items have been added
-               
+
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
