@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kdlgia/navigation_pages/home_page.dart';
 import 'package:kdlgia/navigation_pages/search_page.dart';
@@ -384,6 +385,7 @@ class _SearchUiState extends State<SearchUi> {
 
     return querr;
   }
+  
 
   @override
   void initState() {
@@ -412,7 +414,7 @@ class _SearchUiState extends State<SearchUi> {
     super.dispose();
   }
 
-
+  final FocusNode _focusNode = FocusNode();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -461,9 +463,8 @@ class _SearchUiState extends State<SearchUi> {
                 children: [
                   // **********Shape*********//
                   SizedBox(
-                    height: 140, // Provide a fixed height or other constraints
+                    height: 145, // Provide a fixed height or other constraints
                     child: Container(
-                      height: 130,
                       padding: const EdgeInsets.all(paddingFullSearchWidget),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -530,6 +531,7 @@ class _SearchUiState extends State<SearchUi> {
                                             "Round",
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
+                                              fontSize: fontSizeElement,
                                               color: widget.roundShpIsSelected
                                                   ? mainColor
                                                   : null,
@@ -589,6 +591,8 @@ class _SearchUiState extends State<SearchUi> {
                                             "Princess",
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
+                                                                                            fontSize: fontSizeElement,
+
                                               color: widget.princeShpIsSelected
                                                   ? mainColor
                                                   : null,
@@ -647,6 +651,8 @@ class _SearchUiState extends State<SearchUi> {
                                             "Emerald",
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
+                                              fontSize: fontSizeElement,
+
                                               color: widget.emraldShpIsSelected
                                                   ? mainColor
                                                   : null,
@@ -704,6 +710,8 @@ class _SearchUiState extends State<SearchUi> {
                                             "Oval",
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
+                                                                                            fontSize: fontSizeElement,
+
                                               color: widget.ovalShpIsSelected
                                                   ? mainColor
                                                   : null,
@@ -763,6 +771,8 @@ class _SearchUiState extends State<SearchUi> {
                                             "Pear",
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
+                                                                                            fontSize: fontSizeElement,
+
                                               color: widget.pearShpIsSelected
                                                   ? mainColor
                                                   : null,
@@ -820,6 +830,8 @@ class _SearchUiState extends State<SearchUi> {
                                             "Marquise",
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
+                                                                                            fontSize: fontSizeElement,
+
                                               color:
                                                   widget.marquiseShpIsSelected
                                                       ? mainColor
@@ -879,6 +891,8 @@ class _SearchUiState extends State<SearchUi> {
                                             "Heart",
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
+                                                                                            fontSize: fontSizeElement,
+
                                               color: widget.heartShpIsSelected
                                                   ? mainColor
                                                   : null,
@@ -936,6 +950,8 @@ class _SearchUiState extends State<SearchUi> {
                                             "Triangle",
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
+                                                                                            fontSize: fontSizeElement,
+
                                               color:
                                                   widget.triangleShpIsSelected
                                                       ? mainColor
@@ -994,6 +1010,8 @@ class _SearchUiState extends State<SearchUi> {
                                             "Cushion",
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
+                                                                                            fontSize: fontSizeElement,
+
                                               color: widget.cushionShpIsSelected
                                                   ? mainColor
                                                   : null,
@@ -1051,6 +1069,8 @@ class _SearchUiState extends State<SearchUi> {
                                           "Other",
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
+                                                                                          fontSize: fontSizeElement,
+
                                             color: widget.othersShpIsSelected
                                                 ? mainColor
                                                 : null,
@@ -1101,6 +1121,7 @@ class _SearchUiState extends State<SearchUi> {
                                       keyboardType:
                                           const TextInputType.numberWithOptions(
                                               decimal: true),
+                                              textInputAction: TextInputAction.done,
                                       decoration: const InputDecoration(
                                         border: InputBorder.none,
                                         labelText: 'From',
@@ -1136,6 +1157,8 @@ class _SearchUiState extends State<SearchUi> {
                                       keyboardType:
                                           const TextInputType.numberWithOptions(
                                               decimal: true),
+                                              textInputAction: TextInputAction.done,
+
                                       decoration: const InputDecoration(
                                         border: InputBorder.none,
                                         labelText: 'To',
@@ -1153,6 +1176,7 @@ class _SearchUiState extends State<SearchUi> {
                                       },
                                     ),
                                   ),
+
                                 ),
                               ),
                             ],
@@ -1167,7 +1191,6 @@ class _SearchUiState extends State<SearchUi> {
                     height:
                         textSingleContainerHight, // Provide a fixed height or other constraints
                     child: Container(
-                      height: textSingleCardHight,
                       padding: const EdgeInsets.all(paddingCard),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1214,7 +1237,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "D",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -1250,7 +1274,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "E",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -1286,7 +1311,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "F",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -1322,7 +1348,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "G",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -1358,7 +1385,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "H",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -1394,7 +1422,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "I",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -1430,7 +1459,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "J",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -1466,7 +1496,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "K",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -1502,7 +1533,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "L",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -1538,7 +1570,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "M",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -1574,7 +1607,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "N",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -1593,7 +1627,6 @@ class _SearchUiState extends State<SearchUi> {
                     height:
                         textSingleContainerHight, // Provide a fixed height or other constraints
                     child: Container(
-                      height: textSingleCardHight,
                       padding: const EdgeInsets.all(paddingCard),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1602,7 +1635,7 @@ class _SearchUiState extends State<SearchUi> {
                             "Clarity",
                             style: TextStyle(
                                 fontSize: fontSizeHeading,
-                                fontWeight: FontWeight.bold),
+                                fontWeight: FontWeight.bold,),
                           ),
                           const SizedBox(height: 5),
                           Expanded(
@@ -1640,7 +1673,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "FL",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -1677,7 +1711,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "IF",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -1715,7 +1750,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "VVS1",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -1753,7 +1789,7 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "VVS2",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -1792,7 +1828,7 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "VS1",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold, fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -1831,7 +1867,7 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "VS2",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold, fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -1868,7 +1904,7 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "SI1",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold, fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -1895,7 +1931,7 @@ class _SearchUiState extends State<SearchUi> {
                                         });
                                         widget.claSi2 =
                                             (widget.claSi2IsSelected)
-                                                ? "S12"
+                                                ? "SI2"
                                                 : null;
                                       },
                                       child: const Padding(
@@ -1905,9 +1941,9 @@ class _SearchUiState extends State<SearchUi> {
                                           child:
                                               // Changed to height for vertical spacing
                                               Text(
-                                            "S12",
+                                            "SI2",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold, fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -1943,7 +1979,7 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "I1",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold, fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -1980,7 +2016,7 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "I2",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold, fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -1999,7 +2035,6 @@ class _SearchUiState extends State<SearchUi> {
                     height:
                         textSingleContainerHight, // Provide a fixed height or other constraints
                     child: Container(
-                      height: textSingleCardHight,
                       padding: const EdgeInsets.all(paddingCard),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2008,7 +2043,7 @@ class _SearchUiState extends State<SearchUi> {
                             "Cut/Pol/Sym/Fluor/Cert",
                             style: TextStyle(
                                 fontSize: fontSizeHeading,
-                                fontWeight: FontWeight.bold),
+                                fontWeight: FontWeight.bold, ),
                           ),
                           const SizedBox(height: 5),
                           Expanded(
@@ -2071,7 +2106,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "3EX-N",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -2147,7 +2183,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "3VG-N",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -2166,7 +2203,6 @@ class _SearchUiState extends State<SearchUi> {
                     height:
                         textSingleContainerHight, // Provide a fixed height or other constraints
                     child: Container(
-                      height: textSingleCardHight,
                       padding: const EdgeInsets.all(paddingCard),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2213,7 +2249,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "EX",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -2250,7 +2287,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "VG",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -2287,7 +2325,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "GD",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -2324,7 +2363,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "FR",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -2379,7 +2419,6 @@ class _SearchUiState extends State<SearchUi> {
                     height:
                         textSingleContainerHight, // Provide a fixed height or other constraints
                     child: Container(
-                      height: textSingleCardHight,
                       padding: const EdgeInsets.all(paddingCard),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2388,7 +2427,8 @@ class _SearchUiState extends State<SearchUi> {
                             "Polish",
                             style: TextStyle(
                                 fontSize: fontSizeHeading,
-                                fontWeight: FontWeight.bold),
+                                fontWeight: FontWeight.bold,
+                                ),
                           ),
                           const SizedBox(height: 5),
                           Expanded(
@@ -2426,7 +2466,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "EX",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -2463,7 +2504,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "VG",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -2500,7 +2542,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "GD",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -2537,7 +2580,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "FR",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -2592,7 +2636,6 @@ class _SearchUiState extends State<SearchUi> {
                     height:
                         textSingleContainerHight, // Provide a fixed height or other constraints
                     child: Container(
-                      height: textSingleCardHight,
                       padding: const EdgeInsets.all(paddingCard),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2639,7 +2682,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "EX",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -2676,7 +2720,7 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "VG",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -2713,7 +2757,7 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "GD",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -2750,7 +2794,7 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "FR",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -2804,7 +2848,6 @@ class _SearchUiState extends State<SearchUi> {
                     height:
                         textSingleContainerHight, // Provide a fixed height or other constraints
                     child: Container(
-                      height: textSingleCardHight,
                       padding: const EdgeInsets.all(paddingCard),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2850,7 +2893,7 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "N",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -2886,7 +2929,7 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "F",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -2922,7 +2965,7 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "M",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -2958,7 +3001,7 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "S",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -2994,7 +3037,7 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "VS",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold, fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -3013,7 +3056,6 @@ class _SearchUiState extends State<SearchUi> {
                     height:
                         textSingleContainerHight, // Provide a fixed height or other constraints
                     child: Container(
-                      height: textSingleCardHight,
                       padding: const EdgeInsets.all(paddingCard),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -3022,7 +3064,7 @@ class _SearchUiState extends State<SearchUi> {
                             "Cert",
                             style: TextStyle(
                                 fontSize: fontSizeHeading,
-                                fontWeight: FontWeight.bold),
+                                fontWeight: FontWeight.bold, ),
                           ),
                           const SizedBox(height: 5),
                           Expanded(
@@ -3061,7 +3103,7 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "GIA",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold, fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -3099,7 +3141,7 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "NGTC",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -3137,7 +3179,7 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "IGI",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -3175,7 +3217,7 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "HRD",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -3243,7 +3285,8 @@ class _SearchUiState extends State<SearchUi> {
                                 const Text(
                                   "Image",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: fontSizeElement),
                                 ),
                                 const SizedBox(width: 5),
                                 Checkbox(
@@ -3271,7 +3314,8 @@ class _SearchUiState extends State<SearchUi> {
                                 const Text(
                                   "Video",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: fontSizeElement),
                                 ),
                                 const SizedBox(width: 5),
                                 Checkbox(
@@ -3298,7 +3342,8 @@ class _SearchUiState extends State<SearchUi> {
                                 const Text(
                                   "Cert",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: fontSizeElement),
                                 ),
                                 const SizedBox(width: 5),
                                 Checkbox(
@@ -3324,7 +3369,7 @@ class _SearchUiState extends State<SearchUi> {
                     height:
                         textSingleContainerHight, // Provide a fixed height or other constraints
                     child: Container(
-                      height: textSingleCardHight,
+                      
                       padding: const EdgeInsets.all(paddingCard),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -3372,7 +3417,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "CHINA",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -3409,7 +3455,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "SZ",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -3446,7 +3493,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "HK",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -3483,7 +3531,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "H-K",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -3521,7 +3570,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "Transit",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -3591,7 +3641,7 @@ class _SearchUiState extends State<SearchUi> {
                                 const Text(
                                   "No BGM",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold),
+                                      fontWeight: FontWeight.bold,fontSize: fontSizeElement),
                                 ),
                                 const SizedBox(width: 5),
                                 Checkbox(
@@ -3619,7 +3669,7 @@ class _SearchUiState extends State<SearchUi> {
                                 const Text(
                                   "Not BlackList",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold),
+                                      fontWeight: FontWeight.bold,fontSize: fontSizeElement),
                                 ),
                                 const SizedBox(width: 5),
                                 Checkbox(
@@ -3657,7 +3707,7 @@ class _SearchUiState extends State<SearchUi> {
                                 const Text(
                                   "My Hold",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold),
+                                      fontWeight: FontWeight.bold, fontSize: fontSizeElement),
                                 ),
                                 const SizedBox(width: 5),
                                 Checkbox(
@@ -3685,7 +3735,7 @@ class _SearchUiState extends State<SearchUi> {
                                 const Text(
                                   "My Memo",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold),
+                                      fontWeight: FontWeight.bold, fontSize: fontSizeElement),
                                 ),
                                 const SizedBox(width: 5),
                                 Checkbox(
@@ -3911,6 +3961,7 @@ class _SearchUiState extends State<SearchUi> {
                             ),
                           ),
                           const SizedBox(height: 5),
+                          
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -3929,11 +3980,13 @@ class _SearchUiState extends State<SearchUi> {
                                       keyboardType:
                                           const TextInputType.numberWithOptions(
                                               decimal: true),
+                                              textInputAction: TextInputAction.done,
                                       decoration: const InputDecoration(
                                         border: InputBorder.none,
                                         labelText: 'From',
                                         hintText: '0.0',
                                       ),
+                                      
                                       onChanged: (value) {
                                         setState(() {
                                           widget.depthFrom =
@@ -3964,6 +4017,8 @@ class _SearchUiState extends State<SearchUi> {
                                       keyboardType:
                                           const TextInputType.numberWithOptions(
                                               decimal: true),
+                                              textInputAction: TextInputAction.done,
+                                      
                                       decoration: const InputDecoration(
                                         border: InputBorder.none,
                                         labelText: 'To',
@@ -3995,7 +4050,9 @@ class _SearchUiState extends State<SearchUi> {
           ],
         ),
       ),
-      bottomNavigationBar: Padding(
+      bottomNavigationBar: 
+      _focusNode.hasFocus ? _buildDoneButton(context):
+      Padding(
         padding: const EdgeInsets.all(
             paddingCard), // Adjust the bottom padding as needed
         child: Container(
@@ -4302,4 +4359,15 @@ class _SearchUiState extends State<SearchUi> {
       ),
     );
   }
+}
+
+Widget _buildDoneButton(context){
+  return Container(
+    color: Colors.grey[200],
+    padding: const EdgeInsets.all(paddingCard),
+    child: TextButton(onPressed: (){
+      Focus.of(context).unfocus();
+
+    }, child: const Text("Done", style: TextStyle(fontSize: 18, color: Colors.blue),)),
+  );
 }
