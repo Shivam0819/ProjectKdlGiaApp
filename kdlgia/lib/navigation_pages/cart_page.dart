@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:kdlgia/api_assets_popup/imagePopup.dart';
@@ -32,6 +33,8 @@ class _CartPageState extends State<CartPage> {
   late Map<int, bool> isStaredMap = {};
   final ScrollController _scrollController = ScrollController();
   late List<dynamic> checkItem = [];
+  bool _selectAllChecked = false; // For the select all functionality
+
 
   @override
   void initState() {
@@ -54,6 +57,28 @@ class _CartPageState extends State<CartPage> {
 
     
   }
+Future<void> _toggleSelectAll() async {
+  final diamondData = await _diamondSearchDate;
+  setState(() {
+    _selectAllChecked = !_selectAllChecked;
+
+    // Map diamond.id to true/false
+    isCheckedMap = {
+      for (var i = 0; i < diamondData.diamonds.length; i++)
+        i: _selectAllChecked,
+    };
+
+    for (var diamond in isCheckedMap.keys) {
+      if (_selectAllChecked) {
+        checkItem.add(diamondData.diamonds[diamond].id);
+      } else {
+        checkItem.clear(); // Clear the list if unchecking
+      }
+    }
+  });
+}
+
+
 
   _launchURL(String stockId, String lab) async {
     Uri url;
@@ -80,41 +105,99 @@ class _CartPageState extends State<CartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: Image.asset(
+            'assets/Images/bg-pattern.png',
+            fit: BoxFit.cover,
+          ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: Card(
+              color: secondaryColor, // Set background to mainColor
+
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(
+                    context); // Navigate back when the back button is pressed
+              },
+              color: logoMachingColor, // Customize the color of the back button
+            ),
+          ),
         title: FutureBuilder(
           future: _futureCartResponse,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator(color: logoMachingColor,));
             } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
+              return Center(child: Text('Error: ${snapshot.error}', style: const TextStyle(color: logoMachingColor)));
             } else if (snapshot.hasData) {
               return Text(
-                  "${snapshot.data!.cart?.total} Cost of ${snapshot.data!.cart?.amount}");
+                  "${snapshot.data!.cart?.total} Cost of ${snapshot.data!.cart?.amount}", style: const TextStyle(color: logoMachingColor));
             } else {
-              return Center(child: Text('No cart data available.'));
+              return const Center(child: Text('No cart data available.', style: TextStyle(color: logoMachingColor)));
             }
           },
         ),
         centerTitle: true,
       ),
-      body: FutureBuilder(
-        future: _diamondSearchDate,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.hasData) {
-            return _buildCartContent(snapshot.data!);
-          } else {
-            return Center(child: Text('No cart data available.'));
-          }
-        },
+      body: Container(
+  decoration: const BoxDecoration(
+    image: DecorationImage(
+      image: AssetImage('assets/Images/bg-pattern.png'),
+      fit: BoxFit.fill, // makes the image fill the area
+    ),
+  ),
+  child: Column(
+    children: [
+      // 🔹 Select All row
+      Row(
+        children: [
+          Checkbox(
+            value: _selectAllChecked,
+            onChanged: (value) {
+              setState(() {
+                _toggleSelectAll(); // Toggle select all when checkbox is clicked
+                // Handle select all logic here
+              });
+            },
+          ),
+          const Text("Select All"),
+        ],
       ),
-      bottomNavigationBar: Padding(
+
+      // 🔹 Cart content with Expanded
+      Expanded(
+        child: FutureBuilder(
+          future: _diamondSearchDate,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (snapshot.hasData) {
+              return _buildCartContent(snapshot.data!);
+            } else {
+              return const Center(child: Text('No cart data available.'));
+            }
+          },
+        ),
+      ),
+    ],
+  ),
+),
+      bottomNavigationBar: 
+      Container(
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/Images/bg-pattern.png'),
+              fit: BoxFit.fill, // makes the image fill the area
+            ),
+          ),
+
+      child:Padding(
         padding: const EdgeInsets.all(paddingCard),
         child: Container(
-          height: 80,
+          height: navigationBarHeightAfterLogin,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
@@ -144,13 +227,14 @@ class _CartPageState extends State<CartPage> {
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.home),
+                    Icon(Icons.home, color: navigationMenuColor),
                     SizedBox(height: 2),
-                    Text('Home'),
+                    Text('Home', style: TextStyle(color: navigationMenuColor)),
                   ],
                 ),
               ),
-              TextButton(
+             
+               TextButton(
                 onPressed: () {
                   _showOrderDialog(context, widget.token, checkItem.join(','),
                       _futureCartResponse);
@@ -159,9 +243,45 @@ class _CartPageState extends State<CartPage> {
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.shopify),
+                    Icon(Icons.shopify, color: navigationMenuColor),
                     SizedBox(height: 2),
-                    Text('Order'),
+                    Text('Order', style: TextStyle(color: navigationMenuColor)),
+                  ],
+                ),
+              ),
+               TextButton(
+                onPressed: () {
+                //   _showOrderDialog(context, widget.token, checkItem.join(','),
+                //       _futureCartResponse);
+                //   // Add functionality here
+                // },
+                if (kDebugMode) {
+                  print("object");
+
+                  print(checkItem);
+                  print(checkItem.join(','));
+                  print(checkItem.join(',').runtimeType);
+
+                }
+                for (var stone in checkItem) {
+                  removeFromCart(stone, widget.token);
+                }
+                // removeFromCart(checkItem.join(','), widget.token);
+                // print("success remove");
+                 Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => CartPage(
+                                                token: widget.token,
+                                              )),
+                                      );
+                },
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.delete_forever, color: navigationMenuColor),
+                    SizedBox(height: 2),
+                    Text('Remove', style: TextStyle(color: navigationMenuColor)),
                   ],
                 ),
               ),
@@ -183,7 +303,7 @@ class _CartPageState extends State<CartPage> {
           ),
         ),
       ),
-    );
+    ),);
   }
 
   Widget _buildCartContent(DiamondData diamondData) {
@@ -194,7 +314,7 @@ class _CartPageState extends State<CartPage> {
         bool isStared =
             isStaredMap[index] ?? diamondData.diamonds[index].inCart == "Y";
         final diamond = diamondData.diamonds[index];
-
+         
         return InkWell(
           onTap: () {
             Navigator.push(
@@ -207,7 +327,7 @@ class _CartPageState extends State<CartPage> {
           child: Padding(
             padding: const EdgeInsets.all(paddingCard),
             child: Card.filled(
-              color: Colors.white,
+              color: accentColor,
               elevation: 7,
               borderOnForeground: false,
               child: Column(
@@ -308,7 +428,7 @@ class _CartPageState extends State<CartPage> {
                                   child: Card.filled(
                                     color: Colors.white,
                                     elevation: 7,
-                                    child: Icon(Icons.class_rounded),
+                                    child: Icon(Icons.class_rounded, color: mainColor,),
                                   ),
                                 ),
                               ),
@@ -329,7 +449,7 @@ class _CartPageState extends State<CartPage> {
                                   child: Card.filled(
                                     color: Colors.white,
                                     elevation: 7,
-                                    child: Icon(Icons.camera_alt_outlined),
+                                    child: Icon(Icons.camera_alt_outlined, color: mainColor,),
                                   ),
                                 ),
                               ),
@@ -344,7 +464,7 @@ class _CartPageState extends State<CartPage> {
                                   child: Card.filled(
                                     color: Colors.white,
                                     elevation: 7,
-                                    child: Icon(Icons.video_call_outlined),
+                                    child: Icon(Icons.video_call_outlined, color: mainColor,),
                                   ),
                                 ),
                               ),
@@ -473,28 +593,24 @@ void _showOrderDialog(BuildContext context, String token, String subide,
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Submit Order'),
+                backgroundColor: accentColor,
+
+        title: const Text('Submit Order',
+          style: TextStyle(color: logoMachingColor)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(
+            buildCustomTextField(
               controller: receiverController,
-              decoration: InputDecoration(
-                labelText: 'Cart Receiver Name',
-              ),
+              labelText: 'Cart Receiver Name',
             ),
-            TextField(
+            buildCustomTextField(
               controller: phoneController,
-              decoration: InputDecoration(
-                labelText: 'Cart Phone',
-              ),
-              keyboardType: TextInputType.phone,
+              labelText: 'Cart Phone',
             ),
-            TextField(
+            buildCustomTextField(
               controller: note,
-              decoration: InputDecoration(
-                labelText: 'Note',
-              ),
+              labelText: 'Note',
             ),
           ],
         ),
@@ -509,7 +625,7 @@ void _showOrderDialog(BuildContext context, String token, String subide,
               if (receiverName.isNotEmpty && phone.isNotEmpty) {
                 submitOrder(token, subide, receiverName, phone,cart_note: user_note);
                 var snackBar =
-                    SnackBar(content: Text("Order Placed Successfully"));
+                    const SnackBar(content: Text("Order Placed Successfully"));
 
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -522,17 +638,17 @@ void _showOrderDialog(BuildContext context, String token, String subide,
               } else {
                 // Show error if inputs are invalid
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Please fill in all fields')),
+                  const SnackBar(content: Text('Please fill in all fields')),
                 );
               }
             },
-            child: Text('Submit'),
+            child: const Text('Submit',               style: TextStyle(color: mainColor),),
           ),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text('Cancel'),
+            child: const Text('Cancel', style: TextStyle(color: mainColor),),
           ),
         ],
       );

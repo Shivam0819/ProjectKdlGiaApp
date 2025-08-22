@@ -14,7 +14,7 @@ class ApiService {
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
+      // print(response.body);
       final Map<String, dynamic> data = jsonDecode(response.body);
       // print(response.contentLength);
       final userProfile = UserProfile.fromJson(data['data']);

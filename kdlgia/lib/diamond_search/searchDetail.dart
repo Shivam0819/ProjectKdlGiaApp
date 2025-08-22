@@ -21,7 +21,8 @@ class SearchDetail extends StatefulWidget {
   final Diamond diamondDetail;
   final String token;
 
-  const SearchDetail({super.key, required this.diamondDetail, required this.token});
+  const SearchDetail(
+      {super.key, required this.diamondDetail, required this.token});
 
   @override
   _SearchDetailState createState() => _SearchDetailState();
@@ -36,17 +37,15 @@ class _SearchDetailState extends State<SearchDetail> {
   bool videoSelected = false;
   bool certificateSelected = false;
   bool shareSelected = false;
-  String dna_link= "";
-  
+  String dna_link = "";
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     fetchDnaLink();
-
   }
-  
-   Future<void> fetchDnaLink() async {
+
+  Future<void> fetchDnaLink() async {
     try {
       // Fetch the data asynchronously
       String link = await fetchDnaData(widget.token, widget.diamondDetail.id);
@@ -162,129 +161,143 @@ class _SearchDetailState extends State<SearchDetail> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: Card(
-          child: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(
-                  context); // Navigate back when the back button is pressed
-            },
-            color: Colors.black, // Customize the color of the back button
+        flexibleSpace: Image.asset(
+            'assets/Images/bg-pattern.png',
+            fit: BoxFit.cover,
           ),
-        ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: Card(
+              color: secondaryColor, // Set background to mainColor
 
-        title: const Text("Diamond Details"),
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(
+                    context); // Navigate back when the back button is pressed
+              },
+              color: logoMachingColor, // Customize the color of the back button
+            ),
+          ),
+
+        title: const Text("Diamond Details", style: TextStyle(color: logoMachingColor),),
         centerTitle: true, // Optionally, center the title horizontally
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(15),
-        child: ListView(
-          children: [
-            SizedBox(
-              width: double.infinity,
-              height: 200,
-              child: content,
-            ),
-            // Show content if not null
-            const SizedBox(
-              height: 5,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                // Image icon
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      selectedOption = "image";
-                    });
-                  },
-                  child: SizedBox(
-                    width: widthOfSearchResultCard,
-                    height: heighOfSearchResultCard,
-                    child: Card(
-                      elevation: 7,
-                      child: Icon(
-                        Icons.image,
-                        color: selectedOption == "image"
-                            ? mainColor
-                            : Colors.black,
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/Images/bg-pattern.png'),
+            fit: BoxFit.fill, // makes the image fill the area
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: ListView(
+            children: [
+              SizedBox(
+                width: double.infinity,
+                height: 200,
+                child: content,
+              ),
+              // Show content if not null
+              const SizedBox(
+                height: 5,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  // Image icon
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        selectedOption = "image";
+                      });
+                    },
+                    child: SizedBox(
+                      width: widthOfSearchResultCard,
+                      height: heighOfSearchResultCard,
+                      child: Card(
+                        elevation: 7,
+                        child: Icon(
+                          Icons.image,
+                          color: selectedOption == "image"
+                              ? mainColor
+                              : logoMachingColor,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                // Video icon
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      selectedOption = "video";
-                      _launchURLVideo(widget.diamondDetail.movieUrl);
-                    });
-                  },
-                  child: SizedBox(
-                    width: widthOfSearchResultCard,
-                    height: heighOfSearchResultCard,
-                    child: Card(
-                      elevation: 7,
-                      child: Icon(
-                        Icons.video_call_sharp,
-                        color: selectedOption == "video"
-                            ? mainColor
-                            : Colors.black,
+                  // Video icon
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        selectedOption = "video";
+                        _launchURLVideo(widget.diamondDetail.movieUrl);
+                      });
+                    },
+                    child: SizedBox(
+                      width: widthOfSearchResultCard,
+                      height: heighOfSearchResultCard,
+                      child: Card(
+                        elevation: 7,
+                        child: Icon(
+                          Icons.video_call_sharp,
+                          color: selectedOption == "video"
+                              ? mainColor
+                              : Colors.black,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                // Certificate icon
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      selectedOption = "certificate";
-                      if (widget.diamondDetail.diaReport == "GIA" ||
-                          widget.diamondDetail.diaReport == "IGI") {
-                        _launchURL(widget.diamondDetail.diaReportNo,
-                            widget.diamondDetail.diaReport);
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text("Sorry!!! Not Available")));
-                      }
-                    });
-                  },
-                  child: SizedBox(
-                    width: widthOfSearchResultCard,
-                    height: heighOfSearchResultCard,
-                    child: Card(
-                      elevation: 7,
-                      child: Icon(
-                        Icons.class_rounded,
-                        color: selectedOption == "certificate"
-                            ? mainColor
-                            : Colors.black,
+                  // Certificate icon
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        selectedOption = "certificate";
+                        if (widget.diamondDetail.diaReport == "GIA" ||
+                            widget.diamondDetail.diaReport == "IGI") {
+                          _launchURL(widget.diamondDetail.diaReportNo,
+                              widget.diamondDetail.diaReport);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text("Sorry!!! Not Available")));
+                        }
+                      });
+                    },
+                    child: SizedBox(
+                      width: widthOfSearchResultCard,
+                      height: heighOfSearchResultCard,
+                      child: Card(
+                        elevation: 7,
+                        child: Icon(
+                          Icons.class_rounded,
+                          color: selectedOption == "certificate"
+                              ? mainColor
+                              : Colors.black,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                // // Download icon
-                // InkWell(
-                //   onTap: () {
-                //     setState(() {});
-                //   },
-                //   child: const SizedBox(
-                //     width: widthOfSearchResultCard,
-                //     height: heighOfSearchResultCard,
-                //     child: Card(
-                //       color: Colors.white,
-                //       elevation: 7,
-                //       child: Icon(Icons.download),
-                //     ),
-                //   ),
-                // ),
-                // Share icon
-                InkWell(
-                  onTap: () {
-                    
-                    String pastDetail = """
+                  // // Download icon
+                  // InkWell(
+                  //   onTap: () {
+                  //     setState(() {});
+                  //   },
+                  //   child: const SizedBox(
+                  //     width: widthOfSearchResultCard,
+                  //     height: heighOfSearchResultCard,
+                  //     child: Card(
+                  //       color: Colors.white,
+                  //       elevation: 7,
+                  //       child: Icon(Icons.download),
+                  //     ),
+                  //   ),
+                  // ),
+                  // Share icon
+                  InkWell(
+                    onTap: () {
+                      String pastDetail = """
 Thank you for using KDLGia.com
 
 Diamond Details:
@@ -306,473 +319,508 @@ X-Ray: ${dna_link}
 
 Thank you!
 """;
-                    const snackBar = SnackBar(
-                      content: Text("Copy to Clipboard"),
-                      duration: Duration(seconds: 5),
-                    );
-                    // fetchDnaData(widget.)
-                    // _showShareOptions(context, dna_link, snackBar);
-                    _shareContent(context, pastDetail);
+                      const snackBar = SnackBar(
+                        content: Text("Copy to Clipboard"),
+                        duration: Duration(seconds: 5),
+                      );
+                      // fetchDnaData(widget.)
+                      // _showShareOptions(context, dna_link, snackBar);
+                      _shareContent(context, pastDetail);
 
-                    setState(() {
-                      selectedOption = "image";
-                    });
-                  },
-                  child: const SizedBox(
-                    width: widthOfSearchResultCard,
-                    height: heighOfSearchResultCard,
-                    child: Card(
-                      color: Colors.white,
-                      elevation: 7,
-                      child: Icon(Icons.share),
+                      setState(() {
+                        selectedOption = "image";
+                      });
+                    },
+                    child: const SizedBox(
+                      width: widthOfSearchResultCard,
+                      height: heighOfSearchResultCard,
+                      child: Card(
+                        color: Colors.white,
+                        elevation: 7,
+                        child: Icon(Icons.share),
+                      ),
                     ),
                   ),
-                ),
-                // Add to cart icon
-                //     InkWell(
-                //       onTap: () {
-                //         setState(() {});
-                //       },
-                //       child: const SizedBox(
-                //         width: widthOfSearchResultCard,
-                //         height: heighOfSearchResultCard,
-                //         child: Card(
-                //           color: Colors.white,
-                //           elevation: 7,
-                //           child: Icon(Icons.shopping_cart),
-                //         ),
-                //       ),
-                //     ),
-              ],
-            ),
+                  // Add to cart icon
+                  //     InkWell(
+                  //       onTap: () {
+                  //         setState(() {});
+                  //       },
+                  //       child: const SizedBox(
+                  //         width: widthOfSearchResultCard,
+                  //         height: heighOfSearchResultCard,
+                  //         child: Card(
+                  //           color: Colors.white,
+                  //           elevation: 7,
+                  //           child: Icon(Icons.shopping_cart),
+                  //         ),
+                  //       ),
+                  //     ),
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
 
-            StyledText(
-              text:
-                  "${widget.diamondDetail.diaShape.toUpperCase()} ${widget.diamondDetail.id}",
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
-            StyledText(
-              text: "Rap. %: ${widget.diamondDetail.back}",
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: mainColor,
-            ),
-            StyledText(
-              text: "Amount: ${widget.diamondDetail.dollar1}",
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: mainColor,
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            const StyledText(
-              text: "About",
-              fontSize: 15,
-              color: Colors.black87,
-              fontWeight: FontWeight.bold,
-            ),
-            Table(
-              children: [
-                TableRow(children: [
-                  TableCell(
-                      child: StyledTextSearchDetail(
-                    text: "CT: ${widget.diamondDetail.diaCarat}",
+              StyledText(
+                text:
+                    "${widget.diamondDetail.diaShape.toUpperCase()} ${widget.diamondDetail.id}",
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: logoMachingColor,
+              ),
+              StyledText(
+                text: "Rap. %: ${widget.diamondDetail.back}",
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: mainColor,
+              ),
+              StyledText(
+                text:
+                    "Per.Cts: \$${double.tryParse(widget.diamondDetail.dollar1.toString().replaceAll("\$", "")) != null && double.tryParse(widget.diamondDetail.diaCarat.toString()) != null ? (double.parse(widget.diamondDetail.dollar1.toString().replaceAll("\$", "")) / double.parse(widget.diamondDetail.diaCarat.toString())).toStringAsFixed(2) : 'N/A'}",
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: mainColor,
+              ),
+              StyledText(
+                text: "Amount: ${widget.diamondDetail.dollar1}",
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: mainColor,
+              ),
+
+              const SizedBox(
+                height: 5,
+              ),
+              const StyledText(
+                text: "About",
+                fontSize: 15,
+                color: logoMachingColor,
+                fontWeight: FontWeight.w700,
+              ),
+              Table(
+                children: [
+                  TableRow(children: [
+                    TableCell(
+                        child: StyledTextSearchDetail(
+                      text: "CT: ${widget.diamondDetail.diaCarat}",
+                      fontWeight: FontWeight.w600,
+                    )),
+                    TableCell(
+                        child: StyledTextSearchDetail(
+                      text:
+                          "T:${widget.diamondDetail.diaTable} T.D:${widget.diamondDetail.diaDepth}",
+                      fontWeight: FontWeight.w600,
+                    ))
+                  ]),
+                  TableRow(children: [
+                    TableCell(
+                        child: StyledTextSearchDetail(
+                      text:
+                          "${widget.diamondDetail.diaClarity} ${widget.diamondDetail.diaColor} ${widget.diamondDetail.diaCut}-${widget.diamondDetail.diaPolish}-${widget.diamondDetail.diaSymmetry} ${widget.diamondDetail.diaFluorescence}",
+                      fontWeight: FontWeight.w600,
+                    )),
+                    TableCell(
+                        child: StyledTextSearchDetail(
+                      text: "Dia: ${widget.diamondDetail.diaDiameter}",
+                      fontWeight: FontWeight.w600,
+                    ))
+                  ]),
+                ],
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Card.filled(
+                  color: Colors.white,
+                  elevation: 7,
+                  child: Column(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            detailIsSelected =
+                                !detailIsSelected; // Toggle the expansion state
+                          });
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(paddingInsidCard),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  TextStyleHeader(
+                                      text: "Detail",
+                                      colors: detailIsSelected
+                                          ? mainColor
+                                          : logoMachingColor),
+                                  const Spacer(), // Use Spacer widget to fill available space
+                                  Icon(
+                                    detailIsSelected
+                                        ? Icons.arrow_upward_rounded
+                                        : Icons.arrow_downward_rounded,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   )),
-                  TableCell(
-                      child: StyledTextSearchDetail(
-                    text:
-                        "T:${widget.diamondDetail.diaTable} T.D:${widget.diamondDetail.diaDepth}",
-                  ))
-                ]),
-                TableRow(children: [
-                  TableCell(
-                      child: StyledTextSearchDetail(
-                    text:
-                        "${widget.diamondDetail.diaClarity} ${widget.diamondDetail.diaColor} ${widget.diamondDetail.diaCut}-${widget.diamondDetail.diaPolish}-${widget.diamondDetail.diaSymmetry} ${widget.diamondDetail.diaFluorescence}",
+              if (detailIsSelected)
+                Table(
+                  children: [
+                    TableRow(children: [
+                      const TableCell(
+                          child: StyledTextSearchDetail(text: "Item.No:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: "${widget.diamondDetail.id}"))
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child: StyledTextSearchDetail(text: "Cert.No:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text:
+                                  "${widget.diamondDetail.diaReport} ${widget.diamondDetail.diaReportNo}"))
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child: StyledTextSearchDetail(text: "Shape:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.diaShape))
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child: StyledTextSearchDetail(text: "Carats:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.diaCarat))
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child: StyledTextSearchDetail(text: "Clarity:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.diaClarity))
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child: StyledTextSearchDetail(text: "Color:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.diaColor)),
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child: StyledTextSearchDetail(text: "Cut/Pol/Sym:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text:
+                                  "${widget.diamondDetail.diaCut} / ${widget.diamondDetail.diaPolish} / ${widget.diamondDetail.diaSymmetry}")),
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child: StyledTextSearchDetail(text: "Fluorescence:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.diaFluorescence)),
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child: StyledTextSearchDetail(text: "Measurement:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.diaDiameter)),
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child: StyledTextSearchDetail(
+                              text: "Laser Inscription:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.diaIns)),
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child: StyledTextSearchDetail(text: "Price (USD):")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.dollar1)),
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child: StyledTextSearchDetail(text: "Discount %:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.back))
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child: StyledTextSearchDetail(text: "Rap:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.rap)),
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child:
+                              StyledTextSearchDetail(text: "Key To Symbol:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.dia_kts))
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child: StyledTextSearchDetail(text: "Comment:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.diaNote))
+                    ]),
+                  ],
+                ),
+              const SizedBox(
+                height: 5,
+              ),
+              Card.filled(
+                  color: Colors.white,
+                  elevation: 7,
+                  child: Column(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            additionalDetailIsSelected =
+                                !additionalDetailIsSelected; // Toggle the expansion state
+                          });
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(paddingInsidCard),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  TextStyleHeader(
+                                      text: "Additional Detail",
+                                      colors: additionalDetailIsSelected
+                                          ? mainColor
+                                          : logoMachingColor),
+                                  const Spacer(), // Use Spacer widget to fill available space
+                                  Icon(
+                                    additionalDetailIsSelected
+                                        ? Icons.arrow_upward_rounded
+                                        : Icons.arrow_downward_rounded,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   )),
-                  TableCell(
-                      child: StyledTextSearchDetail(
-                    text: "Dia: ${widget.diamondDetail.diaDiameter}",
-                  ))
-                ]),
-              ],
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Card.filled(
-                color: Colors.white,
-                elevation: 7,
-                child: Column(
+              if (additionalDetailIsSelected)
+                Table(
                   children: [
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          detailIsSelected =
-                              !detailIsSelected; // Toggle the expansion state
-                        });
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(paddingInsidCard),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                TextStyleHeader(
-                                    text: "Detail",
-                                    colors: detailIsSelected
-                                        ? mainColor
-                                        : Colors.black),
-                                const Spacer(), // Use Spacer widget to fill available space
-                                Icon(
-                                  detailIsSelected
-                                      ? Icons.arrow_upward_rounded
-                                      : Icons.arrow_downward_rounded,
-                                ),
-                              ],
-                            ),
-                          ],
+                    TableRow(children: [
+                      const TableCell(
+                          child:
+                              StyledTextSearchDetail(text: "Total Depth %:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.diaDepth)),
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child: StyledTextSearchDetail(text: "Table %:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.diaTable)),
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child:
+                              StyledTextSearchDetail(text: "Crown Angle %:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.diaCa)),
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child: StyledTextSearchDetail(
+                              text: "Pavilion Angle %:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.diaPa)),
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child: StyledTextSearchDetail(text: "Price (RMB):")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.rmb)),
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child: StyledTextSearchDetail(text: "RMB Tax %:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.rmb)),
+                    ]),
+                    const TableRow(children: [
+                      TableCell(
+                          child: StyledTextSearchDetail(text: "Fancy Diamond")),
+                      TableCell(child: StyledTextSearchDetail(text: "")),
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child: StyledTextSearchDetail(text: "Color:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.diaColorColor)),
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child:
+                              StyledTextSearchDetail(text: "Color Intensity:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.diaColorIntensity)),
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child:
+                              StyledTextSearchDetail(text: "Color Overtone:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.diaColorOvertone)),
+                    ]),
+                  ],
+                ),
+              Card.filled(
+                  color: Colors.white,
+                  elevation: 7,
+                  child: Column(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            kdlImpexDetailIsSelected =
+                                !kdlImpexDetailIsSelected; // Toggle the expansion state
+                          });
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(paddingInsidCard),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  TextStyleHeader(
+                                      text: "KDLGia Detail",
+                                      colors: kdlImpexDetailIsSelected
+                                          ? mainColor
+                                          : logoMachingColor),
+                                  const Spacer(), // Use Spacer widget to fill available space
+                                  Icon(
+                                    kdlImpexDetailIsSelected
+                                        ? Icons.arrow_upward_rounded
+                                        : Icons.arrow_downward_rounded,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                )),
-            if (detailIsSelected)
-              Table(
-                children: [
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Item.No:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: "${widget.diamondDetail.id}"))
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Cert.No:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text:
-                                "${widget.diamondDetail.diaReport} ${widget.diamondDetail.diaReportNo}"))
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Shape:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.diaShape))
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Carats:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.diaCarat))
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Clarity:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.diaClarity))
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Color:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.diaColor)),
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Cut/Pol/Sym:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text:
-                                "${widget.diamondDetail.diaCut} / ${widget.diamondDetail.diaPolish} / ${widget.diamondDetail.diaSymmetry}")),
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Fluorescence:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.diaFluorescence)),
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Measurement:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.diaDiameter)),
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child:
-                            StyledTextSearchDetail(text: "Laser Inscription:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.diaIns)),
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Price (USD):")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.dollar1)),
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Discount %:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.back))
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Rap:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.rap)),
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Key To Symbol:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.dia_kts))
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Comment:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.diaNote))
-                  ]),
-                ],
-              ),
-            const SizedBox(
-              height: 5,
-            ),
-            Card.filled(
-                color: Colors.white,
-                elevation: 7,
-                child: Column(
+                    ],
+                  )),
+              if (kdlImpexDetailIsSelected)
+                Table(
                   children: [
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          additionalDetailIsSelected =
-                              !additionalDetailIsSelected; // Toggle the expansion state
-                        });
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(paddingInsidCard),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                TextStyleHeader(
-                                    text: "Additional Detail",
-                                    colors: additionalDetailIsSelected
-                                        ? mainColor
-                                        : Colors.black),
-                                const Spacer(), // Use Spacer widget to fill available space
-                                Icon(
-                                  additionalDetailIsSelected
-                                      ? Icons.arrow_upward_rounded
-                                      : Icons.arrow_downward_rounded,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    TableRow(children: [
+                      const TableCell(
+                          child:
+                              StyledTextSearchDetail(text: "Black In Table:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.diaBt)),
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child:
+                              StyledTextSearchDetail(text: "Black In Crown:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.diaBc)),
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child:
+                              StyledTextSearchDetail(text: "White In Table:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.diaWt)),
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child:
+                              StyledTextSearchDetail(text: "White In Crown:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.diaWc)),
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child: StyledTextSearchDetail(text: "Milky:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.diaMilky)),
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child: StyledTextSearchDetail(text: "Shade:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.diaColsh)),
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child: StyledTextSearchDetail(text: "Eye Clean:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.diaEyeClean)),
+                    ]),
+                    TableRow(children: [
+                      const TableCell(
+                          child:
+                              StyledTextSearchDetail(text: "Heart & Arrow:")),
+                      TableCell(
+                          child: StyledTextSearchDetail(
+                              text: widget.diamondDetail.diaHna)),
+                    ]),
                   ],
-                )),
-            if (additionalDetailIsSelected)
-              Table(
-                children: [
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Total Depth %:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.diaDepth)),
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Table %:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.diaTable)),
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Crown Angle %:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.diaCa)),
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child:
-                            StyledTextSearchDetail(text: "Pavilion Angle %:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.diaPa)),
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Price (RMB):")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.rmb)),
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "RMB Tax %:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.rmb)),
-                  ]),
-                  const TableRow(children: [
-                    TableCell(
-                        child: StyledTextSearchDetail(text: "Fancy Diamond")),
-                    TableCell(child: StyledTextSearchDetail(text: "")),
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Color:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.diaColorColor)),
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child:
-                            StyledTextSearchDetail(text: "Color Intensity:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.diaColorIntensity)),
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Color Overtone:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.diaColorOvertone)),
-                  ]),
-                ],
-              ),
-            Card.filled(
-                color: Colors.white,
-                elevation: 7,
-                child: Column(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          kdlImpexDetailIsSelected =
-                              !kdlImpexDetailIsSelected; // Toggle the expansion state
-                        });
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(paddingInsidCard),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                TextStyleHeader(
-                                    text: "KDLGia Detail",
-                                    colors: kdlImpexDetailIsSelected
-                                        ? mainColor
-                                        : Colors.black),
-                                const Spacer(), // Use Spacer widget to fill available space
-                                Icon(
-                                  kdlImpexDetailIsSelected
-                                      ? Icons.arrow_upward_rounded
-                                      : Icons.arrow_downward_rounded,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                )),
-            if (kdlImpexDetailIsSelected)
-              Table(
-                children: [
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Black In Table:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.diaBt)),
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Black In Crown:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.diaBc)),
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "White In Table:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.diaWt)),
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "White In Crown:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.diaWc)),
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Milky:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.diaMilky)),
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Shade:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.diaColsh)),
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Eye Clean:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.diaEyeClean)),
-                  ]),
-                  TableRow(children: [
-                    const TableCell(
-                        child: StyledTextSearchDetail(text: "Heart & Arrow:")),
-                    TableCell(
-                        child: StyledTextSearchDetail(
-                            text: widget.diamondDetail.diaHna)),
-                  ]),
-                ],
-              ),
-          ],
+                ),
+            ],
+          ),
         ),
       ),
-    bottomNavigationBar: Padding(
+      bottomNavigationBar: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/Images/bg-pattern.png'),
+              fit: BoxFit.fill, // makes the image fill the area
+            ),
+          ),
+          
+          
+      
+      child:Padding(
         padding: const EdgeInsets.all(paddingCard),
         child: Container(
-          height: 80,
+          height: navigationBarHeightAfterLogin,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
@@ -804,35 +852,42 @@ Thank you!
                   children: [
                     Icon(
                       Icons.home,
+                      color: logoMachingColor,
                     ),
                     SizedBox(height: 2),
-                    Text('Home'),
+                    Text(
+                      'Home',
+                      style: TextStyle(color: logoMachingColor),
+                    ),
                   ],
                 ),
               ),
               TextButton(
                 // Add functionality here
-                onPressed: ()  {
-                 addToCart(widget.diamondDetail.id, widget.token);
+                onPressed: () {
+                  addToCart(widget.diamondDetail.id, widget.token);
 
                   // Wait for all diamonds to be added to the cart
 
                   // Now you can show the order dialog after all items have been added
-                  _showOrderDialog(context, widget.token, widget.diamondDetail.id);
+                  _showOrderDialog(
+                      context, widget.token, widget.diamondDetail.id);
                 },
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.shopify),
+                    Icon(
+                      Icons.shopify,
+                      color: logoMachingColor,
+                    ),
                     SizedBox(height: 2),
-                    Text('Order'),
+                    Text('Order', style: TextStyle(color: logoMachingColor)),
                   ],
                 ),
               ),
               TextButton(
-                onPressed: ()  {
-                addToCart(widget.diamondDetail.id, widget.token);
-                  
+                onPressed: () {
+                  addToCart(widget.diamondDetail.id, widget.token);
 
                   // Wait for all diamonds to be added to the cart
 
@@ -848,9 +903,15 @@ Thank you!
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.shopping_cart),
+                    Icon(
+                      Icons.shopping_cart,
+                      color: logoMachingColor,
+                    ),
                     SizedBox(height: 2),
-                    Text('Cart'),
+                    Text(
+                      'Cart',
+                      style: TextStyle(color: logoMachingColor),
+                    ),
                   ],
                 ),
               ),
@@ -858,20 +919,19 @@ Thank you!
           ),
         ),
       ),
-    );
+    ),);
   }
 }
+
 void _shareContent(BuildContext context, String textMessage) {
-    final RenderBox box = context.findRenderObject() as RenderBox;
+  final RenderBox box = context.findRenderObject() as RenderBox;
 
-    Share.share(
-      '$textMessage',
-      subject: 'Look what I found!',
-      sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
-    );
-  }
-
-
+  Share.share(
+    '$textMessage',
+    subject: 'Look what I found!',
+    sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
+  );
+}
 
 void _showOrderDialog(BuildContext context, String token, String subide) {
   final TextEditingController receiverController = TextEditingController();
@@ -882,29 +942,18 @@ void _showOrderDialog(BuildContext context, String token, String subide) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Submit Order'),
+        backgroundColor: accentColor,
+        title: Text(
+          'Submit Order',
+          style: TextStyle(color: logoMachingColor),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(
-              controller: receiverController,
-              decoration: const InputDecoration(
-                labelText: 'Cart Receiver Name',
-              ),
-            ),
-            TextField(
-              controller: phoneController,
-              decoration: const InputDecoration(
-                labelText: 'Cart Phone',
-              ),
-              keyboardType: TextInputType.phone,
-            ),
-            TextField(
-              controller: note,
-              decoration: const InputDecoration(
-                labelText: 'Note',
-              ),
-            ),
+            buildCustomTextField(controller: receiverController, labelText: 'Cart Receiver Name'),
+            buildCustomTextField(controller: phoneController, labelText: 'Cart Phone'),
+            buildCustomTextField(controller: note, labelText: 'Note'),
+              
           ],
         ),
         actions: [
@@ -936,13 +985,19 @@ void _showOrderDialog(BuildContext context, String token, String subide) {
                 );
               }
             },
-            child: Text('Submit'),
+            child: Text(
+              'Submit',
+              style: TextStyle(color: mainColor),
+            ),
           ),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text('Cancel'),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: mainColor),
+            ),
           ),
         ],
       );

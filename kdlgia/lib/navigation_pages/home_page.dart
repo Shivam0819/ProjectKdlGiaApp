@@ -15,11 +15,14 @@ import 'package:kdlgia/search/searchTemp.dart';
 import 'package:kdlgia/style/cardDetail.dart';
 import 'package:kdlgia/style/constant.dart';
 import 'package:kdlgia/style/search_card_ui.dart';
+import 'package:kdlgia/style/styleTextSearchResult.dart';
 import 'package:kdlgia/style/textStyle.dart';
 import 'package:kdlgia/user/apiUserInfo.dart';
-import 'package:kdlgia/user/profile.dart'; 
+import 'package:kdlgia/user/profile.dart';
 import 'package:kdlgia/user/userProfile.dart';
-import 'package:url_launcher/url_launcher.dart'; // Import the search page
+import 'package:url_launcher/url_launcher.dart';
+// Import the search page
+import 'package:flutter_svg/flutter_svg.dart';
 
 class HomePage extends StatefulWidget {
   final String token;
@@ -71,8 +74,8 @@ class _HomePageState extends State<HomePage> {
         exclusiveDiamond = data;
       }
     }
-    print("Exclusinve diamond");
-    print(exclusiveDiamond);
+    // print("Exclusinve diamond");
+    // print(exclusiveDiamond);
     return exclusiveDiamond;
   }
 
@@ -105,7 +108,7 @@ class _HomePageState extends State<HomePage> {
         mode: LaunchMode.externalApplication, // Ensures the phone dialer opens
       );
     } else {
-      print('WhatsApp is not installed.');
+      // print('WhatsApp is not installed.');
     }
   }
 
@@ -117,22 +120,24 @@ class _HomePageState extends State<HomePage> {
         mode: LaunchMode.externalApplication, // Ensures the phone dialer opens
       );
     } else {
-      print('Could not launch phone call.');
+      // print('Could not launch phone call.');
     }
   }
 
-void _connectOnSkype(String skypeUsername) async {
-  print(skypeUsername);
-  final skypeUrl = Uri.parse('skype:$skypeUsername?call');
-  if (await canLaunchUrl(skypeUrl)) {
-    await launchUrl(
-      skypeUrl,
-      mode: LaunchMode.externalApplication, // Ensures it opens in an external app
-    );
-  } else {
-    print('Skype is not installed or could not open Skype.');
+  void _connectOnSkype(String skypeUsername) async {
+    // print(skypeUsername);
+    final skypeUrl = Uri.parse('skype:$skypeUsername?call');
+    if (await canLaunchUrl(skypeUrl)) {
+      await launchUrl(
+        skypeUrl,
+        mode: LaunchMode
+            .externalApplication, // Ensures it opens in an external app
+      );
+    } else {
+      // print('Skype is not installed or could not open Skype.');
+    }
   }
-}
+
   void _extractAndConnect(String inputString) {
     // Split the input string by spaces and colons
     List<String> parts = inputString.split(' ');
@@ -148,1105 +153,1282 @@ void _connectOnSkype(String skypeUsername) async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Center(
-          child: Text("Home"),
-        ),
-        actions: [
-          PopupMenuButton<String>(
-            itemBuilder: (BuildContext context) {
-              return {'Profile', 'Settings', 'Logout'}.map((String choice) {
-                return PopupMenuItem<String>(
-                  value: choice,
-                  child: Text(choice),
-                );
-              }).toList();
-            },
-            onSelected: (String choice) {
-              // Handle the selected choice
-              switch (choice) {
-                case 'Profile':
-                  // Navigate to profile page
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => ProfilePage(
-                        token: widget.token,
+        appBar: AppBar(
+          flexibleSpace: Image.asset(
+            'assets/Images/bg-pattern.png',
+            fit: BoxFit.cover,
+          ),
+          backgroundColor: Colors.white,
+          elevation: 0, // optional, removes shadow for a cleaner look
+          leading: Padding(
+            padding: const EdgeInsets.all(8.0), // adjust padding if needed
+            child: SvgPicture.asset(
+              'assets/logo/company_mini_logo.svg',
+              width: 100,
+              height: 100,
+            ),
+          ),
+          title: null, // remove "Home"
+          centerTitle: false, // ensures logo stays on left
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.menu,
+                  color: logoMachingColor), // hamburger icon
+              onPressed: () {
+                // open a drawer or show popup menu
+                showMenu(
+                  color: cardColor,
+                  context: context,
+                  position: const RelativeRect.fromLTRB(
+                      100, 80, 0, 0), // adjust position
+                  items: [
+                    const PopupMenuItem<String>(
+                      value: 'Profile',
+                      child: Text(
+                        'Profile',
+                        style: TextStyle(color: logoMachingColor),
                       ),
                     ),
-                  );
-                  break;
-                case 'Settings':
-                  // Navigate to settings page
-                  break;
-                case 'Logout':
-                  // Perform logout action
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => LoginPage(),
+                    const PopupMenuItem<String>(
+                      value: 'Settings',
+                      child: Text(
+                        'Settings',
+                        style: TextStyle(color: logoMachingColor),
+                      ),
                     ),
-                  );
-                  break;
-              }
-            },
-          ),
-        ],
-      ),
-      body: Container(
-        child: ListView(
-          children: [
-            GridView.count(
-              crossAxisCount: 2,
-              shrinkWrap:
-                  true, // Ensure the GridView occupies only the space it needs
-              physics:
-                  const NeverScrollableScrollPhysics(), // Disable scrolling if needed
-              children: [
-                // const Padding(
-                //   padding: EdgeInsets.all(paddingCard),
-                //   child: Card(
-                //     child:
-                //         Center(child: TextStyleHeader(text: "Arriving Soon")),
-                //   ),
-                // ),
-                // const Padding(
-                //   padding: EdgeInsets.all(paddingCard),
-                //   child: Card(
-                //     child: Center(child: TextStyleHeader(text: "Pair")),
-                //   ),
-                // ),
-                //cart page
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CartPage(
-                                token: widget.token,
-                              )),
-                    );
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.all(paddingCard),
-                    child: Card(
-                      child: Center(
-                          child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.shopping_cart, size: 60, color: mainColor),
-                          TextStyleHeader(
-                            text: "Cart",
-                            colors: mainColor,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ],
-                      )),
+                    const PopupMenuItem<String>(
+                      value: 'Logout',
+                      child: Text(
+                        'Logout',
+                        style: TextStyle(color: logoMachingColor),
+                      ),
                     ),
-                  ),
-                ),
-                // Add more children as needed
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
+                  ],
+                ).then((value) {
+                  if (value == null) return;
+                  switch (value) {
+                    case 'Profile':
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => SearchPage(
-                                  token: widget.token,
-                                )));
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(paddingCard),
-                    child: Card(
-                      child: Center(
-                          child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            "assets/app_icons/search.png",
-                            height: 60,
-                            color: mainColor,
-                          ),
-                          const TextStyleHeader(
-                            text: "Stock Search",
-                            colors: mainColor,
-                            fontWeight: FontWeight.normal,
-                          ),
-                          FutureBuilder(
-                              future: diamondsFuture,
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return const Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                } else {
-                                  return TextStyleHeader(
-                                    text: snapshot.data!.total.toString(),
-                                    colors: mainColor,
-                                    fontWeight: FontWeight.normal,
-                                  );
-                                }
-                              })
-                        ],
-                      )),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(paddingCard),
-                  child: Card(
-                      child: Column(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            isExpanded =
-                                !isExpanded; // Toggle the expansion state
-                          });
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(paddingInsidCard),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  const TextStyleHeader(
-                                    text: "Referance Search",
-                                    colors: mainColor,
-                                  ),
-                                  const Spacer(), // Use Spacer widget to fill available space
-                                  Icon(
-                                    isExpanded
-                                        ? Icons.arrow_upward_rounded
-                                        : Icons.arrow_downward_rounded,
-                                    color: mainColor,
-                                  ),
-                                ],
-                              ),
-                            ],
+                          builder: (BuildContext context) => ProfilePage(
+                            token: widget.token,
                           ),
                         ),
-                      ),
-                      if (isExpanded)
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 20, right: 20, bottom: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Search By",
-                                style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
-                              ),
-                              Row(
-                                children: [
-                                  const SizedBox(width: 10),
-                                  TextButton(
-                                    onPressed: () {
-                                      isStockNoSelected = true;
-                                      searchByReferance = "id";
-                                      setState(() {});
-                                    },
-                                    child: Text(
-                                      "Stock Id",
-                                      style: TextStyle(
-                                          color: isStockNoSelected
-                                              ? mainColor
-                                              : Colors.black),
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      isStockNoSelected = false;
-                                      searchByReferance = "report_no";
-
-                                      setState(() {});
-                                    },
-                                    child: Text(
-                                      "Cert No",
-                                      style: TextStyle(
-                                          color: isStockNoSelected
-                                              ? Colors.black
-                                              : mainColor),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                width: 350, // Set the width of the container
-                                child: TextField(
-                                  controller: _searchQuerry,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Search Here',
-                                    hintText: 'Space or newline separated list',
-
-                                    border:
-                                        OutlineInputBorder(), // You can choose any border type
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                  height:
-                                      sizedBoxHeight), // Add some space between the TextField and the search button
-
-                              SizedBox(
-                                width: 350,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    // Add your search functionality here
-                                    String querry =
-                                        "q_id=${_searchQuerry.text.toString()}&q_id_type=${searchByReferance.toString()}";
-                                    showCarts(widget.token);
-                                    fetchDataSearchDiamond(widget.token,
-                                            searchQuerry: querry)
-                                        .then((diamondData) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              SearchResultsTemp(
-                                            diamondData: diamondData,
-                                            token: widget.token,
-                                            querryUrl: querry,
-                                          ),
-                                        ),
-                                      );
-                                    }).catchError((error) {
-                                      // Handle error
-                                      print('Error: $error');
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                              'An error occurred. Please try again later.'),
-                                        ),
-                                      );
-                                    });
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        mainColor, // Background color of the button
-                                  ),
-                                  child: const Text(
-                                    'Search',
-                                    style: TextStyle(
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white),
-                                  ),
-                                ),
-                              ),
-
-                              // Add more ListTile widgets for additional details
-                            ],
-                          ),
-                        )
-                    ],
-                  )),
-                ),
-              ],
+                      );
+                      break;
+                    case 'Settings':
+                      // Navigate to settings page
+                      break;
+                    case 'Logout':
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => const LoginPage(),
+                        ),
+                      );
+                      break;
+                  }
+                });
+              },
             ),
-            InkWell(
-              child: Padding(
-                padding: const EdgeInsets.all(paddingCard),
-                child: Card(
-                  child: Column(
-                    children: [
-                      const TextStyleHeader(
-                        text: "KDL Gia Exclusive Diamond",
-                        fontSizeIs: 18,
-                        fontWeight: FontWeight.bold,
+          ],
+        ),
+        body: Container(
+          padding: const EdgeInsets.all(10.0),
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/Images/bg-pattern.png'),
+              fit: BoxFit.fill, // makes the image fill the area
+            ),
+          ),
+          child: ListView(
+            children: [
+              GridView.count(
+                crossAxisCount: 2,
+                shrinkWrap:
+                    true, // Ensure the GridView occupies only the space it needs
+                physics:
+                    const NeverScrollableScrollPhysics(), // Disable scrolling if needed
+                children: [
+                  // const Padding(
+                  //   padding: EdgeInsets.all(paddingCard),
+                  //   child: Card(
+                  //     child:
+                  //         Center(child: TextStyleHeader(text: "Arriving Soon")),
+                  //   ),
+                  // ),
+                  // const Padding(
+                  //   padding: EdgeInsets.all(paddingCard),
+                  //   child: Card(
+                  //     child: Center(child: TextStyleHeader(text: "Pair")),
+                  //   ),
+                  // ),
+                  //cart page
+
+                  // Add more children as needed
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SearchPage(
+                                    token: widget.token,
+                                  )));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(paddingCard),
+                      child: Card(
+                        color: accentColor,
+                        child: Center(
+                            child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              "assets/app_icons/search.png",
+                              height: 60,
+                              color: mainColor,
+                            ),
+                            const TextStyleHeader(
+                              text: "Stock Search",
+                              colors: mainColor,
+                              fontWeight: FontWeight.normal,
+                            ),
+                            FutureBuilder(
+                                future: diamondsFuture,
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  } else {
+                                    return TextStyleHeader(
+                                      text: snapshot.data!.total.toString(),
+                                      colors: mainColor,
+                                      fontWeight: FontWeight.normal,
+                                    );
+                                  }
+                                })
+                          ],
+                        )),
                       ),
-                      SizedBox(
-                        height: 5,
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CartPage(
+                                  token: widget.token,
+                                )),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(paddingCard),
+                      child: Card(
+                        color: accentColor,
+                        elevation: 8, // shadow depth (higher = stronger shadow)
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              12), // optional rounded corners
+                        ),
+                        child: const Center(
+                            child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.shopping_cart,
+                                size: 60, color: mainColor),
+                            TextStyleHeader(
+                              text: "Cart",
+                              colors: mainColor,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ],
+                        )),
                       ),
-
-                      FutureBuilder(
-                        future: diamondsFutureExclusiveDiamond,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          } else {
-                            Diamond? data; // Declare as nullable
-
-                            if (snapshot.hasData) {
-                              // Initialize temp with the first diamond
-                              var temp;
-                              var temp1 = [];
-
-                              print(snapshot.data!.diamonds.length);
-                              var source = [
-                                "PARTH",
-                                "LU",
-                                "LDD",
-                                "KT",
-                                "YD",
-                                "H"
-                              ];
-                              for (var diam in snapshot.data!.diamonds) {
-                                if (source.contains(diam.diaSource)) {
-                                  temp1.add(diam);
-                                }
-                              }
-                              temp = temp1[0];
-                              for (var diam in temp1) {
-                                // Compare using double.parse for decimal numbers
-
-                                print(diam.diaSource);
-
-                                if (double.parse(temp.diaCarat) <
-                                    double.parse(diam.diaCarat)) {
-                                  temp = diam;
-                                  // double? val = double.tryParse(diam.dollar1.replaceAll(RegExp(r'[^\d.]'), ''));
-                                  // print(val);
-                                }
-                              }
-
-                              data = temp; // Assign the found diamond to data
-                            }
-
-                            return InkWell(
+                    ),
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(paddingCard),
+                    child: Card(
+                        color: accentColor,
+                        elevation: 8, // shadow depth (higher = stronger shadow)
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              12), // optional rounded corners
+                        ),
+                        child: Column(
+                          children: [
+                            InkWell(
                               onTap: () {
-                                var stok_no = data!.diaReportNo;
-                                String querry =
-                                    "q_id=${stok_no}&q_id_type=report_no";
-                                print(querry);
-                                // showCarts(widget.token);
-                                fetchDataSearchDiamond(widget.token,
-                                        searchQuerry: querry)
-                                    .then((diamondData) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => SearchResultsTemp(
-                                        diamondData: diamondData,
-                                        token: widget.token,
-                                        querryUrl: querry,
-                                      ),
-                                    ),
-                                  );
+                                setState(() {
+                                  isExpanded =
+                                      !isExpanded; // Toggle the expansion state
                                 });
                               },
-                              child: GridView.count(
-                                  crossAxisCount: 2,
-                                  shrinkWrap:
-                                      true, // Ensure the GridView occupies only the space it needs
-                                  physics: const NeverScrollableScrollPhysics(),
+                              child: Padding(
+                                padding: const EdgeInsets.all(paddingInsidCard),
+                                child: Column(
                                   children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(12.0),
-                                      child: Image.network(
-                                        data!.imageUrl,
-                                        fit: BoxFit.fill,
-                                        loadingBuilder:
-                                            (context, child, loadingProgress) {
-                                          if (loadingProgress == null)
-                                            return child;
-                                          return CircularProgressIndicator(
-                                            value: loadingProgress
-                                                        .expectedTotalBytes !=
-                                                    null
-                                                ? loadingProgress
-                                                        .cumulativeBytesLoaded /
-                                                    loadingProgress
-                                                        .expectedTotalBytes!
-                                                : null,
-                                          );
-                                        },
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
-                                          return Text('Failed to load image');
-                                        },
+                                    Row(
+                                      children: [
+                                        const TextStyleHeader(
+                                          text: "Referance Search",
+                                          colors: mainColor,
+                                        ),
+                                        const Spacer(), // Use Spacer widget to fill available space
+                                        Icon(
+                                          isExpanded
+                                              ? Icons.arrow_upward_rounded
+                                              : Icons.arrow_downward_rounded,
+                                          color: mainColor,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            if (isExpanded)
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, bottom: 20),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      "Search By",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                          color: logoMachingColor),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Row(
+                                      children: [
+                                        const SizedBox(width: 10),
+                                        TextButton(
+                                          onPressed: () {
+                                            isStockNoSelected = true;
+                                            searchByReferance = "id";
+                                            setState(() {});
+                                          },
+                                          child: Text(
+                                            "Stock Id",
+                                            style: TextStyle(
+                                                color: isStockNoSelected
+                                                    ? mainColor
+                                                    : Colors.black),
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            isStockNoSelected = false;
+                                            searchByReferance = "report_no";
+
+                                            setState(() {});
+                                          },
+                                          child: Text(
+                                            "Cert No",
+                                            style: TextStyle(
+                                                color: isStockNoSelected
+                                                    ? logoMachingColor
+                                                    : mainColor),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      width:
+                                          350, // Set the width of the container
+                                      child:
+                                          buildCustomTextFieldOutlineInputBorder(
+                                        controller: _searchQuerry,
+                                        labelText: "Search Here",
+                                        hintedText:
+                                            "Space or Newline separated list",
                                       ),
                                     ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: paddingCard,
-                                              left: paddingCard),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              Text(
-                                                data.diaShape,
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.normal),
-                                              ),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              Text(data.diaCarat)
-                                            ],
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: paddingCard,
-                                              left: paddingCard),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              Text(data.diaColor),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              Text(data.diaClarity),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              Text(data.diaReport)
-                                            ],
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: paddingCard,
-                                              left: paddingCard),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              Text(data.diaCut),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              Text(data.diaPolish),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              Text(data.diaSymmetry),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              Text(data.diaFluorescence)
-                                            ],
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: paddingCard,
-                                              left: paddingCard),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              Text(data.diaReportNo)
-                                            ],
-                                          ),
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Padding(
-                                                padding: const EdgeInsets.only(
-                                                    right: paddingCard,
-                                                    left: paddingCard),
-                                                child: Container(
-                                                    child: Row(
-                                                  children: [
-                                                    InkWell(
-                                                      onTap: () {
-                                                        if (data!.diaReport ==
-                                                                "GIA" ||
-                                                            data.diaReport ==
-                                                                "IGI") {
-                                                          _launchURL(
-                                                              data.diaReportNo,
-                                                              data.diaReport);
-                                                        } else {
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(
-                                                                  const SnackBar(
-                                                                      content: Text(
-                                                                          "Sorry!!! Not Available")));
-                                                        }
-                                                      },
-                                                      child: const SizedBox(
-                                                        width:
-                                                            widthOfSearchResultCard,
-                                                        height:
-                                                            heighOfSearchResultCard,
-                                                        child: Card.filled(
-                                                          color: Colors.white,
-                                                          elevation: 7,
-                                                          child: Icon(Icons
-                                                              .class_rounded),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    InkWell(
-                                                      onTap: () {
-                                                        showDialog(
-                                                          context: context,
-                                                          builder: (BuildContext
-                                                              context) {
-                                                            // Navigator.of(context).pop();
-                                                            return ImagePopup(
-                                                                imageUrl: data!
-                                                                    .imageUrl);
-                                                          },
-                                                        );
-                                                      },
-                                                      child: const SizedBox(
-                                                        width:
-                                                            widthOfSearchResultCard,
-                                                        height:
-                                                            heighOfSearchResultCard,
-                                                        child: Card.filled(
-                                                          color: Colors.white,
-                                                          elevation: 7,
-                                                          child: Icon(Icons
-                                                              .camera_alt_outlined),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    InkWell(
-                                                      onTap: () {
-                                                        _launchURLVideo(
-                                                            data!.movieUrl);
-                                                      },
-                                                      child: const SizedBox(
-                                                        width:
-                                                            widthOfSearchResultCard,
-                                                        height:
-                                                            heighOfSearchResultCard,
-                                                        child: Card.filled(
-                                                          color: Colors.white,
-                                                          elevation: 7,
-                                                          child: Icon(Icons
-                                                              .video_call_outlined),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                  ],
-                                                )))
-                                          ],
-                                        )
-                                      ],
-                                    )
-                                  ]),
-                            );
-                          }
-                        },
-                      )
+                                    SizedBox(
+                                        height:
+                                            sizedBoxHeight), // Add some space between the TextField and the search button
 
-                      // FutureBuilder(future: diamondsFuture, builder:(context, snapshot) {
-                      //           if (snapshot.connectionState ==
-                      //               ConnectionState.waiting) {
-                      //             return const Center(
-                      //               child: CircularProgressIndicator(),
-                      //             );
-                      //           } else {
+                                    SizedBox(
+                                      width: 350,
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          // Add your search functionality here
+                                          String querry =
+                                              "q_id=${_searchQuerry.text.toString()}&q_id_type=${searchByReferance.toString()}";
+                                          showCarts(widget.token);
+                                          fetchDataSearchDiamond(widget.token,
+                                                  searchQuerry: querry)
+                                              .then((diamondData) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SearchResultsTemp(
+                                                  diamondData: diamondData,
+                                                  token: widget.token,
+                                                  querryUrl: querry,
+                                                ),
+                                              ),
+                                            );
+                                          }).catchError((error) {
+                                            // Handle error
+                                            // print('Error: $error');
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                    'An error occurred. Please try again later.'),
+                                              ),
+                                            );
+                                          });
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              mainColor, // Background color of the button
+                                        ),
+                                        child: const Text(
+                                          'Search',
+                                          style: TextStyle(
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
 
-                      //             return TextStyleHeader(
-                      //               text: snapshot.data!.total.toString(),
-                      //               colors: mainColor,
-                      //               fontWeight: FontWeight.normal,
-                      //             );
-                      //           }
-                      //         })
-                    ],
+                                    // Add more ListTile widgets for additional details
+                                  ],
+                                ),
+                              )
+                          ],
+                        )),
+                  ),
+                ],
+              ),
+              InkWell(
+                child: Padding(
+                  padding: const EdgeInsets.all(paddingCard),
+                  child: Card(
+                    margin: const EdgeInsets.all(paddingCard),
+                    color: accentColor,
+                    elevation: 8, // shadow depth (higher = stronger shadow)
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(12), // optional rounded corners
+                    ),
+                    child: Column(
+                      children: [
+                        const TextStyleHeader(
+                          text: "KDL Gia Exclusive Diamond",
+                          fontSizeIs: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+
+                        FutureBuilder(
+                          future: diamondsFutureExclusiveDiamond,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else {
+                              Diamond? data; // Declare as nullable
+
+                              if (snapshot.hasData) {
+                                // Initialize temp with the first diamond
+                                var temp;
+                                var temp1 = [];
+
+                                // print(snapshot.data!.diamonds.length);
+                                var source = [
+                                  "PARTH",
+                                  "LU",
+                                  "LDD",
+                                  "KT",
+                                  "YD",
+                                  "H"
+                                ];
+                                for (var diam in snapshot.data!.diamonds) {
+                                  if (source.contains(diam.diaSource)) {
+                                    temp1.add(diam);
+                                  }
+                                }
+                                temp = temp1[0];
+                                for (var diam in temp1) {
+                                  // Compare using double.parse for decimal numbers
+
+                                  // print(diam.diaSource);
+
+                                  if (double.parse(temp.diaCarat) <
+                                      double.parse(diam.diaCarat)) {
+                                    temp = diam;
+                                    // double? val = double.tryParse(diam.dollar1.replaceAll(RegExp(r'[^\d.]'), ''));
+                                    // print(val);
+                                  }
+                                }
+
+                                data = temp; // Assign the found diamond to data
+                              }
+
+                              return InkWell(
+                                onTap: () {
+                                  var stok_no = data!.diaReportNo;
+                                  String querry =
+                                      "q_id=${stok_no}&q_id_type=report_no";
+                                  // print(querry);
+                                  // showCarts(widget.token);
+                                  fetchDataSearchDiamond(widget.token,
+                                          searchQuerry: querry)
+                                      .then((diamondData) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SearchResultsTemp(
+                                          diamondData: diamondData,
+                                          token: widget.token,
+                                          querryUrl: querry,
+                                        ),
+                                      ),
+                                    );
+                                  });
+                                },
+                                child: GridView.count(
+                                    crossAxisCount: 2,
+                                    shrinkWrap:
+                                        true, // Ensure the GridView occupies only the space it needs
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    childAspectRatio: 1,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                        child: SizedBox(
+                                          height: 50, // set a proper height
+                                          width: 50, // set a proper width
+                                          child: Image.network(
+                                            data!.imageUrl,
+                                            fit: BoxFit
+                                                .cover, // keeps aspect ratio while filling box
+                                            loadingBuilder: (context, child,
+                                                loadingProgress) {
+                                              if (loadingProgress == null)
+                                                return child;
+                                              return const Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                                        strokeWidth: 2),
+                                              );
+                                            },
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return const Center(
+                                                child: Icon(
+                                                  Icons.broken_image,
+                                                  size: 40,
+                                                  color: Colors.grey,
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: paddingCard,
+                                                left: paddingCard),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(
+                                                  data.diaShape,
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.normal),
+                                                ),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(data.diaCarat)
+                                              ],
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: paddingCard,
+                                                left: paddingCard),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(data.diaColor),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(data.diaClarity),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(data.diaReport)
+                                              ],
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: paddingCard,
+                                                left: paddingCard),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(data.diaCut),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(data.diaPolish),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(data.diaSymmetry),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(data.diaFluorescence)
+                                              ],
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: paddingCard,
+                                                left: paddingCard),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(data.diaReportNo)
+                                              ],
+                                            ),
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: paddingCard,
+                                                          left: paddingCard),
+                                                  child: Container(
+                                                      child: Row(
+                                                    children: [
+                                                      InkWell(
+                                                        onTap: () {
+                                                          if (data!.diaReport ==
+                                                                  "GIA" ||
+                                                              data.diaReport ==
+                                                                  "IGI") {
+                                                            _launchURL(
+                                                                data.diaReportNo,
+                                                                data.diaReport);
+                                                          } else {
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                                    const SnackBar(
+                                                                        content:
+                                                                            Text("Sorry!!! Not Available")));
+                                                          }
+                                                        },
+                                                        child: const SizedBox(
+                                                          width:
+                                                              widthOfSearchResultCard,
+                                                          height:
+                                                              heighOfSearchResultCard,
+                                                          child: Card.filled(
+                                                            color: Colors.white,
+                                                            elevation: 7,
+                                                            child: Icon(Icons
+                                                                .class_rounded),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      InkWell(
+                                                        onTap: () {
+                                                          showDialog(
+                                                            context: context,
+                                                            builder:
+                                                                (BuildContext
+                                                                    context) {
+                                                              // Navigator.of(context).pop();
+                                                              return ImagePopup(
+                                                                  imageUrl: data!
+                                                                      .imageUrl);
+                                                            },
+                                                          );
+                                                        },
+                                                        child: const SizedBox(
+                                                          width:
+                                                              widthOfSearchResultCard,
+                                                          height:
+                                                              heighOfSearchResultCard,
+                                                          child: Card.filled(
+                                                            color: accentColor,
+                                                            elevation: 7,
+                                                            child: Icon(Icons
+                                                                .camera_alt_outlined),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      InkWell(
+                                                        onTap: () {
+                                                          _launchURLVideo(
+                                                              data!.movieUrl);
+                                                        },
+                                                        child: const SizedBox(
+                                                          width:
+                                                              widthOfSearchResultCard,
+                                                          height:
+                                                              heighOfSearchResultCard,
+                                                          child: Card.filled(
+                                                            color: accentColor,
+                                                            elevation: 8,
+                                                            child: Icon(Icons
+                                                                .video_call_outlined),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                    ],
+                                                  )))
+                                            ],
+                                          )
+                                        ],
+                                      )
+                                    ]),
+                              );
+                            }
+                          },
+                        )
+
+                        // FutureBuilder(future: diamondsFuture, builder:(context, snapshot) {
+                        //           if (snapshot.connectionState ==
+                        //               ConnectionState.waiting) {
+                        //             return const Center(
+                        //               child: CircularProgressIndicator(),
+                        //             );
+                        //           } else {
+
+                        //             return TextStyleHeader(
+                        //               text: snapshot.data!.total.toString(),
+                        //               colors: mainColor,
+                        //               fontWeight: FontWeight.normal,
+                        //             );
+                        //           }
+                        //         })
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            GridView.count(
-              crossAxisCount: 2,
-              shrinkWrap:
-                  true, // Ensure the GridView occupies only the space it needs
-              physics:
-                  const NeverScrollableScrollPhysics(), // Disable scrolling if needed
-              children: [
-                const InkWell(
-                  onTap: null,
-                  child: Padding(
-                    padding: EdgeInsets.all(paddingCard),
-                    child: Card(
-                      child: Center(child: TextStyleHeader(text: "Flewless")),
-                    ),
-                  ),
-                ),
-
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                OrderPage(token: widget.token)));
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.all(paddingCard),
-                    child: Card(
-                      child: Center(
-                          child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.delivery_dining_rounded,
-                              size: 60, color: mainColor),
-                          TextStyleHeader(
-                            text: "Order Status",
-                            colors: mainColor,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ],
-                      )),
-                    ),
-                  ),
-                )
-
-                // Add more children as needed
-              ],
-            ),
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(paddingCard),
-                  child: Card(
-                      child: Column(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            orderSummaryDetailIsSelected =
-                                !orderSummaryDetailIsSelected; // Toggle the expansion state
-                          });
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(paddingInsidCard),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  const TextStyleHeader(
-                                    text: "Order Summery Detail",
-                                    colors: mainColor,
-                                  ),
-                                  const Spacer(), // Use Spacer widget to fill available space
-                                  Icon(
-                                    orderSummaryDetailIsSelected
-                                        ? Icons.arrow_upward_rounded
-                                        : Icons.arrow_downward_rounded,
-                                    color: mainColor,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      if (orderSummaryDetailIsSelected)
-                        const Padding(
-                          padding: EdgeInsets.only(left: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Order Summery will be here",
-                                style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
-                              ),
-
-                              // Add more ListTile widgets for additional details
-                            ],
-                          ),
-                        )
-                    ],
-                  )),
-                ),
-              ],
-            ),
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(paddingCard),
-                  child: Card(
-                      child: Column(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            userSummaruIsSelected =
-                                !userSummaruIsSelected; // Toggle the expansion state
-                          });
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(paddingInsidCard),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  const TextStyleHeader(
-                                    text: "User Summery",
-                                    colors: mainColor,
-                                  ),
-                                  const Spacer(), // Use Spacer widget to fill available space
-                                  Icon(
-                                    userSummaruIsSelected
-                                        ? Icons.arrow_upward_rounded
-                                        : Icons.arrow_downward_rounded,
-                                    color: mainColor,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      if (userSummaruIsSelected)
-                        const Padding(
-                          padding: EdgeInsets.only(left: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "User Summery will here",
-                                style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
-                              ),
-
-                              // Add more ListTile widgets for additional details
-                            ],
-                          ),
-                        )
-                    ],
-                  )),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(paddingCard),
-              child: Card(
-                child: FutureBuilder<UserProfile>(
-                  future: _userProfileFuture,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    } else {
-                      final userProfile = snapshot.data!;
-                      var salesPersonName = userProfile.salesPerson ?? '';
-                      var salesPersonaPhone =
-                          userProfile.salesPersonPhone ?? '';
-                      var salesPersonWexine =
-                          userProfile.salesPersonSkype ?? '';
-                      var salesPersonWhatsapp =
-                          userProfile.salesPersonWhatsapp ?? '';
-                      var salesPersonSkype = userProfile.salesSkype ?? '';
-
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Center(
-                            child: const Text(
-                              "Key Account Manager",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: mainColor,
-                                  fontSize: 18),
+              GridView.count(
+                crossAxisCount: 2,
+                shrinkWrap:
+                    true, // Ensure the GridView occupies only the space it needs
+                physics:
+                    const NeverScrollableScrollPhysics(), // Disable scrolling if needed
+                children: [
+                  InkWell(
+                    onTap: () {
+                      String querry =
+                          "q_id=${_searchQuerry.text.toString()}&q_carat1=2.0";
+                      showCarts(widget.token);
+                      fetchDataSearchDiamond(widget.token, searchQuerry: querry)
+                          .then((diamondData) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SearchResultsTemp(
+                              diamondData: diamondData,
+                              token: widget.token,
+                              querryUrl: querry,
                             ),
                           ),
-
-                          const SizedBox(
-                            height: 10,
+                        );
+                      }).catchError((error) {
+                        // Handle error
+                        // print('Error: $error');
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                                'An error occurred. Please try again later.'),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment
-                                .start, // Align items to start and end
-                            children: [
-                              Padding(
-                                  padding: const EdgeInsets.all(paddingCard),
-                                  child: SizedBox(
-                                    height: 60,
-                                    width: 60,
-                                    child: Image.asset(
-                                      "assets/Images/user.png",
-                                      color: mainColor,
-                                    ),
-                                  )),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  TextStyleHeader(
-                                    text: salesPersonName,
-                                    fontWeight: FontWeight.normal,
-                                    colors: Colors.black,
-                                  ),
-                                  const TextStyleHeader(
-                                      text: "Marketing Executive",
+                        );
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(paddingCard),
+                      child: Card(
+                        color: accentColor,
+                        elevation: 8, // shadow depth (higher = stronger shadow)
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              12), // optional rounded corners
+                        ),
+                        child: const Center(
+                            child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.diamond_rounded,
+                                size: 60, color: mainColor),
+                            TextStyleHeader(
+                              text: "Exclusive 2 Carat +",
+                              colors: mainColor,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ],
+                        ),
+                            ),
+                      ),
+                    ),
+                  ),
+
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  OrderPage(token: widget.token)));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(paddingCard),
+                      child: Card(
+                        color: accentColor,
+                        elevation: 8, // shadow depth (higher = stronger shadow)
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              12), // optional rounded corners
+                        ),
+                        child: const Center(
+                            child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.delivery_dining_rounded,
+                                size: 60, color: mainColor),
+                            TextStyleHeader(
+                              text: "Order Status",
+                              colors: mainColor,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ],
+                        ),
+                        ),
+                      ),
+                    ),
+                  )
+
+                  // Add more children as needed
+                ],
+              ),
+              // Column(
+              //   children: [
+              //     Padding(
+              //       padding: const EdgeInsets.all(paddingCard),
+              //       child: Card(
+              //           color: accentColor,
+              //           elevation: 8, // shadow depth (higher = stronger shadow)
+              //           shape: RoundedRectangleBorder(
+              //             borderRadius: BorderRadius.circular(
+              //                 12), // optional rounded corners
+              //           ),
+              //           child: Column(
+              //             children: [
+              //               InkWell(
+              //                 onTap: () {
+              //                   setState(() {
+              //                     orderSummaryDetailIsSelected =
+              //                         !orderSummaryDetailIsSelected; // Toggle the expansion state
+              //                   });
+              //                 },
+              //                 child: Padding(
+              //                   padding: const EdgeInsets.all(paddingInsidCard),
+              //                   child: Column(
+              //                     children: [
+              //                       Row(
+              //                         children: [
+              //                           const TextStyleHeader(
+              //                             text: "Order Summery Detail",
+              //                             colors: mainColor,
+              //                           ),
+              //                           const Spacer(), // Use Spacer widget to fill available space
+              //                           Icon(
+              //                             orderSummaryDetailIsSelected
+              //                                 ? Icons.arrow_upward_rounded
+              //                                 : Icons.arrow_downward_rounded,
+              //                             color: mainColor,
+              //                           ),
+              //                         ],
+              //                       ),
+              //                     ],
+              //                   ),
+              //                 ),
+              //               ),
+              //               if (orderSummaryDetailIsSelected)
+              //                 const Padding(
+              //                   padding: EdgeInsets.only(left: 20),
+              //                   child: Column(
+              //                     crossAxisAlignment: CrossAxisAlignment.start,
+              //                     children: [
+              //                       Text(
+              //                         "Order Summery will be here",
+              //                         style: TextStyle(
+              //                             fontSize: 15,
+              //                             fontWeight: FontWeight.bold),
+              //                         textAlign: TextAlign.center,
+              //                       ),
+
+              //                       // Add more ListTile widgets for additional details
+              //                     ],
+              //                   ),
+              //                 )
+              //             ],
+              //           )),
+              //     ),
+              //   ],
+              // ),
+              // Column(
+              //   children: [
+              //     Padding(
+              //       padding: const EdgeInsets.all(paddingCard),
+              //       child: Card(
+              //           color: accentColor,
+              //           elevation: 8, // shadow depth (higher = stronger shadow)
+              //           shape: RoundedRectangleBorder(
+              //             borderRadius: BorderRadius.circular(
+              //                 12), // optional rounded corners
+              //           ),
+              //           child: Column(
+              //             children: [
+              //               InkWell(
+              //                 onTap: () {
+              //                   setState(() {
+              //                     userSummaruIsSelected =
+              //                         !userSummaruIsSelected; // Toggle the expansion state
+              //                   });
+              //                 },
+              //                 child: Padding(
+              //                   padding: const EdgeInsets.all(paddingInsidCard),
+              //                   child: Column(
+              //                     children: [
+              //                       Row(
+              //                         children: [
+              //                           const TextStyleHeader(
+              //                             text: "User Summery",
+              //                             colors: mainColor,
+              //                           ),
+              //                           const Spacer(), // Use Spacer widget to fill available space
+              //                           Icon(
+              //                             userSummaruIsSelected
+              //                                 ? Icons.arrow_upward_rounded
+              //                                 : Icons.arrow_downward_rounded,
+              //                             color: mainColor,
+              //                           ),
+              //                         ],
+              //                       ),
+              //                     ],
+              //                   ),
+              //                 ),
+              //               ),
+              //               if (userSummaruIsSelected)
+              //                 const Padding(
+              //                   padding: EdgeInsets.only(left: 20),
+              //                   child: Column(
+              //                     crossAxisAlignment: CrossAxisAlignment.start,
+              //                     children: [
+              //                       Text(
+              //                         "User Summery will here",
+              //                         style: TextStyle(
+              //                             fontSize: 15,
+              //                             fontWeight: FontWeight.bold),
+              //                         textAlign: TextAlign.center,
+              //                       ),
+
+              //                       // Add more ListTile widgets for additional details
+              //                     ],
+              //                   ),
+              //                 )
+              //             ],
+              //           )),
+              //     ),
+              //   ],
+              // ),
+              Padding(
+                padding: const EdgeInsets.all(paddingCard),
+                child: Card(
+                  color: accentColor,
+                  elevation: 8, // shadow depth (higher = stronger shadow)
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(12), // optional rounded corners
+                  ),
+                  child: FutureBuilder<UserProfile>(
+                    future: _userProfileFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      } else {
+                        final userProfile = snapshot.data!;
+                        var salesPersonName = userProfile.salesPerson ?? '';
+                        var salesPersonaPhone =
+                            userProfile.salesPersonPhone ?? '';
+                        var salesPersonWexine =
+                            userProfile.salesPersonSkype ?? '';
+                        var salesPersonWhatsapp =
+                            userProfile.salesPersonWhatsapp ?? '';
+                        var salesPersonSkype = userProfile.salesSkype ?? '';
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Center(
+                              child: Text(
+                                "Key Account Manager",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: mainColor,
+                                    fontSize: 18),
+                              ),
+                            ),
+
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment
+                                  .start, // Align items to start and end
+                              children: [
+                                Padding(
+                                    padding: const EdgeInsets.all(paddingCard),
+                                    child: SizedBox(
+                                      height: 60,
+                                      width: 60,
+                                      child: Image.asset(
+                                        "assets/Images/user.png",
+                                        color: mainColor,
+                                      ),
+                                    )),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    TextStyleHeader(
+                                      text: salesPersonName,
                                       fontWeight: FontWeight.normal,
-                                      colors: Colors.black),
-                                ],
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          // Mail******************
-                          InkWell(
-                          onTap: (){
-                            _makePhoneCall(salesPersonaPhone);
-                          },
-                          child: InsideShadowCard(
-                              child: Row(
-                            children: [
-                              SizedBox(
-                                width: 40,
-                                height: 40,
-                                child: Padding(
-                                  padding: EdgeInsets.all(paddingCard),
-                                  child: Image.asset(
-                                      "assets/logo/telephone.png",
-                                      color: mainColor),
+                                      colors: Colors.black,
+                                    ),
+                                    const TextStyleHeader(
+                                        text: "Marketing Executive",
+                                        fontWeight: FontWeight.normal,
+                                        colors: Colors.black),
+                                  ],
                                 ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(paddingCard),
-                                child: Text(
-                                  salesPersonaPhone,
-                                  style: TextStyle(fontSize: 15.0),
-                                ),
-                              )
-                            ],
-                          ))
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          // WhatSup ******************
-                          InkWell(
-                            onTap: (){
-                              _sendWhatsAppMessage(salesPersonWhatsapp);
-                            },
-
-                          child: 
-                          InsideShadowCard(
-                              child: Row(
-                            children: [
-                              SizedBox(
-                                width: 40,
-                                height: 40,
-                                child: Padding(
-                                  padding: EdgeInsets.all(paddingCard),
-                                  child: Image.asset("assets/logo/whatsapp.png",
-                                      color: mainColor),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(paddingCard),
-                                child: Text(
-                                  salesPersonWhatsapp,
-                                  style: TextStyle(fontSize: 15.0),
-                                ),
-                              )
-                            ],
-                          ))),
-                          const SizedBox(height: 5),
-                          // Whatsup
-                          InsideShadowCard(
-                              child: Row(
-                            children: [
-                              SizedBox(
-                                width: 40,
-                                height: 40,
-                                child: Padding(
-                                  padding: EdgeInsets.all(paddingCard),
-                                  child: Image.asset("assets/logo/wechat.png",
-                                      color: mainColor),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(paddingCard),
-                                child: Text(
-                                  salesPersonWexine,
-                                  style: TextStyle(fontSize: 15.0),
-                                ),
-                              )
-                            ],
-                          )),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              _extractAndConnect(salesPersonSkype);
-                              
-                            },
-
-                          child: 
-                          InsideShadowCard(
-                            child: Row(
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            // Mail******************
+                            InkWell(
+                                onTap: () {
+                                  _makePhoneCall(salesPersonaPhone);
+                                },
+                                child: InsideShadowCard(
+                                    child: Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 40,
+                                      height: 40,
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.all(paddingCard),
+                                        child: Image.asset(
+                                            "assets/logo/telephone.png",
+                                            color: mainColor),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.all(paddingCard),
+                                      child: Text(
+                                        salesPersonaPhone,
+                                        style: const TextStyle(fontSize: 15.0),
+                                      ),
+                                    )
+                                  ],
+                                ))),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            // WhatSup ******************
+                            InkWell(
+                                onTap: () {
+                                  _sendWhatsAppMessage(salesPersonWhatsapp);
+                                },
+                                child: InsideShadowCard(
+                                    child: Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 40,
+                                      height: 40,
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.all(paddingCard),
+                                        child: Image.asset(
+                                            "assets/logo/whatsapp.png",
+                                            color: mainColor),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.all(paddingCard),
+                                      child: Text(
+                                        salesPersonWhatsapp,
+                                        style: const TextStyle(fontSize: 15.0),
+                                      ),
+                                    )
+                                  ],
+                                ))),
+                            const SizedBox(height: 5),
+                            // Whatsup
+                            InsideShadowCard(
+                                child: Row(
                               children: [
                                 SizedBox(
                                   width: 40,
                                   height: 40,
                                   child: Padding(
-                                    padding: EdgeInsets.all(paddingCard),
-                                    child: Image.asset("assets/logo/skype.png",
+                                    padding: const EdgeInsets.all(paddingCard),
+                                    child: Image.asset("assets/logo/wechat.png",
                                         color: mainColor),
                                   ),
                                 ),
-                                Expanded(
-                                  // Expanded widget added here
-                                  child: Padding(
-                                    padding: EdgeInsets.all(paddingCard),
-                                    child: SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: Text(
-                                        salesPersonSkype, // Use null-aware operator to handle null value
-                                        style: TextStyle(fontSize: 15.0),
-                                      ),
-                                    ),
+                                Padding(
+                                  padding: const EdgeInsets.all(paddingCard),
+                                  child: Text(
+                                    salesPersonWexine,
+                                    style: const TextStyle(fontSize: 15.0),
                                   ),
-                                ),
+                                )
                               ],
+                            )),
+                            const SizedBox(
+                              height: 5,
                             ),
-                          ))
-                        ],
-                      );
-                    }
-                  },
+                            InkWell(
+                                onTap: () {
+                                  _extractAndConnect(salesPersonSkype);
+                                },
+                                child: InsideShadowCard(
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 40,
+                                        height: 40,
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.all(paddingCard),
+                                          child: Image.asset(
+                                              "assets/logo/skype.png",
+                                              color: mainColor),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        // Expanded widget added here
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.all(paddingCard),
+                                          child: SingleChildScrollView(
+                                            scrollDirection: Axis.horizontal,
+                                            child: Text(
+                                              salesPersonSkype, // Use null-aware operator to handle null value
+                                              style: const TextStyle(
+                                                  fontSize: 15.0),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ))
+                          ],
+                        );
+                      }
+                    },
+                  ),
                 ),
+              ),
+            ],
+          ),
+        ),
+        bottomNavigationBar: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/Images/bg-pattern.png'),
+              fit: BoxFit.fill, // makes the image fill the area
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(
+                paddingCard), // Adjust the bottom padding as needed
+            child: Container(
+              height:
+                  navigationBarHeightAfterLogin, // Adjust the height as needed
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20), // Add rounded corners
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: const Offset(0, 3), // changes position of shadow
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => HomePage(
+                                  token: widget.token,
+                                )),
+                        (route) => false,
+                      );
+                    },
+                    child: const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.home_rounded,
+                          color: navigationMenuColor,
+                        ),
+                        SizedBox(
+                          height: 2,
+                        ), // Add some space between the icon and text
+                        Text(
+                          'Home',
+                          style: TextStyle(color: navigationMenuColor),
+                        ),
+                      ],
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SearchPage(
+                                    token: widget.token,
+                                  )));
+                    },
+                    child: const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.search_rounded,
+                          color: navigationMenuColor,
+                        ),
+                        SizedBox(
+                          height: 2,
+                        ), // Add some space between the icon and text
+                        Text('Search',
+                            style: TextStyle(
+                              color: navigationMenuColor,
+                            )),
+                      ],
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CartPage(
+                                  token: widget.token,
+                                )),
+                      );
+                    },
+                    child: const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.shopping_cart_rounded,
+                          color: navigationMenuColor,
+                        ),
+                        SizedBox(
+                          height: 2,
+                        ), // Add some space between the icon and text
+                        Text('Cart',
+                            style: TextStyle(
+                              color: navigationMenuColor,
+                            )),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(
-            paddingCard), // Adjust the bottom padding as needed
-        child: Container(
-          height: 80, // Adjust the height as needed
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20), // Add rounded corners
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: const Offset(0, 3), // changes position of shadow
-              ),
-            ],
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => HomePage(
-                              token: widget.token,
-                            )),
-                    (route) => false,
-                  );
-                },
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.home_rounded),
-                    SizedBox(
-                      height: 2,
-                    ), // Add some space between the icon and text
-                    Text('Home'),
-                  ],
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SearchPage(
-                                token: widget.token,
-                              )));
-                },
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.search_rounded),
-                    SizedBox(
-                      height: 2,
-                    ), // Add some space between the icon and text
-                    Text('Search'),
-                  ],
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CartPage(
-                              token: widget.token,
-                            )),
-                  );
-                },
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.shopping_cart_rounded),
-                    SizedBox(
-                      height: 2,
-                    ), // Add some space between the icon and text
-                    Text('Cart'),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+        ));
   }
 }

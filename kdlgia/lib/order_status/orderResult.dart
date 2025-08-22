@@ -75,20 +75,34 @@ class _OrderResultState extends State<OrderResult> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Card(
-          child: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(
-                  context); // Navigate back when the back button is pressed
-            },
-            color: Colors.black, // Customize the color of the back button
+       flexibleSpace: Image.asset(
+            'assets/Images/bg-pattern.png',
+            fit: BoxFit.cover,
           ),
-        ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: Card(
+              color: secondaryColor, // Set background to mainColor
+
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(
+                    context); // Navigate back when the back button is pressed
+              },
+            ),
+          ),
         title: Text(widget.headinAppBar),
         centerTitle: true,
       ),
-      body: FutureBuilder(
+      body: Container(
+         decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/Images/bg-pattern.png'),
+              fit: BoxFit.fill, // makes the image fill the area
+            ),
+          ),
+      child : FutureBuilder(
           future: orderData,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -111,7 +125,7 @@ class _OrderResultState extends State<OrderResult> {
                     child: Padding(
                       padding: const EdgeInsets.all(paddingCard),
                       child: Card.filled(
-                        color: Colors.white,
+                        color: cardColor,
                         elevation: 7,
                         borderOnForeground: false,
                         child: Column(
@@ -342,10 +356,20 @@ class _OrderResultState extends State<OrderResult> {
               );
             }
           }),
-      bottomNavigationBar: Padding(
+          ),
+      bottomNavigationBar:Container(
+         decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/Images/bg-pattern.png'),
+              fit: BoxFit.fill, // makes the image fill the area
+            ),
+          ),
+      
+       child:Padding(
+
         padding: const EdgeInsets.all(paddingCard),
         child: Container(
-          height: 80,
+          height: navigationBarHeightAfterLogin,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
@@ -368,9 +392,9 @@ class _OrderResultState extends State<OrderResult> {
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.shopify),
+                    Icon(Icons.shopify, color: navigationMenuColor,),
                     SizedBox(height: 2),
-                    Text('Order'),
+                    Text('Order', style: TextStyle(color: navigationMenuColor)),
                   ],
                 ),
               ),
@@ -379,9 +403,9 @@ class _OrderResultState extends State<OrderResult> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.save_rounded),
+                    Icon(Icons.save_rounded, color: navigationMenuColor),
                     SizedBox(height: 2),
-                    Text('Save Search'),
+                    Text('Save Search', style: TextStyle(color: navigationMenuColor)),
                   ],
                 ),
               ),
@@ -397,9 +421,9 @@ class _OrderResultState extends State<OrderResult> {
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.shopping_cart),
+                    Icon(Icons.shopping_cart, color: navigationMenuColor),
                     SizedBox(height: 2),
-                    Text('Cart'),
+                    Text('Cart', style: TextStyle(color: navigationMenuColor)),
                   ],
                 ),
               ),
@@ -407,6 +431,7 @@ class _OrderResultState extends State<OrderResult> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }

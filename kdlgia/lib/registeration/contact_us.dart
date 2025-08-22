@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kdlgia/registeration/about_us.dart';
 import 'package:kdlgia/style/search_card_ui.dart';
 import 'package:kdlgia/style/styleTextSearchResult.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -34,7 +35,6 @@ class _ContactUsState extends State<ContactUs> {
   String show = "Hong Kong";
   _launchURL(String url_link) async {
     Uri url = Uri.parse(url_link);
-    
 
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
       throw Exception('Could not launch');
@@ -69,197 +69,292 @@ class _ContactUsState extends State<ContactUs> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: Card(
-          child: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(
-                  context); // Navigate back when the back button is pressed
-            },
-            color: Colors.black, // Customize the color of the back button
+        appBar: AppBar(
+          flexibleSpace: Image.asset(
+            'assets/Images/bg-pattern.png',
+            fit: BoxFit.cover,
           ),
-        ),
-        title: const Text("Contact Us"),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 4),
-            const StyledText(
-              text: "Social Networks",
-              color: Colors.black87,
-              fontSize: 15,
-              fontWeight: FontWeight.normal,
-            ),
-            Row(
-              children: [
-                InkWell(
-                  onTap: () {
-_launchURL("https://play.google.com/store/apps/details?id=com.shivam.kdlgia&pcampaignid=web_share");
-                  },
-                  child: Container(
-                  height: 50,
-                  width: 50,
-                  child: const Card(
-                    color: Colors.white,
-                    child: Icon(Icons.play_arrow, color: mainColor),
-                  ),
-                ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: Card(
+            color: secondaryColor, // Set background to mainColor
 
-                ),
-                const SizedBox(width: 10),
-                InkWell(
-                  onTap: () {
-                    _launchURL("https://www.kdlgia.com/");
-                  },
-                  child: Container(
-                  height: 50, 
-                  width: 50,
-                  child: const Card(
-                    color: Colors.white,
-                    child: Icon(Icons.open_in_browser, color: mainColor),
-                  ),
-                ),
-                )
-                ,
-              ],
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(
+                    context); // Navigate back when the back button is pressed
+              },
+              color: logoMachingColor, // Customize the color of the back button
             ),
-            const SizedBox(height: 20),
-            const StyledText(
-              text: "Location",
-              color: Colors.black87,
-              fontSize: 15,
-              fontWeight: FontWeight.normal,
+          ),
+          title: const Text("Contact Us"),
+          centerTitle: true,
+        ),
+        body: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/Images/bg-pattern.png'),
+              fit: BoxFit.fill, // makes the image fill the area
             ),
-            const SizedBox(height: 10),
-            Row(
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // InkWell(
-                //   onTap: () {
-                //     setState(() {
-                //       show = "Mumbai";
-                //     });
-                //   },
-                //   child: Container(
-                //     height: 50,
-                //     width: 100,
-                //     child: Card.outlined(
-                //       shadowColor: Colors.black,
-                //       surfaceTintColor: Colors.red,
-                //       color: (show == "Mumbai") ? mainColor : Colors.white,
-                //       child: Center(
-                //         child: Text("Mumbai",
-                //             style: TextStyle(
-                //               color: (show == "Mumbai")
-                //                   ? Colors.white
-                //                   : Colors.black,
-                //             )),
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                // InkWell(
-                //   onTap: () {
-                //     setState(() {
-                //       show = "Surat";
-                //     });
-                //   },
-                //   child: Container(
-                //     height: 50,
-                //     width: 100,
-                //     child: Card.outlined(
-                //       shadowColor: Colors.black,
-                //       surfaceTintColor: Colors.red,
-                //       color: (show == "Surat") ? mainColor : Colors.white,
-                //       child: Center(
-                //         child: Text("Surat",
-                //             style: TextStyle(
-                //               color: (show == "Surat")
-                //                   ? Colors.white
-                //                   : Colors.black,
-                //             )),
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      show = "Hong Kong";
-                    });
-                  },
-                  child: Container(
-                    height: 50,
-                    width: 100,
-                    child: Card.outlined(
-                      shadowColor: Colors.black,
-                      surfaceTintColor: Colors.red,
-                      color: (show == "Hong Kong") ? mainColor : Colors.white,
-                      child: Center(
-                        child: Text(
-                          "Hong Kong",
-                          style: TextStyle(
-                            color: (show == "Hong Kong")
-                                ? Colors.white
-                                : Colors.black,
-                          ),
+                const SizedBox(height: 4),
+                const StyledText(
+                  text: "Social Networks",
+                  color: Colors.black87,
+                  fontSize: 15,
+                  fontWeight: FontWeight.normal,
+                ),
+                Row(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        _launchURL(
+                            "https://play.google.com/store/apps/details?id=com.shivam.kdlgia&pcampaignid=web_share");
+                      },
+                      child: Container(
+                        height: 50,
+                        width: 50,
+                        child: const Card(
+                          color: Colors.white,
+                          child: Icon(Icons.play_arrow, color: mainColor),
                         ),
                       ),
                     ),
+                    const SizedBox(width: 10),
+                    InkWell(
+                      onTap: () {
+                        _launchURL("https://www.kdlgia.com/");
+                      },
+                      child: Container(
+                        height: 50,
+                        width: 50,
+                        child: const Card(
+                          color: Colors.white,
+                          child: Icon(Icons.open_in_browser, color: mainColor),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                const StyledText(
+                  text: "Location",
+                  color: Colors.black87,
+                  fontSize: 15,
+                  fontWeight: FontWeight.normal,
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    // InkWell(
+                    //   onTap: () {
+                    //     setState(() {
+                    //       show = "Mumbai";
+                    //     });
+                    //   },
+                    //   child: Container(
+                    //     height: 50,
+                    //     width: 100,
+                    //     child: Card.outlined(
+                    //       shadowColor: Colors.black,
+                    //       surfaceTintColor: Colors.red,
+                    //       color: (show == "Mumbai") ? mainColor : Colors.white,
+                    //       child: Center(
+                    //         child: Text("Mumbai",
+                    //             style: TextStyle(
+                    //               color: (show == "Mumbai")
+                    //                   ? Colors.white
+                    //                   : Colors.black,
+                    //             )),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    // InkWell(
+                    //   onTap: () {
+                    //     setState(() {
+                    //       show = "Surat";
+                    //     });
+                    //   },
+                    //   child: Container(
+                    //     height: 50,
+                    //     width: 100,
+                    //     child: Card.outlined(
+                    //       shadowColor: Colors.black,
+                    //       surfaceTintColor: Colors.red,
+                    //       color: (show == "Surat") ? mainColor : Colors.white,
+                    //       child: Center(
+                    //         child: Text("Surat",
+                    //             style: TextStyle(
+                    //               color: (show == "Surat")
+                    //                   ? Colors.white
+                    //                   : Colors.black,
+                    //             )),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          show = "Hong Kong";
+                        });
+                      },
+                      child: Container(
+                        height: 50,
+                        width: 100,
+                        child: Card.outlined(
+                          shadowColor: Colors.black,
+                          surfaceTintColor: Colors.red,
+                          color:
+                              (show == "Hong Kong") ? mainColor : Colors.white,
+                          child: Center(
+                            child: Text(
+                              "Hong Kong",
+                              style: TextStyle(
+                                color: (show == "Hong Kong")
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 20),
+                // Display Address and Contact No with Icons
+                ListTile(
+                  leading: const Icon(Icons.location_on, color: mainColor),
+                  title: Text(
+                    info[show]?["Address"] ?? "Address not available",
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.normal),
                   ),
-                )
+                ),
+                const SizedBox(height: 10),
+                InkWell(
+                  onTap: () {
+                    _makePhoneCall(
+                        info[show]?["Contact No"] ?? "+852 97316693");
+                  },
+                  child: ListTile(
+                    leading: const Icon(Icons.phone, color: mainColor),
+                    title: Text(
+                      info[show]?["Contact No"] ?? "Contact not available",
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.normal),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                InkWell(
+                  onTap: () {
+                    _sendWhatsAppMessage(
+                        info[show]?["WhatsUp"] ?? "+852 97316693");
+                  },
+                  child: ListTile(
+                    leading: Image.asset(
+                      "assets/logo/whatsapp.png",
+                      color: mainColor,
+                      height: 28,
+                    ),
+                    title: Text(
+                      info[show]?["WhatsUp"] ?? "WhatsUp not available",
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.normal),
+                    ),
+                  ),
+                ),
               ],
             ),
-            const SizedBox(height: 20),
-            // Display Address and Contact No with Icons
-            ListTile(
-              leading: const Icon(Icons.location_on, color: Colors.red),
-              title: Text(
-                info[show]?["Address"] ?? "Address not available",
-                style: const TextStyle(
-                    fontSize: 16, fontWeight: FontWeight.normal),
-              ),
-            ),
-            const SizedBox(height: 10),
-            InkWell(
-              onTap: (){
-                _makePhoneCall(info[show]?["Contact No"] ?? "+852 97316693");
-              },
-              child: ListTile(
-                leading: const Icon(Icons.phone, color: Colors.blue),
-                title: Text(
-                  info[show]?["Contact No"] ?? "Contact not available",
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.normal),
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            InkWell(
-              onTap: () {
-                _sendWhatsAppMessage(info[show]?["WhatsUp"] ?? "+852 97316693");
-              },
-              child: ListTile(
-                leading: Image.asset(
-                  "assets/logo/whatsapp.png",
-                  color: Colors.green,
-                  height: 28,
-                ),
-                title: Text(
-                  info[show]?["WhatsUp"] ?? "WhatsUp not available",
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.normal),
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
-    );
+         bottomNavigationBar: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/Images/bg-pattern.png'),
+              fit: BoxFit.fill, // makes the image fill the area
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(paddingCard),
+            child: Container(
+              height: navigationBarHeight,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const AboutUsPage()),
+                      );
+                    },
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.info, color: logoMachingColor),
+                        SizedBox(width: 4),
+                        Text('About Us', style: TextStyle(color: logoMachingColor)),
+                      ],
+                    ),
+                  ),
+                  
+                 Container(
+                    decoration: BoxDecoration(
+                      
+                      color: accentColor,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    height: 50,
+                    width: 170,
+                    
+                    child:  
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ContactUs()),
+                      );
+                    },
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.call, color: logoMachingColor),
+                        SizedBox(width: 4),
+                        Text('Contact Us', style: TextStyle(color: logoMachingColor)),
+                      ],
+                    ),
+                  ),),
+                ],
+              ),
+            ),
+          ),
+        )
+        );
   }
 }

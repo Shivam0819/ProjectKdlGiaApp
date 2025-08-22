@@ -1,22 +1,18 @@
-
 import 'package:http/http.dart' as http;
 import 'package:kdlgia/cart/cartData.dart';
 import 'dart:convert';
 
 Future<void> addToCart(String itemId, String token) async {
   String url = 'https://www.kdlgia.com/consumer/cart/add/$itemId';
-  print(url);
 
   try {
     http.Response response = await http.get(
       Uri.parse(url),
       headers: {'Mob-Token': token},
     );
-    print(response.body);
 
     if (response.statusCode == 200) {
       // Handle success response
-      print("Success");
 
       // return 'Item added to cart successfully';
     } else {
@@ -38,9 +34,7 @@ Future<CartResponse> showCarts(String token) async {
       Uri.parse(url),
       headers: {'Mob-Token': token},
     );
-    // print("******************************************");
-    //   print(response.statusCode);
-    //   print("******************************************");
+  
 
     if (response.statusCode == 200) {
       // Handle success response
@@ -48,10 +42,7 @@ Future<CartResponse> showCarts(String token) async {
       final parsed = jsonDecode(response.body.toString());
 
       CartResponse cartResponse = CartResponse.fromJson(parsed);
-      print(response.body);
-   
 
-      
       return cartResponse;
     } else {
       // Handle error response
@@ -73,7 +64,6 @@ Future<String> removeFromCart(String itemId, String token) async {
     // print(response.body);
 
     if (response.statusCode == 200) {
-      print("******************************Item Remove to cart successfully");
 
       // Handle success response
       return 'Item removed from cart successfully';
@@ -110,14 +100,11 @@ Future<String> submitOrder(String token, String subids, String cart_receiver, St
     headers: headers,
     body: body,
   );
-  print(url.path);
-  print(body);
+
 
   if (response.statusCode == 200) {
-    print(response.body);
     final parsed = jsonDecode(response.body.toString());
 
-    print(parsed);
     return 'Order submitted successfully';
   } else {
     return 'Failed to submit order: ${response.statusCode}';

@@ -1,3 +1,4 @@
+import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:kdlgia/navigation_pages/home_page.dart';
 
@@ -16,7 +17,6 @@ import 'package:photo_view/photo_view.dart';
 // To update the app
 import 'package:in_app_update/in_app_update.dart';
 
-
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -34,13 +34,14 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _checkForUpdate() async {
     try {
       final appUpdateInfo = await InAppUpdate.checkForUpdate();
-      if (appUpdateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
+      if (appUpdateInfo.updateAvailability ==
+          UpdateAvailability.updateAvailable) {
         await InAppUpdate.startFlexibleUpdate().then((_) async {
           await InAppUpdate.completeFlexibleUpdate();
         });
       }
     } catch (e) {
-      print("Error checking for update: $e"); 
+      print("Error checking for update: $e");
     }
   }
 
@@ -54,11 +55,10 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false; // Track loading state
   bool _isPasswordVisible = false; // To toggle password visibility
 
-
   @override
   void initState() {
     super.initState();
-    
+
     _loadCredentials();
     _checkForUpdate();
   }
@@ -122,255 +122,324 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const Text(
-                  'Welcome',
-                  style: TextStyle(
-                    color: mainColor,
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: sizedBoxHeight * 2),
-                TextField(
-                  controller: _usernameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Username',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.person),
-                  ),
-                ),
-                SizedBox(height: sizedBoxHeight),
-                TextField(
-                  controller: _passwordController,
-                  obscureText: !_isPasswordVisible, // Hide password by default
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    border: const OutlineInputBorder(),
-                    prefixIcon: const Icon(Icons.lock),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _isPasswordVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _isPasswordVisible = !_isPasswordVisible;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-                SizedBox(height: sizedBoxHeight * 2),
-                Row(
+        body: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/Images/bg-pattern.png'),
+              fit: BoxFit.fill, // makes the image fill the area
+            ),
+          ),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Expanded(
-                      child: InkWell(
-                        onTap: _isLoading
-                            ? null
-                            : () {
-                                String username = _usernameController.text.trim();
-                                String password = _passwordController.text.trim();
+                    Image.asset(
+                      'assets/logo/company_logo.png',
+                      height: 95,
+                      // width: 100,
+                    ),
+                    // const Text(
+                    //   'PLAN, EXECUTE, SERVE BEST',
+                    //   style: TextStyle(
+                    //     color: logoMachingColor,
+                    //     fontSize: 10,
+                    //     fontFamily: 'Faustina',
+                    //   ),
+                    //   textAlign: TextAlign.center,
+                    // ),
+                    const Text(
+                      'WELCOME TO KDL',
+                      style: TextStyle(
+                        color: logoMachingColor,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: sizedBoxHeight * 2),
+                    TextField(
+                      controller: _usernameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Username',
+                        labelStyle: TextStyle(color: mainColor), // label color
+                        prefixIcon: Icon(Icons.person, color: mainColor),
 
-                                if (username.isNotEmpty && password.isNotEmpty) {
-                                  setState(() {
-                                    _isLoading = true; // Start loading
-                                  });
+                        // Default border
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: mainColor, width: 1.5),
+                        ),
 
-                                  login(username, password).then((response) {
-                                    setState(() {
-                                      _isLoading = false; // Stop loading
-                                    });
-                                     print(response);
-                                    if (response["Status"] == "1") {
-                                      _saveCredentials(username, password); // Save credentials
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => HomePage(
-                                            token: response["MobToken"].toString(),
+                        // Border when focused
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: mainColor, width: 2.0),
+                        ),
+                      ),
+                      cursorColor: mainColor, // cursor also matches
+                    ),
+                    SizedBox(height: sizedBoxHeight),
+                    TextField(
+                      controller: _passwordController,
+                      obscureText:
+                          !_isPasswordVisible, // Hide password by default
+                      cursorColor: mainColor, // cursor matches theme
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        labelStyle:
+                            const TextStyle(color: mainColor), // label color
+                        prefixIcon: const Icon(Icons.lock, color: mainColor),
+
+                        // Border when not focused
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: mainColor, width: 1.5),
+                        ),
+
+                        // Border when focused
+                        focusedBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: mainColor, width: 2.0),
+                        ),
+
+                        // Toggle visibility
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _isPasswordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: mainColor,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _isPasswordVisible = !_isPasswordVisible;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: sizedBoxHeight * 2),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            onTap: _isLoading
+                                ? null
+                                : () {
+                                    String username =
+                                        _usernameController.text.trim();
+                                    String password =
+                                        _passwordController.text.trim();
+
+                                    if (username.isNotEmpty &&
+                                        password.isNotEmpty) {
+                                      setState(() {
+                                        _isLoading = true; // Start loading
+                                      });
+
+                                      login(username, password)
+                                          .then((response) {
+                                        setState(() {
+                                          _isLoading = false; // Stop loading
+                                        });
+                                        print(response);
+                                        if (response["Status"] == "1") {
+                                          _saveCredentials(username,
+                                              password); // Save credentials
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => HomePage(
+                                                token: response["MobToken"]
+                                                    .toString(),
+                                              ),
+                                            ),
+                                          );
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                'Login failed. Please check User ID or Password.',
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      }).catchError((error) {
+                                        setState(() {
+                                          _isLoading = false; // Stop loading
+                                        });
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                              'An error occurred. Please try again later.',
+                                            ),
                                           ),
-                                        ),
-                                      );
+                                        );
+                                      });
                                     } else {
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
                                         const SnackBar(
                                           content: Text(
-                                            'Login failed. Please check User ID or Password.',
+                                            'Please enter username and password.',
                                           ),
                                         ),
                                       );
                                     }
-                                  }).catchError((error) {
-                                    setState(() {
-                                      _isLoading = false; // Stop loading
-                                    });
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                          'An error occurred. Please try again later.',
+                                  },
+                            child: Card.filled(
+                              color: mainColor,
+                              elevation: elevationOfCard,
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Center(
+                                  child: _isLoading
+                                      ? const SizedBox(
+                                          width: 24,
+                                          height: 24,
+                                          child: CircularProgressIndicator(
+                                            color: Colors.white,
+                                            strokeWidth: 2.0,
+                                          ),
+                                        )
+                                      : const Text(
+                                          'Login',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  });
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        'Please enter username and password.',
-                                      ),
-                                    ),
-                                  );
-                                }
-                              },
-                        child: Card.filled(
-                          color: mainColor,
-                          elevation: elevationOfCard,
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Center(
-                              child: _isLoading
-                                  ? const SizedBox(
-                                      width: 24,
-                                      height: 24,
-                                      child: CircularProgressIndicator(
-                                        color: Colors.white,
-                                        strokeWidth: 2.0,
-                                      ),
-                                    )
-                                  : const Text(
-                                      'Login',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: InkWell(
-                        onTap: () {
-                          fetchCaptcha().then((value) => {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        SignUpPage(imageToken: value),
-                                  ),
-                                )
-                              });
-                        },
-                        child: const Card.filled(
-                          color: Colors.white,
-                          elevation: elevationOfCard,
-                          child: Padding(
-                            padding: EdgeInsets.all(10.0),
-                            child: Center(
-                              child: Text(
-                                'Sign Up',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: mainColor,
                                 ),
                               ),
                             ),
                           ),
                         ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: InkWell(
+                            onTap: () {
+                              fetchCaptcha().then((value) => {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            SignUpPage(imageToken: value),
+                                      ),
+                                    )
+                                  });
+                            },
+                            child: const Card.filled(
+                              color: Colors.white,
+                              elevation: elevationOfCard,
+                              child: Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: Center(
+                                  child: Text(
+                                    'Sign Up',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: mainColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: sizedBoxHeight),
+                    Align(
+                      alignment: Alignment.center,
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ContactUs()));
+                        },
+                        child: const Text(
+                          'Forgot password?',
+                          style: TextStyle(color: mainColor),
+                        ),
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: sizedBoxHeight),
-                Align(
-                  alignment: Alignment.center,
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ContactUs()));
-                    },
-                    child: const Text(
-                      'Forgot password?',
-                      style: TextStyle(color: mainColor),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),
-      ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(paddingCard), 
-        child: Container(
-          height: 80, 
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20), 
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: const Offset(0, 3),
-              ),
-            ],
+        bottomNavigationBar: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/Images/bg-pattern.png'),
+              fit: BoxFit.fill, // makes the image fill the area
+            ),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const AboutUsPage()),
-                  );
-                },
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.info),
-                    SizedBox(height: 2),
-                    Text('About Us'),
-                  ],
-                ),
+          child: Padding(
+            padding: const EdgeInsets.all(paddingCard),
+            child: Container(
+              height: navigationBarHeight,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
               ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const ContactUs()),
-                  );
-                },
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.call),
-                    SizedBox(height: 2),
-                    Text('Contact Us'),
-                  ],
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const AboutUsPage()),
+                      );
+                    },
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.info_outline, color: logoMachingColor),
+                        SizedBox(width: 4),
+                        Text('About Us',
+                            style: TextStyle(color: logoMachingColor)),
+                      ],
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ContactUs()),
+                      );
+                    },
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.call, color: logoMachingColor),
+                        SizedBox(width: 4),
+                        Text('Contact Us',
+                            style: TextStyle(color: logoMachingColor)),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }

@@ -29,10 +29,37 @@ class _OrderPageState extends State<OrderPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Order Status'),
+      // backgroundColor: Colors.transparent,
+      appBar: AppBar(
+        flexibleSpace: Image.asset(
+          'assets/Images/bg-pattern.png',
+          fit: BoxFit.cover,
         ),
-        body: Padding(
+        elevation: 0,
+        leading: Card(
+          color: secondaryColor, // Set background to mainColor
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(
+                  context); // Navigate back when the back button is pressed
+            },
+            color: logoMachingColor, // Customize the color of the back button
+          ),
+        ),
+        title: const Text(
+          'Order Status',
+          style: TextStyle(color: logoMachingColor),
+        ),
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/Images/bg-pattern.png'),
+            fit: BoxFit.fill, // makes the image fill the area
+          ),
+        ),
+        child: Padding(
           padding: const EdgeInsets.all(paddingCard),
           child: Column(
             children: [
@@ -42,26 +69,36 @@ class _OrderPageState extends State<OrderPage> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => OrderResult(
-                              token: widget.token, querryUrl: url, headinAppBar: "All Orders",)));
+                                token: widget.token,
+                                querryUrl: url,
+                                headinAppBar: "All Orders",
+                              )));
                 },
-                child: const Padding(
-                  padding: EdgeInsets.all(paddingInsidCard),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          TextStyleHeader(
-                            text: "All Orders",
-                            colors: mainColor,
-                          ),
-                          Spacer(), // Use Spacer widget to fill available space
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            color: mainColor,
-                          ),
-                        ],
-                      ),
-                    ],
+                child: Padding(
+                  padding: const EdgeInsets.all(paddingInsidCard),
+                  child: Container(
+                    padding: const EdgeInsets.all(paddingInsidCard),
+                    decoration: BoxDecoration(
+                      color: cardColor,
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: const Column(
+                      children: [
+                        Row(
+                          children: [
+                            TextStyleHeader(
+                              text: "All Orders",
+                              colors: logoMachingColor,
+                            ),
+                            Spacer(), // Use Spacer widget to fill available space
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              color: logoMachingColor,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -71,56 +108,77 @@ class _OrderPageState extends State<OrderPage> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => OrderResult(
-                              token: widget.token, querryUrl: urlWaitingForPickUp, headinAppBar: "Waiting For Pickup",)));
+                                token: widget.token,
+                                querryUrl: urlWaitingForPickUp,
+                                headinAppBar: "Waiting For Pickup",
+                              )));
                 },
-                child: const Padding(
-                  padding: EdgeInsets.all(paddingInsidCard),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          TextStyleHeader(
-                            text: "Waiting For Pickup",
-                            colors: mainColor,
-                          ),
-                          Spacer(), // Use Spacer widget to fill available space
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            color: mainColor,
-                          ),
-                        ],
-                      ),
-                    ],
+                child: Padding(
+                  padding: const EdgeInsets.all(paddingInsidCard),
+                  child: Container(
+                    padding: const EdgeInsets.all(paddingInsidCard),
+                    decoration: BoxDecoration(
+                      color: cardColor,
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: const Column(
+                      children: [
+                        Row(
+                          children: [
+                            TextStyleHeader(
+                              text: "Waiting For Pickup",
+                              colors: logoMachingColor,
+                            ),
+                            Spacer(), // Use Spacer widget to fill available space
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              color: logoMachingColor,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
               InkWell(
-onTap: () {
+                onTap: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => OrderResult(
-                              token: widget.token, querryUrl: urlPickedUp, headinAppBar: "Picked Up",)));
-                },                child: const Padding(
-                  padding: EdgeInsets.all(paddingInsidCard),
-                  child: Column(
+                                token: widget.token,
+                                querryUrl: urlPickedUp,
+                                headinAppBar: "Picked Up",
+                              )));
+                },
+                child:   Padding(
+                  padding: const EdgeInsets.all(paddingInsidCard),
+                  child:Container(
+                                      padding: const EdgeInsets.all(paddingInsidCard),
+
+                    decoration: BoxDecoration(
+                    color: cardColor,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: const Column(
                     children: [
                       Row(
                         children: [
                           TextStyleHeader(
                             text: "Picked Up",
-                            colors: mainColor,
+                            colors: logoMachingColor,
                           ),
                           Spacer(), // Use Spacer widget to fill available space
                           Icon(
                             Icons.arrow_forward_ios,
-                            color: mainColor,
+                            color: logoMachingColor,
                           ),
                         ],
                       ),
                     ],
                   ),
-                ),
+                ),),
               ),
               InkWell(
                 onTap: () {
@@ -128,27 +186,38 @@ onTap: () {
                       context,
                       MaterialPageRoute(
                           builder: (context) => OrderResult(
-                              token: widget.token, querryUrl: urlCompleted, headinAppBar: "Completed Order",)));
+                                token: widget.token,
+                                querryUrl: urlCompleted,
+                                headinAppBar: "Completed Order",
+                              )));
                 },
-                child: const Padding(
-                  padding: EdgeInsets.all(paddingInsidCard),
-                  child: Column(
+                child:   Padding(
+                  padding: const EdgeInsets.all(paddingInsidCard),
+                  child:Container(
+                                      padding: const EdgeInsets.all(paddingInsidCard),
+
+                    decoration: BoxDecoration(
+                    color: cardColor,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: const Column(
                     children: [
                       Row(
                         children: [
                           TextStyleHeader(
                             text: "Completed",
-                            colors: mainColor,
+                            colors: logoMachingColor,
                           ),
                           Spacer(), // Use Spacer widget to fill available space
                           Icon(
                             Icons.arrow_forward_ios,
-                            color: mainColor,
+                            color: logoMachingColor,
                           ),
                         ],
                       ),
                     ],
                   ),
+                ),
                 ),
               ),
               InkWell(
@@ -157,27 +226,38 @@ onTap: () {
                       context,
                       MaterialPageRoute(
                           builder: (context) => OrderResult(
-                              token: widget.token, querryUrl: urlCancelled, headinAppBar: "Cancelled Order",)));
+                                token: widget.token,
+                                querryUrl: urlCancelled,
+                                headinAppBar: "Cancelled Order",
+                              )));
                 },
-                child: const Padding(
-                  padding: EdgeInsets.all(paddingInsidCard),
-                  child: Column(
+                child:   Padding(
+                  padding: const EdgeInsets.all(paddingInsidCard),
+                  child:Container(
+                                      padding: const EdgeInsets.all(paddingInsidCard),
+
+                    decoration: BoxDecoration(
+                    color: cardColor,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: const Column(
                     children: [
                       Row(
                         children: [
                           TextStyleHeader(
                             text: "Canceled",
-                            colors: mainColor,
+                            colors: logoMachingColor,
                           ),
                           Spacer(), // Use Spacer widget to fill available space
                           Icon(
                             Icons.arrow_forward_ios,
-                            color: mainColor,
+                            color: logoMachingColor,
                           ),
                         ],
                       ),
                     ],
                   ),
+                ),
                 ),
               ),
               InkWell(
@@ -186,117 +266,157 @@ onTap: () {
                       context,
                       MaterialPageRoute(
                           builder: (context) => OrderResult(
-                              token: widget.token, querryUrl: urlReturn, headinAppBar: "Return Order",)));
+                                token: widget.token,
+                                querryUrl: urlReturn,
+                                headinAppBar: "Return Order",
+                              )));
                 },
-                child: const Padding(
-                  padding: EdgeInsets.all(paddingInsidCard),
-                  child: Column(
+                child:   Padding(
+                  padding: const EdgeInsets.all(paddingInsidCard),
+                  child:Container(
+                                      padding: const EdgeInsets.all(paddingInsidCard),
+
+                    decoration: BoxDecoration(
+                    color: cardColor,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child:const Column(
                     children: [
                       Row(
                         children: [
                           TextStyleHeader(
                             text: "Return",
-                            colors: mainColor,
+                            colors: logoMachingColor,
                           ),
                           Spacer(), // Use Spacer widget to fill available space
                           Icon(
                             Icons.arrow_forward_ios,
-                            color: mainColor,
+                            color: logoMachingColor,
                           ),
                         ],
                       ),
                     ],
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
-        bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(
-            paddingCard), // Adjust the bottom padding as needed
-        child: Container(
-          height: 80, // Adjust the height as needed
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20), // Add rounded corners
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: const Offset(0, 3), // changes position of shadow
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => HomePage(
-                                token: widget.token,
-                              )),(route) => false,);
-                },
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.home_rounded),
-                    SizedBox(
-                      height: 2,
-                    ), // Add some space between the icon and text
-                    Text('Home'),
-                  ],
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SearchPage(
-                                token: widget.token,
-                              )));
-                },
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.search_rounded),
-                    SizedBox(
-                      height: 2,
-                    ), // Add some space between the icon and text
-                    Text('Search'),
-                  ],
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CartPage(
-                                token: widget.token,
-                              )));
-                },
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.shopping_cart_rounded),
-                    SizedBox(
-                      height: 2,
-                    ), // Add some space between the icon and text
-                    Text('Cart'),
-                  ],
                 ),
               ),
             ],
           ),
         ),
       ),
-        );
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/Images/bg-pattern.png'),
+            fit: BoxFit.fill, // makes the image fill the area
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(
+              paddingCard), // Adjust the bottom padding as needed
+          child: Container(
+            height: 80, // Adjust the height as needed
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20), // Add rounded corners
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: const Offset(0, 3), // changes position of shadow
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => HomePage(
+                                token: widget.token,
+                              )),
+                      (route) => false,
+                    );
+                  },
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.home_rounded,
+                        color: logoMachingColor,
+                      ),
+                      SizedBox(
+                        height: 2,
+                      ), // Add some space between the icon and text
+                      Text(
+                        'Home',
+                        style: TextStyle(color: logoMachingColor),
+                      ),
+                    ],
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SearchPage(
+                                  token: widget.token,
+                                )));
+                  },
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.search_rounded,
+                        color: logoMachingColor,
+                      ),
+                      SizedBox(
+                        height: 2,
+                      ), // Add some space between the icon and text
+                      Text(
+                        'Search',
+                        style: TextStyle(color: logoMachingColor),
+                      ),
+                    ],
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CartPage(
+                                  token: widget.token,
+                                )));
+                  },
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.shopping_cart_rounded,
+                        color: logoMachingColor,
+                      ),
+                      SizedBox(
+                        height: 2,
+                      ), // Add some space between the icon and text
+                      Text(
+                        'Cart',
+                        style: TextStyle(color: logoMachingColor),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

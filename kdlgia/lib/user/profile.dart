@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:kdlgia/style/search_card_ui.dart';
+import 'package:kdlgia/style/styleTextSearchResult.dart';
 import 'package:kdlgia/user/apiUserInfo.dart';
 import 'package:kdlgia/user/userProfile.dart'; // Import ApiService
 
@@ -60,17 +61,36 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          color: Colors.black,
-        ),
-        title: const Text("User Profile"),
+          flexibleSpace: Image.asset(
+            'assets/Images/bg-pattern.png',
+            fit: BoxFit.cover,
+          ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: Card(
+              color: secondaryColor, // Set background to mainColor
+
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(
+                    context); // Navigate back when the back button is pressed
+              },
+              color: logoMachingColor, // Customize the color of the back button
+            ),
+          ),
+        title: const Text("User Profile", style: TextStyle(color: logoMachingColor)),
         centerTitle: true,
       ),
-      body: FutureBuilder<UserProfile>(
+      body: Container(
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/Images/bg-pattern.png'),
+              fit: BoxFit.fill, // makes the image fill the area
+            ),
+          ),
+      
+      child:FutureBuilder<UserProfile>(
         future: _userProfileFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -104,25 +124,25 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  _buildProfileField('Real Name', _realNameController),
+                  buildCustomTextFieldOutlineInputBorder(labelText: 'Real Name',controller:  _realNameController),
                   const SizedBox(height: 10),
-                  _buildProfileField('Gender', _genderController),
+                  buildCustomTextFieldOutlineInputBorder(labelText: 'Gender',controller:  _genderController),
                   const SizedBox(height: 10),
-                  _buildProfileField('Phone', _phoneController),
+                  buildCustomTextFieldOutlineInputBorder(labelText: 'Phone',controller:  _phoneController),
                   const SizedBox(height: 10),
-                  _buildProfileField('QQ', _qqController),
+                  buildCustomTextFieldOutlineInputBorder(labelText: 'QQ',controller: _qqController),
                   const SizedBox(height: 10),
-                  _buildProfileField('Skype', _skypeController),
+                  buildCustomTextFieldOutlineInputBorder(labelText: 'Skype',controller: _skypeController),
                   const SizedBox(height: 10),
-                  _buildProfileField('WeChat', _wechatController),
+                  buildCustomTextFieldOutlineInputBorder(labelText: 'WeChat',controller: _wechatController),
                   const SizedBox(height: 10),
-                  _buildProfileField('WhatsApp', _whatsappController),
+                  buildCustomTextFieldOutlineInputBorder(labelText: 'WhatsApp',controller: _whatsappController),
                   const SizedBox(height: 10),
-                  _buildProfileField('Company', _companyController),
+                  buildCustomTextFieldOutlineInputBorder(labelText: 'Company',controller: _companyController),
                   const SizedBox(height: 10),
-                  _buildProfileField('Address', _addressController),
+                  buildCustomTextFieldOutlineInputBorder(labelText: 'Address',controller: _addressController),
                   const SizedBox(height: 10),
-                  _buildProfileField('Email', _emailController),
+                  buildCustomTextFieldOutlineInputBorder(labelText: 'Email',controller: _emailController),
                   const SizedBox(height: 10),
                   const SizedBox(height: 16),
                   ElevatedButton(
@@ -142,6 +162,7 @@ class _ProfilePageState extends State<ProfilePage> {
       //   },
       //   child: Icon(Icons.edit),
       // ),
+    ),
     );
   }
 
@@ -150,7 +171,7 @@ class _ProfilePageState extends State<ProfilePage> {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: TextStyle(color: mainColor),
+        labelStyle: TextStyle(color: logoMachingColor),
         border: const OutlineInputBorder(),
       ),
     );

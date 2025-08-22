@@ -8,6 +8,7 @@ import 'package:kdlgia/search/diamondData.dart';
 import 'package:kdlgia/search/diamondDataDetail.dart';
 import 'package:kdlgia/search/searchTemp.dart';
 import 'package:kdlgia/style/search_card_ui.dart';
+import 'package:kdlgia/style/styleTextSearchResult.dart';
 
 class SearchUi extends StatefulWidget {
   final String token;
@@ -353,11 +354,11 @@ class _SearchUiState extends State<SearchUi> {
         .where((shortcut) => shortcut != null && shortcut!.isNotEmpty)
         .join(',');
 
-    print(
-        "************************************************************************************");
-    print(widget.caratFrom);
-    print(
-        "************************************************************************************");
+    // print(
+    //     "************************************************************************************");
+    // print(widget.caratFrom);
+    // print(
+    //     "************************************************************************************");
 
     String? querr =
         'q_is_schv=1&q_shp=$shapesParam&q_co=$colorsParam&q_cl=$claritiesParam&q_lab=$certsParam&q_places=$locationsParam&q_cut=$cutsParam&q_pol=$polishesParam&q_sym=$symmetriesParam&q_fl=$fluorParam&q_carat1=${widget.caratFrom.toString()}&q_carat2=${widget.caratTo.toString()}&q_is_nobgm=${widget.noBgm}&q_is_available=${widget.avaiable}&q_is_image=${widget.imageAvailable}&q_is_movie=${widget.movieAvaible}&q_is_budget=${widget.certificateAvailable}&q_bkl=${widget.onBlackList}&q_ms=${widget.holdDiamond},${widget.loanDiamond}&q_price1=${widget.priceFrom == null ? "" : widget.priceFrom}&q_price2=${widget.priceTo == null ? "" : widget.priceTo}&q_price_type=dollar&q_depth1=${widget.depthFrom}&q_depth2=${widget.depthTo}&q_table1=${widget.tableFrom}&q_table2=${widget.tableTo}&q_perpage=25';
@@ -381,11 +382,10 @@ class _SearchUiState extends State<SearchUi> {
     // // "&q_table2="
     // ;
 
-    print(querr);
+    // print(querr);
 
     return querr;
   }
-  
 
   @override
   void initState() {
@@ -419,14 +419,22 @@ class _SearchUiState extends State<SearchUi> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: Image.asset(
+          'assets/Images/bg-pattern.png',
+          fit: BoxFit.cover,
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         leading: Card(
+          color: secondaryColor, // Set background to mainColor
+
           child: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.pop(
                   context); // Navigate back when the back button is pressed
             },
-            color: Colors.black, // Customize the color of the back button
+            color: logoMachingColor, // Customize the color of the back button
           ),
         ),
 
@@ -444,18 +452,26 @@ class _SearchUiState extends State<SearchUi> {
                       SizedBox(
                         width: 10,
                       ),
-                      Text("Result")
+                      Text("Result", style: TextStyle(color: logoMachingColor)),
                     ]);
               } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
+                return Text('Error: ${snapshot.error}',
+                    style: TextStyle(color: logoMachingColor));
               }
               {
-                return Text('${snapshot.data!.total} Results');
+                return Text('${snapshot.data!.total} Results',
+                    style: const TextStyle(color: logoMachingColor));
               }
             }),
         centerTitle: true, // Optionally, center the title horizontally
       ),
       body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/Images/bg-pattern.png'),
+            fit: BoxFit.fill, // makes the image fill the area
+          ),
+        ),
         child: Column(
           children: [
             Expanded(
@@ -465,15 +481,18 @@ class _SearchUiState extends State<SearchUi> {
                   SizedBox(
                     height: 145, // Provide a fixed height or other constraints
                     child: Container(
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/Images/bg-pattern.png'),
+                          fit: BoxFit.fill, // makes the image fill the area
+                        ),
+                      ),
                       padding: const EdgeInsets.all(paddingFullSearchWidget),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "Shape",
-                            style: TextStyle(
-                                fontSize: fontSizeHeading,
-                                fontWeight: FontWeight.bold),
+                          buildingCustomTextFieldFilterHeading(
+                            labelText: "Shape",
                           ),
                           const SizedBox(height: 5),
                           Expanded(
@@ -505,7 +524,7 @@ class _SearchUiState extends State<SearchUi> {
 
                                             color: widget.roundShpIsSelected
                                                 ? mainColor
-                                                : null,
+                                                : cardColor,
                                             margin: const EdgeInsets.all(
                                                 paddingCard),
                                             // Set color based on isSelected flag
@@ -530,12 +549,11 @@ class _SearchUiState extends State<SearchUi> {
                                           Text(
                                             "Round",
                                             style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: fontSizeElement,
-                                              color: widget.roundShpIsSelected
-                                                  ? mainColor
-                                                  : null,
-                                            ),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement,
+                                                color: widget.roundShpIsSelected
+                                                    ? mainColor
+                                                    : logoMachingColor),
                                           ),
                                         ],
                                       ),
@@ -565,7 +583,7 @@ class _SearchUiState extends State<SearchUi> {
 
                                             color: widget.princeShpIsSelected
                                                 ? mainColor
-                                                : null,
+                                                : cardColor,
                                             margin: const EdgeInsets.all(
                                                 paddingCard),
                                             // Set color based on isSelected flag
@@ -591,11 +609,10 @@ class _SearchUiState extends State<SearchUi> {
                                             "Princess",
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
-                                                                                            fontSize: fontSizeElement,
-
+                                              fontSize: fontSizeElement,
                                               color: widget.princeShpIsSelected
                                                   ? mainColor
-                                                  : null,
+                                                  : logoMachingColor,
                                             ),
                                           ),
                                         ],
@@ -625,7 +642,7 @@ class _SearchUiState extends State<SearchUi> {
 
                                             color: widget.emraldShpIsSelected
                                                 ? mainColor
-                                                : null,
+                                                : cardColor,
                                             margin: const EdgeInsets.all(
                                                 paddingCard),
                                             // Set color based on isSelected flag
@@ -652,10 +669,9 @@ class _SearchUiState extends State<SearchUi> {
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: fontSizeElement,
-
                                               color: widget.emraldShpIsSelected
                                                   ? mainColor
-                                                  : null,
+                                                  : logoMachingColor,
                                             ),
                                           ),
                                         ],
@@ -684,7 +700,7 @@ class _SearchUiState extends State<SearchUi> {
 
                                             color: widget.ovalShpIsSelected
                                                 ? mainColor
-                                                : null,
+                                                : cardColor,
                                             margin: const EdgeInsets.all(
                                                 paddingCard),
                                             // Set color based on isSelected flag
@@ -710,11 +726,10 @@ class _SearchUiState extends State<SearchUi> {
                                             "Oval",
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
-                                                                                            fontSize: fontSizeElement,
-
+                                              fontSize: fontSizeElement,
                                               color: widget.ovalShpIsSelected
                                                   ? mainColor
-                                                  : null,
+                                                  : logoMachingColor,
                                             ),
                                           ),
                                         ],
@@ -745,7 +760,7 @@ class _SearchUiState extends State<SearchUi> {
 
                                             color: widget.pearShpIsSelected
                                                 ? mainColor
-                                                : null,
+                                                : cardColor,
                                             margin: const EdgeInsets.all(
                                                 paddingCard),
                                             // Set color based on isSelected flag
@@ -771,11 +786,10 @@ class _SearchUiState extends State<SearchUi> {
                                             "Pear",
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
-                                                                                            fontSize: fontSizeElement,
-
+                                              fontSize: fontSizeElement,
                                               color: widget.pearShpIsSelected
                                                   ? mainColor
-                                                  : null,
+                                                  : logoMachingColor,
                                             ),
                                           ),
                                         ],
@@ -804,7 +818,7 @@ class _SearchUiState extends State<SearchUi> {
 
                                             color: widget.marquiseShpIsSelected
                                                 ? mainColor
-                                                : null,
+                                                : cardColor,
                                             margin: const EdgeInsets.all(
                                                 paddingCard),
                                             // Set color based on isSelected flag
@@ -830,12 +844,11 @@ class _SearchUiState extends State<SearchUi> {
                                             "Marquise",
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
-                                                                                            fontSize: fontSizeElement,
-
+                                              fontSize: fontSizeElement,
                                               color:
                                                   widget.marquiseShpIsSelected
                                                       ? mainColor
-                                                      : null,
+                                                      : logoMachingColor,
                                             ),
                                           ),
                                         ],
@@ -864,7 +877,7 @@ class _SearchUiState extends State<SearchUi> {
 
                                             color: widget.heartShpIsSelected
                                                 ? mainColor
-                                                : null,
+                                                : cardColor,
 
                                             margin: const EdgeInsets.all(
                                                 paddingCard),
@@ -891,11 +904,10 @@ class _SearchUiState extends State<SearchUi> {
                                             "Heart",
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
-                                                                                            fontSize: fontSizeElement,
-
+                                              fontSize: fontSizeElement,
                                               color: widget.heartShpIsSelected
                                                   ? mainColor
-                                                  : null,
+                                                  : logoMachingColor,
                                             ),
                                           ),
                                         ],
@@ -924,7 +936,7 @@ class _SearchUiState extends State<SearchUi> {
 
                                             color: widget.triangleShpIsSelected
                                                 ? mainColor
-                                                : null,
+                                                : cardColor,
                                             margin: const EdgeInsets.all(
                                                 paddingCard),
                                             // Set color based on isSelected flag
@@ -950,12 +962,11 @@ class _SearchUiState extends State<SearchUi> {
                                             "Triangle",
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
-                                                                                            fontSize: fontSizeElement,
-
+                                              fontSize: fontSizeElement,
                                               color:
                                                   widget.triangleShpIsSelected
                                                       ? mainColor
-                                                      : null,
+                                                      : logoMachingColor,
                                             ),
                                           ),
                                         ],
@@ -984,7 +995,7 @@ class _SearchUiState extends State<SearchUi> {
 
                                             color: widget.cushionShpIsSelected
                                                 ? mainColor
-                                                : null,
+                                                : cardColor,
                                             margin: const EdgeInsets.all(
                                                 paddingCard),
                                             // Set color based on isSelected flag
@@ -1010,11 +1021,10 @@ class _SearchUiState extends State<SearchUi> {
                                             "Cushion",
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
-                                                                                            fontSize: fontSizeElement,
-
+                                              fontSize: fontSizeElement,
                                               color: widget.cushionShpIsSelected
                                                   ? mainColor
-                                                  : null,
+                                                  : logoMachingColor,
                                             ),
                                           ),
                                         ],
@@ -1043,7 +1053,7 @@ class _SearchUiState extends State<SearchUi> {
 
                                           color: widget.othersShpIsSelected
                                               ? mainColor
-                                              : null,
+                                              : cardColor,
                                           margin:
                                               const EdgeInsets.all(paddingCard),
                                           // Set color based on isSelected flag
@@ -1069,11 +1079,10 @@ class _SearchUiState extends State<SearchUi> {
                                           "Other",
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                                                                          fontSize: fontSizeElement,
-
+                                            fontSize: fontSizeElement,
                                             color: widget.othersShpIsSelected
                                                 ? mainColor
-                                                : null,
+                                                : logoMachingColor,
                                           ),
                                         ),
                                       ],
@@ -1095,12 +1104,8 @@ class _SearchUiState extends State<SearchUi> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "Carat",
-                            style: TextStyle(
-                              fontSize: fontSizeHeading,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          buildingCustomTextFieldFilterHeading(
+                            labelText: "Carat",
                           ),
                           const SizedBox(height: 5),
                           Row(
@@ -1108,6 +1113,7 @@ class _SearchUiState extends State<SearchUi> {
                             children: [
                               Expanded(
                                 child: Card(
+                                  color: cardColor,
                                   elevation: elevationOfCard,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8.0),
@@ -1121,12 +1127,15 @@ class _SearchUiState extends State<SearchUi> {
                                       keyboardType:
                                           const TextInputType.numberWithOptions(
                                               decimal: true),
-                                              textInputAction: TextInputAction.done,
+                                      textInputAction: TextInputAction.done,
                                       decoration: const InputDecoration(
-                                        border: InputBorder.none,
-                                        labelText: 'From',
-                                        hintText: '0.0',
-                                      ),
+                                          border: InputBorder.none,
+                                          labelText: 'From',
+                                          hintText: '0.0',
+                                          labelStyle: TextStyle(
+                                              color: logoMachingColor),
+                                          focusColor: logoMachingColor),
+                                      cursorColor: logoMachingColor,
                                       onChanged: (value) {
                                         setState(() {
                                           widget.caratFrom =
@@ -1144,6 +1153,7 @@ class _SearchUiState extends State<SearchUi> {
                               const SizedBox(width: 10),
                               Expanded(
                                 child: Card(
+                                  color: cardColor,
                                   elevation: elevationOfCard,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8.0),
@@ -1157,13 +1167,15 @@ class _SearchUiState extends State<SearchUi> {
                                       keyboardType:
                                           const TextInputType.numberWithOptions(
                                               decimal: true),
-                                              textInputAction: TextInputAction.done,
-
+                                      textInputAction: TextInputAction.done,
                                       decoration: const InputDecoration(
-                                        border: InputBorder.none,
-                                        labelText: 'To',
-                                        hintText: '0.0',
-                                      ),
+                                          border: InputBorder.none,
+                                          labelText: 'To',
+                                          hintText: '0.0',
+                                          labelStyle: TextStyle(
+                                              color: logoMachingColor),
+                                          focusColor: logoMachingColor),
+                                      cursorColor: logoMachingColor,
                                       onChanged: (value) {
                                         setState(() {
                                           widget.caratTo = _controllerCaratTo
@@ -1176,7 +1188,6 @@ class _SearchUiState extends State<SearchUi> {
                                       },
                                     ),
                                   ),
-
                                 ),
                               ),
                             ],
@@ -1195,11 +1206,8 @@ class _SearchUiState extends State<SearchUi> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "Colors",
-                            style: TextStyle(
-                                fontSize: fontSizeHeading,
-                                fontWeight: FontWeight.bold),
+                          buildingCustomTextFieldFilterHeading(
+                            labelText: "Colors",
                           ),
                           const SizedBox(height: 5),
                           Expanded(
@@ -1215,7 +1223,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.colDIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -1238,7 +1246,8 @@ class _SearchUiState extends State<SearchUi> {
                                             "D",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: fontSizeElement),
+                                                fontSize: fontSizeElement,
+                                                color: logoMachingColor),
                                           ),
                                         ),
                                       ),
@@ -1252,7 +1261,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.colEIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -1289,7 +1298,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.colFIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -1326,7 +1335,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.colGIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -1363,7 +1372,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.colHIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -1400,7 +1409,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.colIIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -1437,7 +1446,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.colJIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -1511,7 +1520,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.colLIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -1548,7 +1557,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.colMIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -1585,7 +1594,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.colNIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -1631,11 +1640,8 @@ class _SearchUiState extends State<SearchUi> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "Clarity",
-                            style: TextStyle(
-                                fontSize: fontSizeHeading,
-                                fontWeight: FontWeight.bold,),
+                          buildingCustomTextFieldFilterHeading(
+                            labelText: "Clarity",
                           ),
                           const SizedBox(height: 5),
                           Expanded(
@@ -1651,7 +1657,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.claFlIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -1689,7 +1695,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.claIfIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -1727,7 +1733,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.claVvs1IsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -1766,7 +1772,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.claVvs2IsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -1789,7 +1795,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "VVS2",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold,fontSize: fontSizeElement),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -1805,7 +1812,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.claVs1IsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -1828,7 +1835,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "VS1",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold, fontSize: fontSizeElement),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -1844,7 +1852,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.claVs2IsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -1867,7 +1875,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "VS2",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold, fontSize: fontSizeElement),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -1881,7 +1890,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.claSi1IsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -1904,7 +1913,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "SI1",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold, fontSize: fontSizeElement),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -1920,7 +1930,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.claSi2IsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -1943,7 +1953,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "SI2",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold, fontSize: fontSizeElement),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -1957,7 +1968,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.claI1IsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -1979,7 +1990,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "I1",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold, fontSize: fontSizeElement),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -2016,7 +2028,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "I2",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold, fontSize: fontSizeElement),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -2039,11 +2052,8 @@ class _SearchUiState extends State<SearchUi> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "Cut/Pol/Sym/Fluor/Cert",
-                            style: TextStyle(
-                                fontSize: fontSizeHeading,
-                                fontWeight: FontWeight.bold, ),
+                          buildingCustomTextFieldFilterHeading(
+                            labelText: "Cut/Pol/Sym/Fluor/Cert",
                           ),
                           const SizedBox(height: 5),
                           Expanded(
@@ -2058,7 +2068,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.shortCut3EXNIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         widget.shortCut3EXNIsSelected =
@@ -2123,7 +2133,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.shortCut3VGNIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         widget.shortCut3VGNIsSelected =
@@ -2207,11 +2217,10 @@ class _SearchUiState extends State<SearchUi> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "Cut",
-                            style: TextStyle(
-                                fontSize: fontSizeHeading,
-                                fontWeight: FontWeight.bold),
+                          buildingCustomTextFieldFilterHeading(
+                            labelText: "Cut",
+                            fontSizeElement: fontSizeHeading,
+                            fontWeightElement: FontWeight.bold,
                           ),
                           const SizedBox(height: 5),
                           Expanded(
@@ -2227,7 +2236,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.cutExIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -2265,7 +2274,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.cutVgIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -2303,7 +2312,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.cutGdIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -2341,7 +2350,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.cutFrIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -2423,12 +2432,8 @@ class _SearchUiState extends State<SearchUi> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "Polish",
-                            style: TextStyle(
-                                fontSize: fontSizeHeading,
-                                fontWeight: FontWeight.bold,
-                                ),
+                          buildingCustomTextFieldFilterHeading(
+                            labelText: "Polish",
                           ),
                           const SizedBox(height: 5),
                           Expanded(
@@ -2444,7 +2449,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.polExIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -2482,7 +2487,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.polVgIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -2520,7 +2525,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.polGdIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -2558,7 +2563,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.polFrIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -2640,11 +2645,8 @@ class _SearchUiState extends State<SearchUi> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "Symm",
-                            style: TextStyle(
-                                fontSize: fontSizeHeading,
-                                fontWeight: FontWeight.bold),
+                          buildingCustomTextFieldFilterHeading(
+                            labelText: "Symm",
                           ),
                           const SizedBox(height: 5),
                           Expanded(
@@ -2660,7 +2662,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.symExIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -2698,7 +2700,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.symVgIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -2720,7 +2722,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "VG",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold,fontSize: fontSizeElement),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -2735,7 +2738,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.symGdIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -2757,7 +2760,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "GD",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold,fontSize: fontSizeElement),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -2772,7 +2776,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.symFrIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -2794,7 +2798,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "FR",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold,fontSize: fontSizeElement),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -2852,11 +2857,8 @@ class _SearchUiState extends State<SearchUi> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "Fluoro",
-                            style: TextStyle(
-                                fontSize: fontSizeHeading,
-                                fontWeight: FontWeight.bold),
+                          buildingCustomTextFieldFilterHeading(
+                            labelText: "Fluoro",
                           ),
                           const SizedBox(height: 5),
                           Expanded(
@@ -2872,7 +2874,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.flNIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -2893,7 +2895,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "N",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold,fontSize: fontSizeElement),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -2908,7 +2911,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.flFIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -2929,7 +2932,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "F",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold,fontSize: fontSizeElement),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -2944,7 +2948,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.flMIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -2965,7 +2969,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "M",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold,fontSize: fontSizeElement),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -2980,7 +2985,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.flSIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -3001,7 +3006,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "S",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold,fontSize: fontSizeElement),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -3016,7 +3022,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.flVsIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -3037,7 +3043,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "VS",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold, fontSize: fontSizeElement),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -3060,11 +3067,8 @@ class _SearchUiState extends State<SearchUi> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "Cert",
-                            style: TextStyle(
-                                fontSize: fontSizeHeading,
-                                fontWeight: FontWeight.bold, ),
+                          buildingCustomTextFieldFilterHeading(
+                            labelText: "Cert",
                           ),
                           const SizedBox(height: 5),
                           Expanded(
@@ -3080,7 +3084,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.certGiaIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -3103,7 +3107,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "GIA",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold, fontSize: fontSizeElement),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -3118,7 +3123,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.certNgtcIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -3141,7 +3146,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "NGTC",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold,fontSize: fontSizeElement),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -3156,7 +3162,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.certIgiIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -3179,7 +3185,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "IGI",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold,fontSize: fontSizeElement),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -3194,7 +3201,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.certHrdIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -3217,7 +3224,8 @@ class _SearchUiState extends State<SearchUi> {
                                               Text(
                                             "HRD",
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold,fontSize: fontSizeElement),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: fontSizeElement),
                                           ),
                                         ),
                                       ),
@@ -3269,6 +3277,7 @@ class _SearchUiState extends State<SearchUi> {
 
                   //************Image,Video & certificate**************//
                   Card(
+                      color: cardColor,
                       elevation: elevationOfCard,
                       margin: const EdgeInsets.all(paddingCard),
                       // Set color based on isSelected flag
@@ -3369,16 +3378,12 @@ class _SearchUiState extends State<SearchUi> {
                     height:
                         textSingleContainerHight, // Provide a fixed height or other constraints
                     child: Container(
-                      
                       padding: const EdgeInsets.all(paddingCard),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "Location",
-                            style: TextStyle(
-                                fontSize: fontSizeHeading,
-                                fontWeight: FontWeight.bold),
+                          buildingCustomTextFieldFilterHeading(
+                            labelText: "Location",
                           ),
                           const SizedBox(height: 5),
                           Expanded(
@@ -3394,7 +3399,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.locChinaIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -3433,7 +3438,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.locSzIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -3471,7 +3476,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.locHkIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -3509,7 +3514,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.locH_KIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -3547,7 +3552,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.locTransitIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -3626,6 +3631,7 @@ class _SearchUiState extends State<SearchUi> {
 //************BGM & Not in Black list**************//
 
                   Card(
+                      color: cardColor,
                       elevation: elevationOfCard,
                       margin: const EdgeInsets.all(paddingCard),
                       // Set color based on isSelected flag
@@ -3641,7 +3647,8 @@ class _SearchUiState extends State<SearchUi> {
                                 const Text(
                                   "No BGM",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold,fontSize: fontSizeElement),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: fontSizeElement),
                                 ),
                                 const SizedBox(width: 5),
                                 Checkbox(
@@ -3669,7 +3676,8 @@ class _SearchUiState extends State<SearchUi> {
                                 const Text(
                                   "Not BlackList",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold,fontSize: fontSizeElement),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: fontSizeElement),
                                 ),
                                 const SizedBox(width: 5),
                                 Checkbox(
@@ -3691,6 +3699,7 @@ class _SearchUiState extends State<SearchUi> {
                       )),
                   //************Hold and Loan Diamond**************//
                   Card(
+                      color: cardColor,
                       elevation: elevationOfCard,
                       margin: const EdgeInsets.all(paddingCard),
                       // Set color based on isSelected flag
@@ -3707,7 +3716,8 @@ class _SearchUiState extends State<SearchUi> {
                                 const Text(
                                   "My Hold",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold, fontSize: fontSizeElement),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: fontSizeElement),
                                 ),
                                 const SizedBox(width: 5),
                                 Checkbox(
@@ -3735,7 +3745,8 @@ class _SearchUiState extends State<SearchUi> {
                                 const Text(
                                   "My Memo",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold, fontSize: fontSizeElement),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: fontSizeElement),
                                 ),
                                 const SizedBox(width: 5),
                                 Checkbox(
@@ -3765,12 +3776,8 @@ class _SearchUiState extends State<SearchUi> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "Price",
-                            style: TextStyle(
-                              fontSize: fontSizeHeading,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          buildingCustomTextFieldFilterHeading(
+                            labelText: "Price",
                           ),
                           const SizedBox(height: 5),
                           Row(
@@ -3778,6 +3785,7 @@ class _SearchUiState extends State<SearchUi> {
                             children: [
                               Expanded(
                                 child: Card(
+                                  color: cardColor,
                                   elevation: elevationOfCard,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8.0),
@@ -3801,7 +3809,7 @@ class _SearchUiState extends State<SearchUi> {
                                           widget.priceFrom =
                                               _controllerPriceFrom.text
                                                   .toString();
-                                          print(widget.priceFrom);
+                                          // print(widget.priceFrom);
                                           fetchDataSearchDiamond(widget.token,
                                               searchQuerry: buildQueryString());
                                           ; // Trigger filter function after updating the value
@@ -3814,6 +3822,7 @@ class _SearchUiState extends State<SearchUi> {
                               const SizedBox(width: 10),
                               Expanded(
                                 child: Card(
+                                  color: cardColor,
                                   elevation: elevationOfCard,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8.0),
@@ -3859,12 +3868,8 @@ class _SearchUiState extends State<SearchUi> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "Table %",
-                            style: TextStyle(
-                              fontSize: fontSizeHeading,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          buildingCustomTextFieldFilterHeading(
+                            labelText: "Table %",
                           ),
                           const SizedBox(height: 5),
                           Row(
@@ -3872,6 +3877,7 @@ class _SearchUiState extends State<SearchUi> {
                             children: [
                               Expanded(
                                 child: Card(
+                                  color: cardColor,
                                   elevation: elevationOfCard,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8.0),
@@ -3907,6 +3913,7 @@ class _SearchUiState extends State<SearchUi> {
                               const SizedBox(width: 10),
                               Expanded(
                                 child: Card(
+                                  color: cardColor,
                                   elevation: elevationOfCard,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8.0),
@@ -3953,20 +3960,16 @@ class _SearchUiState extends State<SearchUi> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "Depth %",
-                            style: TextStyle(
-                              fontSize: fontSizeHeading,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          buildingCustomTextFieldFilterHeading(
+                            labelText: "Depth %",
                           ),
                           const SizedBox(height: 5),
-                          
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Expanded(
                                 child: Card(
+                                  color: cardColor,
                                   elevation: elevationOfCard,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8.0),
@@ -3980,13 +3983,12 @@ class _SearchUiState extends State<SearchUi> {
                                       keyboardType:
                                           const TextInputType.numberWithOptions(
                                               decimal: true),
-                                              textInputAction: TextInputAction.done,
+                                      textInputAction: TextInputAction.done,
                                       decoration: const InputDecoration(
                                         border: InputBorder.none,
                                         labelText: 'From',
                                         hintText: '0.0',
                                       ),
-                                      
                                       onChanged: (value) {
                                         setState(() {
                                           widget.depthFrom =
@@ -4004,6 +4006,7 @@ class _SearchUiState extends State<SearchUi> {
                               const SizedBox(width: 10),
                               Expanded(
                                 child: Card(
+                                  color: cardColor,
                                   elevation: elevationOfCard,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8.0),
@@ -4017,8 +4020,7 @@ class _SearchUiState extends State<SearchUi> {
                                       keyboardType:
                                           const TextInputType.numberWithOptions(
                                               decimal: true),
-                                              textInputAction: TextInputAction.done,
-                                      
+                                      textInputAction: TextInputAction.done,
                                       decoration: const InputDecoration(
                                         border: InputBorder.none,
                                         labelText: 'To',
@@ -4050,324 +4052,358 @@ class _SearchUiState extends State<SearchUi> {
           ],
         ),
       ),
-      bottomNavigationBar: 
-      _focusNode.hasFocus ? _buildDoneButton(context):
-      Padding(
-        padding: const EdgeInsets.all(
-            paddingCard), // Adjust the bottom padding as needed
-        child: Container(
-          height: 80, // Adjust the height as needed
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20), // Add rounded corners
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: const Offset(0, 3), // changes position of shadow
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => HomePage(
-                              token: widget.token,
-                            )),
-                    (route) => false,
-                  );
-                },
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.home),
-                    SizedBox(height: 2),
-                    Text('Home'),
-                  ],
+      bottomNavigationBar: _focusNode.hasFocus
+          ? _buildDoneButton(context)
+          : Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/Images/bg-pattern.png'),
+                  fit: BoxFit.fill, // makes the image fill the area
                 ),
               ),
-              TextButton(
-                onPressed: () {
-                  fetchDataSearchDiamond(widget.token,
-                          searchQuerry: buildQueryString())
-                      .then((diamondData) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SearchResultsTemp(
-                          diamondData: diamondData,
-                          token: widget.token,
-                          querryUrl: buildQueryString(),
+              child: Padding(
+                padding: const EdgeInsets.all(
+                    paddingCard), // Adjust the bottom padding as needed
+                child: Container(
+                  height:
+                      navigationBarHeightAfterLogin, // Adjust the height as needed
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius:
+                        BorderRadius.circular(20), // Add rounded corners
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset:
+                            const Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomePage(
+                                      token: widget.token,
+                                    )),
+                            (route) => false,
+                          );
+                        },
+                        child: const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.home, color: navigationMenuColor),
+                            SizedBox(height: 2),
+                            Text(
+                              'Home',
+                              style: TextStyle(color: navigationMenuColor),
+                            ),
+                          ],
                         ),
                       ),
-                    );
-                  }).catchError((error) {
-                    // Handle error
-                    print('Error: $error');
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content:
-                            Text('An error occurred. Please try again later.'),
-                      ),
-                    );
-                  });
-                  // Add your onPressed callback here
-                },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.search_rounded),
-                    const SizedBox(
-                      height: 2,
-                    ), // Add some space between the icon and text
-                    FutureBuilder(
-                        future: fetchDataSearchDiamond(widget.token,
-                            searchQuerry: buildQueryString()),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text("Search("),
-                                  Center(
-                                    child: CircularProgressIndicator(
-                                        strokeWidth: 3.0),
-                                  ),
-                                  Text(")"),
-                                ]);
-                          } else if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}');
-                          }
-                          {
-                            return Text('Search(${snapshot.data!.total})');
-                          }
-                        }),
-                  ],
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SearchPage(
+                      TextButton(
+                        onPressed: () {
+                          fetchDataSearchDiamond(widget.token,
+                                  searchQuerry: buildQueryString())
+                              .then((diamondData) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SearchResultsTemp(
+                                  diamondData: diamondData,
                                   token: widget.token,
-                                )));
-                  // Add your onPressed callback here
-                  // setState(() {
-                  //   widget.roundShpIsSelected = false;
-                  //   widget.roundShp = null;
-                  //   widget.princeShpIsSelected = false;
-                  //   widget.princeShp = null;
-                  //   widget.emraldShpIsSelected = false;
-                  //   widget.emraldShp = null;
-                  //   widget.ovalShpIsSelected = false;
-                  //   widget.ovalShp = null;
-                  //   widget.radiantShpIsSelected = false;
-                  //   widget.radiantShp = null;
-                  //   widget.pearShpIsSelected = false;
-                  //   widget.pearShp = null;
-                  //   widget.marquiseShpIsSelected = false;
-                  //   widget.marquiseShp = null;
-                  //   widget.heartShpIsSelected = false;
-                  //   widget.heartShp = null;
-                  //   widget.cushionShpIsSelected = false;
-                  //   widget.cushionShp = null;
-                  //   widget.othersShpIsSelected = false;
-                  //   widget.othersShp = null;
-                  //   widget.triangleShpIsSelected = false;
-                  //   widget.triangleShp = null;
-                  //   widget.caratIsSelected = false;
-                  //   widget.carat = null;
-                  //   widget.caratFromIsSelected = false;
-                  //   widget.caratFrom = null;
-                  //   widget.caratToIsSelected = false;
-                  //   widget.caratTo = null;
-                  //   widget.colDIsSelected = false;
-                  //   widget.colD = null;
-                  //   widget.colEIsSelected = false;
-                  //   widget.colE = null;
-                  //   widget.colFIsSelected = false;
-                  //   widget.colF = null;
-                  //   widget.colGIsSelected = false;
-                  //   widget.colG = null;
-                  //   widget.colHIsSelected = false;
-                  //   widget.colH = null;
-                  //   widget.colIIsSelected = false;
-                  //   widget.colI = null;
-                  //   widget.colJIsSelected = false;
-                  //   widget.colJ = null;
-                  //   widget.colKIsSelected = false;
-                  //   widget.colK = null;
-                  //   widget.colLIsSelected = false;
-                  //   widget.colL = null;
-                  //   widget.colMIsSelected = false;
-                  //   widget.colM = null;
-                  //   widget.colNIsSelected = false;
-                  //   widget.colN = null;
-                  //   widget.colO_PIsSelected = false;
-                  //   widget.colO_P = null;
-                  //   widget.colQ_RIsSelected = false;
-                  //   widget.colQ_R = null;
-                  //   widget.colS_TIsSelected = false;
-                  //   widget.colS_T = null;
-                  //   widget.colU_VIsSelected = false;
-                  //   widget.colU_V = null;
-                  //   widget.colW_ZIsSelected = false;
-                  //   widget.colW_Z = null;
-                  //   widget.claFlIsSelected = false;
-                  //   widget.claFl = null;
-                  //   widget.claIfIsSelected = false;
-                  //   widget.claIf = null;
-                  //   widget.claVvs1IsSelected = false;
-                  //   widget.claVvs1 = null;
-                  //   widget.claVvs2IsSelected = false;
-                  //   widget.claVvs2 = null;
-                  //   widget.claVs1IsSelected = false;
-                  //   widget.claVs1 = null;
-                  //   widget.claVs2IsSelected = false;
-                  //   widget.claVs2 = null;
-                  //   widget.claSi1IsSelected = false;
-                  //   widget.claSi1 = null;
-                  //   widget.claSi2IsSelected = false;
-                  //   widget.claSi2 = null;
-                  //   widget.claSi3IsSelected = false;
-                  //   widget.claSi3 = null;
-                  //   widget.claI1IsSelected = false;
-                  //   widget.claI1 = null;
-                  //   widget.claI2IsSelected = false;
-                  //   widget.claI2 = null;
-                  //   widget.cutExIsSelected = false;
-                  //   widget.cutEx = null;
-                  //   widget.cutVgIsSelected = false;
-                  //   widget.cutVg = null;
-                  //   widget.cutGdIsSelected = false;
-                  //   widget.cutGd = null;
-                  //   widget.cutFrIsSelected = false;
-                  //   widget.cutFr = null;
-                  //   widget.cutPrIsSelected = false;
-                  //   widget.cutPr = null;
-                  //   widget.cutNoneIsSelected = false;
-                  //   widget.cutNone = null;
-                  //   widget.polExIsSelected = false;
-                  //   widget.polEx = null;
-                  //   widget.polVgIsSelected = false;
-                  //   widget.polVg = null;
-                  //   widget.polGdIsSelected = false;
-                  //   widget.polGd = null;
-                  //   widget.polFrIsSelected = false;
-                  //   widget.polFr = null;
-                  //   widget.polPrIsSelected = false;
-                  //   widget.polPr = null;
-                  //   widget.symExIsSelected = false;
-                  //   widget.symEx = null;
-                  //   widget.symVgIsSelected = false;
-                  //   widget.symVg = null;
-                  //   widget.symGdIsSelected = false;
-                  //   widget.symGd = null;
-                  //   widget.symFrIsSelected = false;
-                  //   widget.symFr = null;
-                  //   widget.symPrIsSelected = false;
-                  //   widget.symPr = null;
-                  //   widget.flNIsSelected = false;
-                  //   widget.flN = null;
-                  //   widget.flFIsSelected = false;
-                  //   widget.flF = null;
-                  //   widget.flMIsSelected = false;
-                  //   widget.flM = null;
-                  //   widget.flSIsSelected = false;
-                  //   widget.flS = null;
-                  //   widget.flVsIsSelected = false;
-                  //   widget.flVs = null;
-                  //   widget.certGiaIsSelected = false;
-                  //   widget.certGia = null;
-                  //   widget.certIgiIsSelected = false;
-                  //   widget.certIgi = null;
-                  //   widget.certHrdIsSelected = false;
-                  //   widget.certHrd = null;
-                  //   widget.certNgtcIsSelected = false;
-                  //   widget.certNgtc = null;
-                  //   widget.bjmYesIsSelected = false;
-                  //   widget.bjmYes = null;
-                  //   widget.bjmNoIsSelected = false;
-                  //   widget.bjmNo = null;
-                  //   widget.locIndiaIsSelected = false;
-                  //   widget.locIndia = null;
-                  //   widget.locChinaIsSelected = false;
-                  //   widget.locChina = null;
-                  //   widget.locHkIsSelected = false;
-                  //   widget.locHk = null;
-                  //   widget.locSzIsSelected = false;
-                  //   widget.locSz = null;
-                  //   widget.locH_KIsSelected = false;
-                  //   widget.locH_K = null;
-                  //   widget.locTransitIsSelected = false;
-                  //   widget.locTransit = null;
-                  //   widget.shortCut3EXNIsSelected = false;
-                  //   widget.shortCut3EXN = null;
-                  //   widget.shortCut3VGNIsSelected = false;
-                  //   widget.shortCut3VGN = null;
+                                  querryUrl: buildQueryString(),
+                                ),
+                              ),
+                            );
+                          }).catchError((error) {
+                            // Handle error
+                            // print('Error: $error');
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    'An error occurred. Please try again later.'),
+                              ),
+                            );
+                          });
+                          // Add your onPressed callback here
+                        },
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.search_rounded,
+                              color: navigationMenuColor,
+                            ),
+                            const SizedBox(
+                              height: 2,
+                            ), // Add some space between the icon and text
+                            FutureBuilder(
+                                future: fetchDataSearchDiamond(widget.token,
+                                    searchQuerry: buildQueryString()),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text("Search(",
+                                              style: TextStyle(
+                                                  color: navigationMenuColor)),
+                                          Center(
+                                            child: CircularProgressIndicator(
+                                                strokeWidth: 3.0),
+                                          ),
+                                          Text(
+                                            ")",
+                                            style: TextStyle(
+                                                color: navigationMenuColor),
+                                          ),
+                                        ]);
+                                  } else if (snapshot.hasError) {
+                                    return Text('xx',
+                                        style: TextStyle(
+                                            color: navigationMenuColor));
+                                  }
+                                  {
+                                    return Text(
+                                        'Search(${snapshot.data!.total})',
+                                        style: TextStyle(
+                                            color: navigationMenuColor));
+                                  }
+                                }),
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SearchPage(
+                                        token: widget.token,
+                                      )));
+                          // Add your onPressed callback here
+                          // setState(() {
+                          //   widget.roundShpIsSelected = false;
+                          //   widget.roundShp = null;
+                          //   widget.princeShpIsSelected = false;
+                          //   widget.princeShp = null;
+                          //   widget.emraldShpIsSelected = false;
+                          //   widget.emraldShp = null;
+                          //   widget.ovalShpIsSelected = false;
+                          //   widget.ovalShp = null;
+                          //   widget.radiantShpIsSelected = false;
+                          //   widget.radiantShp = null;
+                          //   widget.pearShpIsSelected = false;
+                          //   widget.pearShp = null;
+                          //   widget.marquiseShpIsSelected = false;
+                          //   widget.marquiseShp = null;
+                          //   widget.heartShpIsSelected = false;
+                          //   widget.heartShp = null;
+                          //   widget.cushionShpIsSelected = false;
+                          //   widget.cushionShp = null;
+                          //   widget.othersShpIsSelected = false;
+                          //   widget.othersShp = null;
+                          //   widget.triangleShpIsSelected = false;
+                          //   widget.triangleShp = null;
+                          //   widget.caratIsSelected = false;
+                          //   widget.carat = null;
+                          //   widget.caratFromIsSelected = false;
+                          //   widget.caratFrom = null;
+                          //   widget.caratToIsSelected = false;
+                          //   widget.caratTo = null;
+                          //   widget.colDIsSelected = false;
+                          //   widget.colD = null;
+                          //   widget.colEIsSelected = false;
+                          //   widget.colE = null;
+                          //   widget.colFIsSelected = false;
+                          //   widget.colF = null;
+                          //   widget.colGIsSelected = false;
+                          //   widget.colG = null;
+                          //   widget.colHIsSelected = false;
+                          //   widget.colH = null;
+                          //   widget.colIIsSelected = false;
+                          //   widget.colI = null;
+                          //   widget.colJIsSelected = false;
+                          //   widget.colJ = null;
+                          //   widget.colKIsSelected = false;
+                          //   widget.colK = null;
+                          //   widget.colLIsSelected = false;
+                          //   widget.colL = null;
+                          //   widget.colMIsSelected = false;
+                          //   widget.colM = null;
+                          //   widget.colNIsSelected = false;
+                          //   widget.colN = null;
+                          //   widget.colO_PIsSelected = false;
+                          //   widget.colO_P = null;
+                          //   widget.colQ_RIsSelected = false;
+                          //   widget.colQ_R = null;
+                          //   widget.colS_TIsSelected = false;
+                          //   widget.colS_T = null;
+                          //   widget.colU_VIsSelected = false;
+                          //   widget.colU_V = null;
+                          //   widget.colW_ZIsSelected = false;
+                          //   widget.colW_Z = null;
+                          //   widget.claFlIsSelected = false;
+                          //   widget.claFl = null;
+                          //   widget.claIfIsSelected = false;
+                          //   widget.claIf = null;
+                          //   widget.claVvs1IsSelected = false;
+                          //   widget.claVvs1 = null;
+                          //   widget.claVvs2IsSelected = false;
+                          //   widget.claVvs2 = null;
+                          //   widget.claVs1IsSelected = false;
+                          //   widget.claVs1 = null;
+                          //   widget.claVs2IsSelected = false;
+                          //   widget.claVs2 = null;
+                          //   widget.claSi1IsSelected = false;
+                          //   widget.claSi1 = null;
+                          //   widget.claSi2IsSelected = false;
+                          //   widget.claSi2 = null;
+                          //   widget.claSi3IsSelected = false;
+                          //   widget.claSi3 = null;
+                          //   widget.claI1IsSelected = false;
+                          //   widget.claI1 = null;
+                          //   widget.claI2IsSelected = false;
+                          //   widget.claI2 = null;
+                          //   widget.cutExIsSelected = false;
+                          //   widget.cutEx = null;
+                          //   widget.cutVgIsSelected = false;
+                          //   widget.cutVg = null;
+                          //   widget.cutGdIsSelected = false;
+                          //   widget.cutGd = null;
+                          //   widget.cutFrIsSelected = false;
+                          //   widget.cutFr = null;
+                          //   widget.cutPrIsSelected = false;
+                          //   widget.cutPr = null;
+                          //   widget.cutNoneIsSelected = false;
+                          //   widget.cutNone = null;
+                          //   widget.polExIsSelected = false;
+                          //   widget.polEx = null;
+                          //   widget.polVgIsSelected = false;
+                          //   widget.polVg = null;
+                          //   widget.polGdIsSelected = false;
+                          //   widget.polGd = null;
+                          //   widget.polFrIsSelected = false;
+                          //   widget.polFr = null;
+                          //   widget.polPrIsSelected = false;
+                          //   widget.polPr = null;
+                          //   widget.symExIsSelected = false;
+                          //   widget.symEx = null;
+                          //   widget.symVgIsSelected = false;
+                          //   widget.symVg = null;
+                          //   widget.symGdIsSelected = false;
+                          //   widget.symGd = null;
+                          //   widget.symFrIsSelected = false;
+                          //   widget.symFr = null;
+                          //   widget.symPrIsSelected = false;
+                          //   widget.symPr = null;
+                          //   widget.flNIsSelected = false;
+                          //   widget.flN = null;
+                          //   widget.flFIsSelected = false;
+                          //   widget.flF = null;
+                          //   widget.flMIsSelected = false;
+                          //   widget.flM = null;
+                          //   widget.flSIsSelected = false;
+                          //   widget.flS = null;
+                          //   widget.flVsIsSelected = false;
+                          //   widget.flVs = null;
+                          //   widget.certGiaIsSelected = false;
+                          //   widget.certGia = null;
+                          //   widget.certIgiIsSelected = false;
+                          //   widget.certIgi = null;
+                          //   widget.certHrdIsSelected = false;
+                          //   widget.certHrd = null;
+                          //   widget.certNgtcIsSelected = false;
+                          //   widget.certNgtc = null;
+                          //   widget.bjmYesIsSelected = false;
+                          //   widget.bjmYes = null;
+                          //   widget.bjmNoIsSelected = false;
+                          //   widget.bjmNo = null;
+                          //   widget.locIndiaIsSelected = false;
+                          //   widget.locIndia = null;
+                          //   widget.locChinaIsSelected = false;
+                          //   widget.locChina = null;
+                          //   widget.locHkIsSelected = false;
+                          //   widget.locHk = null;
+                          //   widget.locSzIsSelected = false;
+                          //   widget.locSz = null;
+                          //   widget.locH_KIsSelected = false;
+                          //   widget.locH_K = null;
+                          //   widget.locTransitIsSelected = false;
+                          //   widget.locTransit = null;
+                          //   widget.shortCut3EXNIsSelected = false;
+                          //   widget.shortCut3EXN = null;
+                          //   widget.shortCut3VGNIsSelected = false;
+                          //   widget.shortCut3VGN = null;
 
-                  //   widget.noBgmboool = false;
-                  //   widget.noBgm = "";
-                  //   widget.isOnBlackList = false;
-                  //   widget.onBlackList = "";
-                  //   widget.isImage = false;
-                  //   widget.imageAvailable = "";
-                  //   widget.isMovie = false;
-                  //   widget.movieAvaible = "";
-                  //   widget.isCertificate = false;
-                  //   widget.certificateAvailable = "";
-                  //   widget.isHoldDiamond = false;
-                  //   widget.holdDiamond = "";
-                  //   widget.isLoanDiamond = false;
-                  //   widget.loanDiamond = "";
+                          //   widget.noBgmboool = false;
+                          //   widget.noBgm = "";
+                          //   widget.isOnBlackList = false;
+                          //   widget.onBlackList = "";
+                          //   widget.isImage = false;
+                          //   widget.imageAvailable = "";
+                          //   widget.isMovie = false;
+                          //   widget.movieAvaible = "";
+                          //   widget.isCertificate = false;
+                          //   widget.certificateAvailable = "";
+                          //   widget.isHoldDiamond = false;
+                          //   widget.holdDiamond = "";
+                          //   widget.isLoanDiamond = false;
+                          //   widget.loanDiamond = "";
 
+                          //   widget.priceFrom = null;
+                          //   widget.priceTo = null;
+                          //   widget.tableFrom = null;
+                          //   widget.tableTo = null;
+                          //   widget.depthFrom =null;
+                          //   widget.depthTo = null;
 
-                  //   widget.priceFrom = null;
-                  //   widget.priceTo = null;
-                  //   widget.tableFrom = null;
-                  //   widget.tableTo = null;
-                  //   widget.depthFrom =null;
-                  //   widget.depthTo = null;
-                    
-                  //   fetchDataSearchDiamond(widget.token,
-                  //       searchQuerry: buildQueryString());
-                  // });
-                },
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.border_clear_rounded),
-                    SizedBox(
-                      height: 2,
-                    ),
-                    Text('Reset'),
-                  ],
+                          //   fetchDataSearchDiamond(widget.token,
+                          //       searchQuerry: buildQueryString());
+                          // });
+                        },
+                        child: const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.border_clear_rounded,
+                                color: navigationMenuColor),
+                            SizedBox(
+                              height: 2,
+                            ),
+                            Text('Reset',
+                                style: TextStyle(color: navigationMenuColor)),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }
 
-Widget _buildDoneButton(context){
+Widget _buildDoneButton(context) {
   return Container(
     color: Colors.grey[200],
     padding: const EdgeInsets.all(paddingCard),
-    child: TextButton(onPressed: (){
-      Focus.of(context).unfocus();
-
-    }, child: const Text("Done", style: TextStyle(fontSize: 18, color: Colors.blue),)),
+    child: TextButton(
+        onPressed: () {
+          Focus.of(context).unfocus();
+        },
+        child: const Text(
+          "Done",
+          style: TextStyle(fontSize: 18, color: Colors.blue),
+        )),
   );
 }

@@ -29,111 +29,141 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text(
-          "Sign Up",
-          style: TextStyle(
-            color: mainColor,
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
+        appBar: AppBar(
+          flexibleSpace: Image.asset(
+            'assets/Images/bg-pattern.png',
+            fit: BoxFit.cover,
           ),
-          textAlign: TextAlign.center,
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              _buildTextField(_realNameController, 'Real Name', Icons.person),
-              _buildTextField(_usernameController, 'Username', Icons.person,
-                  hint:
-                      "Between 3-15 characters, letters, numbers, underscores"),
-              _buildPasswordField(_passwordController, 'Password', Icons.lock,
-                  hint: "Between 6-16 characters, letters, numbers, symbols"),
-              _buildPasswordField(
-                  _retypePasswordController, 'Retype Password', Icons.lock,
-                  hint: "Same as above password"),
-              _buildTextField(_mobileController, 'Mobile', Icons.phone),
-              _buildTextField(_companyController, 'Company', Icons.business),
-              if (widget.imageToken['imageBytes'] != null)
-                Image.memory(widget.imageToken['imageBytes']),
-              _buildTextField(_captchaController, 'CAPTCHA', Icons.security),
-              SizedBox(height: sizedBoxHeight),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    // Implement sign-up functionality here
-                    String realName = _realNameController.text;
-                    String username = _usernameController.text;
-                    String password = _passwordController.text;
-                    String retypePassword = _retypePasswordController.text;
-                    String mobile = _mobileController.text;
-                    String company = _companyController.text;
-                    String captcha = _captchaController.text;
-                    // Here you can perform validation and sign up the user
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: Card(
+            color: secondaryColor, // Set background to mainColor
 
-                    if (password == retypePassword) {
-                      print('Real Name: $realName');
-                      print('Username: $username');
-                      print('Password: $password');
-                      print('Retype Password: $retypePassword');
-                      print('Mobile: $mobile');
-                      print('Company: $company');
-                      print('CAPTCHA: $captcha');
-                      var response = registerUser(
-                          widget.imageToken['cookie'],
-                          realName,
-                          username,
-                          password,
-                          retypePassword,
-                          mobile,
-                          company,
-                          captcha);
-                      response.then((value) => {
-                            if (value.status == '1' || value.status == 1)
-                              {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text(value.message))),
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ThankYouPage()),
-                                    (route) => false)
-                              }
-                            else
-                              {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text(value.message))),
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => LoginPage()))
-                              }
-                          });
-                    } else {
-                      // SnackBar(content: ,)
-                    }
-                  }
-                },
-                child: const Text('Sign Up',
-                    style: TextStyle(color: Colors.white)),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: mainColor,
-                  textStyle: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(
+                    context); // Navigate back when the back button is pressed
+              },
+              color: logoMachingColor, // Customize the color of the back button
+            ),
           ),
+          // title: const Text(
+          //   "Sign Up",
+          //   style: TextStyle(
+          //     color: mainColor,
+          //     fontSize: 25,
+          //     fontWeight: FontWeight.bold,
+          //   ),
+          //   textAlign: TextAlign.center,
+          // ),
         ),
-      ),
-    );
+        body: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/Images/bg-pattern.png'),
+              fit: BoxFit.fill, // makes the image fill the area
+            ),
+          ),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  _buildTextField(
+                      _realNameController, 'Real Name', Icons.person),
+                  _buildTextField(_usernameController, 'Username', Icons.person,
+                      hint:
+                          "Between 3-15 characters, letters, numbers, underscores"),
+                  _buildPasswordField(
+                      _passwordController, 'Password', Icons.lock,
+                      hint:
+                          "Between 6-16 characters, letters, numbers, symbols"),
+                  _buildPasswordField(
+                      _retypePasswordController, 'Retype Password', Icons.lock,
+                      hint: "Same as above password"),
+                  _buildTextField(_mobileController, 'Mobile', Icons.phone),
+                  _buildTextField(
+                      _companyController, 'Company', Icons.business),
+                  if (widget.imageToken['imageBytes'] != null)
+                    Image.memory(widget.imageToken['imageBytes']),
+                  _buildTextField(
+                      _captchaController, 'CAPTCHA', Icons.security),
+                  SizedBox(height: sizedBoxHeight),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        // Implement sign-up functionality here
+                        String realName = _realNameController.text;
+                        String username = _usernameController.text;
+                        String password = _passwordController.text;
+                        String retypePassword = _retypePasswordController.text;
+                        String mobile = _mobileController.text;
+                        String company = _companyController.text;
+                        String captcha = _captchaController.text;
+                        // Here you can perform validation and sign up the user
+
+                        if (password == retypePassword) {
+                          print('Real Name: $realName');
+                          print('Username: $username');
+                          print('Password: $password');
+                          print('Retype Password: $retypePassword');
+                          print('Mobile: $mobile');
+                          print('Company: $company');
+                          print('CAPTCHA: $captcha');
+                          var response = registerUser(
+                              widget.imageToken['cookie'],
+                              realName,
+                              username,
+                              password,
+                              retypePassword,
+                              mobile,
+                              company,
+                              captcha);
+                          response.then((value) => {
+                                if (value.status == '1' || value.status == 1)
+                                  {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text(value.message))),
+                                    Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ThankYouPage()),
+                                        (route) => false)
+                                  }
+                                else
+                                  {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text(value.message))),
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => LoginPage()))
+                                  }
+                              });
+                        } else {
+                          // SnackBar(content: ,)
+                        }
+                      }
+                    },
+                    child: const Text('Sign Up',
+                        style: TextStyle(color: Colors.white)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: mainColor,
+                      textStyle: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ));
   }
 
   Widget _buildTextField(
@@ -143,11 +173,32 @@ class _SignUpPageState extends State<SignUpPage> {
       children: [
         TextFormField(
           controller: controller,
+          cursorColor: mainColor, // cursor in brand color
           decoration: InputDecoration(
             labelText: label,
-            border: const OutlineInputBorder(),
-            prefixIcon: Icon(icon),
+            labelStyle: const TextStyle(color: mainColor),
             hintText: hint,
+            prefixIcon: Icon(icon, color: mainColor),
+
+            // Normal border
+            enabledBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: mainColor, width: 1.5),
+            ),
+
+            // Focused border
+            focusedBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: mainColor, width: 2.0),
+            ),
+
+            // Error border
+            errorBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red, width: 1.5),
+            ),
+
+            // Focused error border
+            focusedErrorBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red, width: 2.0),
+            ),
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
@@ -168,20 +219,39 @@ class _SignUpPageState extends State<SignUpPage> {
       children: [
         TextFormField(
           controller: controller,
+          obscureText: true, // hides the password
+          cursorColor: mainColor,
           decoration: InputDecoration(
             labelText: label,
-            border: const OutlineInputBorder(),
-            prefixIcon: Icon(icon),
+            labelStyle: const TextStyle(color: mainColor),
             hintText: hint,
+            prefixIcon: Icon(icon, color: mainColor),
+
+            // Normal border
+            enabledBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: mainColor, width: 1.5),
+            ),
+
+            // Focused border
+            focusedBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: mainColor, width: 2.0),
+            ),
+
+            // Error border
+            errorBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red, width: 1.5),
+            ),
+
+            // Focused error border
+            focusedErrorBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red, width: 2.0),
+            ),
           ),
-          obscureText: true,
           validator: (value) {
             if (value == null || value.isEmpty) {
               return 'Please enter $label';
-            } else {
-              if (value.length < 6) {
-                return 'Between 6-16 characters is permitted';
-              }
+            } else if (value.length < 6 || value.length > 16) {
+              return 'Between 6–16 characters is permitted';
             }
             return null;
           },

@@ -74,7 +74,7 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
 
       _currentPage++;
       // Simulate network request delay
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 2));
 
       // Fetch more data from the API and add it to the list
       DiamondData newDiamondData = await fetchDataSearchDiamond(widget.token,
@@ -92,9 +92,9 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
       widget.token,
       searchQuerry: "${widget.querryUrl}&q_perpage=200",
     );
-    print(newDiamondData.page);
-    print(newDiamondData.pages);
-    print(newDiamondData.perPage);
+    // print(newDiamondData.page);
+    // print(newDiamondData.pages);
+    // print(newDiamondData.perPage);
     diamond_temp.addAll(newDiamondData.diamonds);
 
     for (int i = 2; i <= newDiamondData.pages; i++) {
@@ -106,7 +106,7 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
       // diamond_temp.addAll(newDiamondData.diamonds); // Update this line based on your actual API response structure
       diamond_temp.addAll(newDiamondData.diamonds);
     }
-    print(diamond_temp.length);
+    // print(diamond_temp.length);
 
     return diamond_temp;
   }
@@ -131,13 +131,13 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
             _diamonds[key]); // Diamonds to add if selectAllChecked is false
       }
     });
-    print(ls_remove.length);
-    print(add_diamond.length);
+    // print(ls_remove.length);
+    // print(add_diamond.length);
 
     // If all diamonds are selected, remove diamonds in ls_remove from the copy
     if (selectAllChecked) {
-      print(
-          "********************************************I am in the right place, I am selected");
+      // print(
+      //     "********************************************I am in the right place, I am selected");
 
       // Remove each diamond in ls_remove from diamondsSelectedCopy
       ls_remove.forEach((removeDiamond) {
@@ -152,10 +152,10 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
       diamondsSelectedCopy.clear();
       diamondsSelectedCopy.addAll(add_diamond);
     }
-    print(
-        "********************************************i am in right place i am selected diamond coppy ${diamondsSelectedCopy.length}");
+    // print(
+    //     "********************************************i am in right place i am selected diamond coppy ${diamondsSelectedCopy.length}");
 
-    print(diamondsSelectedCopy.length);
+    // print(diamondsSelectedCopy.length);
 
     // Return the modified list of diamonds
     return diamondsSelectedCopy;
@@ -206,12 +206,12 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
     String querry = "";
 
     isCheckedMap.forEach((key, value) {
-      print(key);
+      // print(key);
       if (value) {
-        print(_diamonds[key]);
+        // print(_diamonds[key]);
         querry = querry + _diamonds[key].id + ",";
       }
-      print(querry);
+      // print(querry);
     });
     return querry;
   }
@@ -336,23 +336,39 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Card(
-          child: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(
-                  context); // Navigate back when the back button is pressed
-            },
-            color: Colors.black, // Customize the color of the back button
+        flexibleSpace: Image.asset(
+            'assets/Images/bg-pattern.png',
+            fit: BoxFit.cover,
           ),
-        ),
-        title: Text("${_diamonds.length}/${widget.diamondData.total} Result"),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: Card(
+              color: secondaryColor, // Set background to mainColor
+
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(
+                    context); // Navigate back when the back button is pressed
+              },
+              color: logoMachingColor, // Customize the color of the back button
+            ),
+          ),
+        title: Text("${_diamonds.length}/${widget.diamondData.total} Result", style: TextStyle(color: logoMachingColor),),
         centerTitle: true,
       ),
-      body: Column(
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/Images/bg-pattern.png'),
+            fit: BoxFit.fill, // makes the image fill the area
+          ),
+        ),
+      
+      child:Column(
         children: [
           Container(
-            color: Colors.white,
+            color: cardColor,
             // padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -366,22 +382,22 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                   },
                   icon: Icon(_selectAllChecked
                       ? Icons.check_box
-                      : Icons.check_box_outline_blank),
-                  label: const Text("All"),
+                      : Icons.check_box_outline_blank, color: logoMachingColor,),
+                  label: const Text("All", style: TextStyle(color: logoMachingColor),),
                 ),
 
                 // Sort by Price Button
                 TextButton.icon(
                   onPressed: _sortByPrice,
-                  icon: const Icon(Icons.sort),
-                  label: Text(_isAscendingPrice ? "Amt ↑" : "Amt ↓"),
+                  icon: const Icon(Icons.sort, color: logoMachingColor,),
+                  label: Text(_isAscendingPrice ? "Amt ↑" : "Amt ↓", style: const TextStyle(color: logoMachingColor),),
                 ),
 
                 // Sort by Discount Button
                 TextButton.icon(
                   onPressed: _sortByDiscount,
-                  icon: const Icon(Icons.sort),
-                  label: Text(_isAscendingDiscount ? "Dis% ↑" : "Dis% ↓"),
+                  icon: const Icon(Icons.sort, color: logoMachingColor,),
+                  label: Text(_isAscendingDiscount ? "Dis% ↑" : "Dis% ↓", style: const TextStyle(color: logoMachingColor),),
                 ),
                 // TextButton.icon(
                 //   onPressed: () async {
@@ -419,7 +435,7 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
               itemCount: _diamonds.length + (_isLoadingMore ? 1 : 0),
               itemBuilder: (context, index) {
                 if (index == _diamonds.length) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
 
                 bool isChecked = isCheckedMap[index] ?? false;
@@ -440,7 +456,7 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                   child: Padding(
                     padding: const EdgeInsets.all(paddingCard),
                     child: Card.filled(
-                      color: Colors.white,
+                      color: cardColor,
                       elevation: 7,
                       borderOnForeground: false,
                       child: Column(
@@ -471,7 +487,9 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                                             elevation: 7,
                                             child: isChecked
                                                 ? Image.asset(
-                                                    "assets/app_icons/check.png")
+                                                    "assets/app_icons/check.png",
+                                                    color: mainColor,
+                                                  )
                                                 : Container(),
                                           ),
                                         ),
@@ -510,7 +528,7 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                                                     Icons.shopping_cart,
                                                     color: mainColor) //#2162E0
                                                 : const Icon(Icons
-                                                    .shopping_cart_outlined),
+                                                    .shopping_cart_outlined, color: mainColor,),
                                           ),
                                         ),
                                       ),
@@ -543,7 +561,7 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                                           child: Card.filled(
                                             color: Colors.white,
                                             elevation: 7,
-                                            child: Icon(Icons.class_rounded),
+                                            child: Icon(Icons.class_rounded, color: mainColor,),
                                           ),
                                         ),
                                       ),
@@ -565,7 +583,7 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                                             color: Colors.white,
                                             elevation: 7,
                                             child:
-                                                Icon(Icons.camera_alt_outlined),
+                                                Icon(Icons.camera_alt_outlined, color: mainColor,),
                                           ),
                                         ),
                                       ),
@@ -581,7 +599,7 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                                             color: Colors.white,
                                             elevation: 7,
                                             child:
-                                                Icon(Icons.video_call_outlined),
+                                                Icon(Icons.video_call_outlined, color: mainColor,),
                                           ),
                                         ),
                                       ),
@@ -706,10 +724,18 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
           )
         ],
       ),
-      bottomNavigationBar: Padding(
+      ),
+      bottomNavigationBar: Container(
+             decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/Images/bg-pattern.png'),
+              fit: BoxFit.fill, // makes the image fill the area
+            ),
+          ),
+      child:Padding(
         padding: const EdgeInsets.all(paddingCard),
         child: Container(
-          height: 80,
+          height: navigationBarHeightAfterLogin,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
@@ -741,17 +767,18 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                   children: [
                     Icon(
                       Icons.home,
+                      color: navigationMenuColor,
                     ),
                     SizedBox(height: 2),
-                    Text('Home'),
+                    Text('Home', style: TextStyle(color: navigationMenuColor)),
                   ],
                 ),
               ),
               TextButton(
                 // Add functionality here
                 onPressed: () async {
-                  print(
-                      "********************************************i am in right place");
+                  // print(
+                  //     "********************************************i am in right place");
 
                   // Fetch the selected diamonds asynchronously
                   List<Diamond> diamondsSelected = await diamond_select;
@@ -762,19 +789,19 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                   // If all diamonds are selected, process accordingly
                   if (_selectAllChecked) {
                     if (diamondsSelected.length == widget.diamondData.total) {
-                      print(
-                          "********************************************i am in right place");
+                      // print(
+                      //     "********************************************i am in right place");
                       updatedDiamonds = processDiamonds(
                           diamondsSelected, true); // Processing with removal
                     }
                   } else {
-                    print(
-                        "********************************************i am in right place");
+                    // print(
+                    //     "********************************************i am in right place");
                     updatedDiamonds = processDiamonds(
                         diamondsSelected, false); // Processing with addition
                   }
 
-                  print(updatedDiamonds.length);
+                  // print(updatedDiamonds.length);
                   String diamondIdsString = updatedDiamonds
                       .map((diamond) => diamond.id.toString())
                       .join(',');
@@ -794,16 +821,16 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.shopify),
+                    Icon(Icons.shopify, color: navigationMenuColor),
                     SizedBox(height: 2),
-                    Text('Order'),
+                    Text('Order', style: TextStyle(color: navigationMenuColor)),
                   ],
                 ),
               ),
               TextButton(
                 onPressed: () async {
-                  print(
-                      "********************************************i am in right place");
+                  // print(
+                  //     "********************************************i am in right place");
 
                   // Fetch the selected diamonds asynchronously
                   List<Diamond> diamondsSelected = await diamond_select;
@@ -814,19 +841,19 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                   // If all diamonds are selected, process accordingly
                   if (_selectAllChecked) {
                     if (diamondsSelected.length == widget.diamondData.total) {
-                      print(
-                          "********************************************i am in right place");
+                      // print(
+                      //     "********************************************i am in right place");
                       updatedDiamonds = processDiamonds(
                           diamondsSelected, true); // Processing with removal
                     }
                   } else {
-                    print(
-                        "********************************************i am in right place");
+                    // print(
+                    //     "********************************************i am in right place");
                     updatedDiamonds = processDiamonds(
                         diamondsSelected, false); // Processing with addition
                   }
 
-                  print(updatedDiamonds.length);
+                  // print(updatedDiamonds.length);
                   String diamondIdsString = updatedDiamonds
                       .map((diamond) => diamond.id.toString())
                       .join(',');
@@ -852,9 +879,9 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.shopping_cart),
+                    Icon(Icons.shopping_cart, color: navigationMenuColor),
                     SizedBox(height: 2),
-                    Text('Cart'),
+                    Text('Cart', style: TextStyle(color: navigationMenuColor)),
                   ],
                 ),
               ),
@@ -862,6 +889,7 @@ class _SearchResultsTempState extends State<SearchResultsTemp> {
           ),
         ),
       ),
+    ),
     );
   }
 
@@ -912,29 +940,16 @@ void _showOrderDialog(BuildContext context, String token, String subide) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Submit Order'),
+        backgroundColor: accentColor,
+        title: const Text('Submit Order', style: TextStyle(color: logoMachingColor),
+        
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(
-              controller: receiverController,
-              decoration: const InputDecoration(
-                labelText: 'Cart Receiver Name',
-              ),
-            ),
-            TextField(
-              controller: phoneController,
-              decoration: const InputDecoration(
-                labelText: 'Cart Phone',
-              ),
-              keyboardType: TextInputType.phone,
-            ),
-            TextField(
-              controller: note,
-              decoration: const InputDecoration(
-                labelText: 'Note',
-              ),
-            ),
+            buildCustomTextField(controller: receiverController, labelText: 'Cart Receiver Name'),
+            buildCustomTextField(controller: phoneController, labelText: 'Cart Phone'),
+            buildCustomTextField(controller: note, labelText: 'Note'),
           ],
         ),
         actions: [
@@ -949,7 +964,7 @@ void _showOrderDialog(BuildContext context, String token, String subide) {
                 submitOrder(token, subide, receiverName, phone,
                     cart_note: user_note);
                 var snackBar =
-                    SnackBar(content: Text("Order Placed Successfully"));
+                    const SnackBar(content: Text("Order Placed Successfully"));
 
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -962,17 +977,17 @@ void _showOrderDialog(BuildContext context, String token, String subide) {
               } else {
                 // Show error if inputs are invalid
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Please fill in all fields')),
+                  const SnackBar(content: Text('Please fill in all fields')),
                 );
               }
             },
-            child: Text('Submit'),
+            child: const Text('Submit', style: TextStyle(color: mainColor),),
           ),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text('Cancel'),
+            child: const Text('Cancel', style: TextStyle(color: mainColor),),
           ),
         ],
       );

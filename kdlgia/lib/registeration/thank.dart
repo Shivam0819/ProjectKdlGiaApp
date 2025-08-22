@@ -7,9 +7,23 @@ class ThankYouPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Thank You'),
+        flexibleSpace: Image.asset(
+            'assets/Images/bg-pattern.png',
+            fit: BoxFit.cover,
+          ),
+         
+       
+        title: const Text('Thank You', style: TextStyle(color: logoMachingColor),),
       ),
-      body: Center(
+      body: 
+      Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/Images/bg-pattern.png'),
+            fit: BoxFit.fill, // makes the image fill the area
+          ),
+        ),
+      child: Center(
         child:Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -24,6 +38,7 @@ class ThankYouPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
+                color: logoMachingColor,
               ),
             ),
             const SizedBox(height: 10),
@@ -31,6 +46,7 @@ class ThankYouPage extends StatelessWidget {
               'Your account is temporarily unavailable.\nPlease wait patiently to be allowed.',
               style: TextStyle(
                 fontSize: 15,
+                color: logoMachingColor,
               ),
             ),
             const SizedBox(height: 20),
@@ -39,12 +55,12 @@ class ThankYouPage extends StatelessWidget {
                 // Navigate back to the previous page or any other action
                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginPage()), (route) => false);
               },
-              child:const Text('Log Out'),
+              child:const Text('Log Out', style: TextStyle(color: mainColor)),
             ),
           ],
         ),
         )
-      );
+      ),);
     
   }
 }
