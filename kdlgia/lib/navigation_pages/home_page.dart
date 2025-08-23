@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -44,6 +46,7 @@ class _HomePageState extends State<HomePage> {
 
   late Future<DiamondData> diamondsFuture;
   late Future<DiamondData> diamondsFutureExclusiveDiamond;
+  late Future<DiamondData> diamondsFutureRareTwoCarat;
 
   late Future<CartResponse> cartResponse;
   late int stockWehave;
@@ -56,6 +59,8 @@ class _HomePageState extends State<HomePage> {
     );
     diamondsFutureExclusiveDiamond = fetchDataSearchDiamond(widget.token,
         searchQuerry: "q_lab=GIA,IGI&q_perpage=200&q_carat1=2");
+    diamondsFutureRareTwoCarat =
+        fetchDataSearchDiamond(widget.token, searchQuerry: "q_carat1=2");
     cartResponse = showCarts(widget.token);
     _userProfileFuture = ApiService.fetchUserProfile(widget.token);
   }
@@ -161,7 +166,7 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Colors.white,
           elevation: 0, // optional, removes shadow for a cleaner look
           leading: Padding(
-            padding: const EdgeInsets.all(8.0), // adjust padding if needed
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 2, top: 2), // adjust padding if needed
             child: SvgPicture.asset(
               'assets/logo/company_mini_logo.svg',
               width: 100,
@@ -279,7 +284,7 @@ class _HomePageState extends State<HomePage> {
                     child: Padding(
                       padding: const EdgeInsets.all(paddingCard),
                       child: Card(
-                        color: accentColor,
+                        color: cardColor,
                         child: Center(
                             child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -301,13 +306,16 @@ class _HomePageState extends State<HomePage> {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
                                     return const Center(
-                                      child: CircularProgressIndicator(),
+                                      child: CircularProgressIndicator(
+                                        color: logoMachingColor,
+                                      ),
                                     );
                                   } else {
                                     return TextStyleHeader(
-                                      text: snapshot.data!.total.toString(),
+                                      text:
+                                          "( ${snapshot.data!.total.toString()} )",
                                       colors: mainColor,
-                                      fontWeight: FontWeight.normal,
+                                      fontWeight: FontWeight.w700,
                                     );
                                   }
                                 })
@@ -329,7 +337,7 @@ class _HomePageState extends State<HomePage> {
                     child: Padding(
                       padding: const EdgeInsets.all(paddingCard),
                       child: Card(
-                        color: accentColor,
+                        color: cardColor,
                         elevation: 8, // shadow depth (higher = stronger shadow)
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(
@@ -359,7 +367,7 @@ class _HomePageState extends State<HomePage> {
                   Padding(
                     padding: const EdgeInsets.all(paddingCard),
                     child: Card(
-                        color: accentColor,
+                        color: cardColor,
                         elevation: 8, // shadow depth (higher = stronger shadow)
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(
@@ -426,7 +434,7 @@ class _HomePageState extends State<HomePage> {
                                             style: TextStyle(
                                                 color: isStockNoSelected
                                                     ? mainColor
-                                                    : Colors.black),
+                                                    : logoMachingColor),
                                           ),
                                         ),
                                         TextButton(
@@ -523,11 +531,12 @@ class _HomePageState extends State<HomePage> {
                   padding: const EdgeInsets.all(paddingCard),
                   child: Card(
                     margin: const EdgeInsets.all(paddingCard),
-                    color: accentColor,
+                    color: cardColor,
                     elevation: 8, // shadow depth (higher = stronger shadow)
                     shape: RoundedRectangleBorder(
                       borderRadius:
-                          BorderRadius.circular(12), // optional rounded corners
+                          BorderRadius.circular(12),
+                           // optional rounded corners
                     ),
                     child: Column(
                       children: [
@@ -546,45 +555,63 @@ class _HomePageState extends State<HomePage> {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
                               return const Center(
-                                child: CircularProgressIndicator(),
+                                child: CircularProgressIndicator(color: logoMachingColor,),
+                              );
+                            } else if (!snapshot.hasData ||
+                                snapshot.data!.diamonds.isEmpty) {
+                              // If no data at all
+                              return const Center(
+                                child: Text(
+                                  "No data available!",
+                                  style: TextStyle(color: logoMachingColor),
+                                ),
                               );
                             } else {
-                              Diamond? data; // Declare as nullable
+                              Diamond? data;
 
-                              if (snapshot.hasData) {
-                                // Initialize temp with the first diamond
-                                var temp;
-                                var temp1 = [];
+                              var temp1 = [];
+                              var allDiamondthree = [];
 
-                                // print(snapshot.data!.diamonds.length);
-                                var source = [
-                                  "PARTH",
-                                  "LU",
-                                  "LDD",
-                                  "KT",
-                                  "YD",
-                                  "H"
-                                ];
-                                for (var diam in snapshot.data!.diamonds) {
-                                  if (source.contains(diam.diaSource)) {
-                                    temp1.add(diam);
-                                  }
+                              var source = [
+                                "PARTH",
+                                "Parth",
+                                "parth",
+                                "LU",
+                                "LDD",
+                                "KT",
+                                "YD",
+                                "yd",
+                                "Yd",
+                                "H"
+                              ];
+
+                              for (var diam in snapshot.data!.diamonds) {
+                                if (source.contains(diam.diaSource)) {
+                                  temp1.add(diam);
                                 }
-                                temp = temp1[0];
-                                for (var diam in temp1) {
-                                  // Compare using double.parse for decimal numbers
+                              }
 
-                                  // print(diam.diaSource);
-
-                                  if (double.parse(temp.diaCarat) <
-                                      double.parse(diam.diaCarat)) {
-                                    temp = diam;
-                                    // double? val = double.tryParse(diam.dollar1.replaceAll(RegExp(r'[^\d.]'), ''));
-                                    // print(val);
-                                  }
+                              // Now pick diamonds >= 3 carat
+                              for (var diam in temp1) {
+                                if (double.tryParse(diam.diaCarat) != null &&
+                                    double.parse(diam.diaCarat) >= 3.0) {
+                                  allDiamondthree.add(diam);
                                 }
+                              }
 
-                                data = temp; // Assign the found diamond to data
+                              if (allDiamondthree.isNotEmpty) {
+                                // ✅ safe random pick
+                                int randomIndex = Random.secure()
+                                    .nextInt(allDiamondthree.length);
+                                data = allDiamondthree[randomIndex];
+                              } else {
+                                // ✅ show message instead of error
+                                return const Center(
+                                  child: Text(
+                                    "No data available!",
+                                    style: TextStyle(color: logoMachingColor),
+                                  ),
+                                );
                               }
 
                               return InkWell(
@@ -643,7 +670,7 @@ class _HomePageState extends State<HomePage> {
                                                 child: Icon(
                                                   Icons.broken_image,
                                                   size: 40,
-                                                  color: Colors.grey,
+                                                  color: cardColor,
                                                 ),
                                               );
                                             },
@@ -669,12 +696,16 @@ class _HomePageState extends State<HomePage> {
                                                   data.diaShape,
                                                   style: const TextStyle(
                                                       fontWeight:
-                                                          FontWeight.normal),
+                                                          FontWeight.normal,
+                                                      color: logoMachingColor),
                                                 ),
                                                 const SizedBox(
                                                   width: 10,
                                                 ),
-                                                Text(data.diaCarat)
+                                                Text(data.diaCarat,
+                                                    style: const TextStyle(
+                                                        color:
+                                                            logoMachingColor)),
                                               ],
                                             ),
                                           ),
@@ -689,15 +720,24 @@ class _HomePageState extends State<HomePage> {
                                                 const SizedBox(
                                                   width: 10,
                                                 ),
-                                                Text(data.diaColor),
+                                                Text(data.diaColor,
+                                                    style: const TextStyle(
+                                                        color:
+                                                            logoMachingColor)),
                                                 const SizedBox(
                                                   width: 10,
                                                 ),
-                                                Text(data.diaClarity),
+                                                Text(data.diaClarity,
+                                                    style: const TextStyle(
+                                                        color:
+                                                            logoMachingColor)),
                                                 const SizedBox(
                                                   width: 10,
                                                 ),
-                                                Text(data.diaReport)
+                                                Text(data.diaReport,
+                                                    style: const TextStyle(
+                                                        color:
+                                                            logoMachingColor))
                                               ],
                                             ),
                                           ),
@@ -712,19 +752,31 @@ class _HomePageState extends State<HomePage> {
                                                 const SizedBox(
                                                   width: 10,
                                                 ),
-                                                Text(data.diaCut),
+                                                Text(data.diaCut,
+                                                    style: const TextStyle(
+                                                        color:
+                                                            logoMachingColor)),
                                                 const SizedBox(
                                                   width: 10,
                                                 ),
-                                                Text(data.diaPolish),
+                                                Text(data.diaPolish,
+                                                    style: const TextStyle(
+                                                        color:
+                                                            logoMachingColor)),
                                                 const SizedBox(
                                                   width: 10,
                                                 ),
-                                                Text(data.diaSymmetry),
+                                                Text(data.diaSymmetry,
+                                                    style: const TextStyle(
+                                                        color:
+                                                            logoMachingColor)),
                                                 const SizedBox(
                                                   width: 10,
                                                 ),
-                                                Text(data.diaFluorescence)
+                                                Text(data.diaFluorescence,
+                                                    style: const TextStyle(
+                                                        color:
+                                                            logoMachingColor))
                                               ],
                                             ),
                                           ),
@@ -739,7 +791,10 @@ class _HomePageState extends State<HomePage> {
                                                 const SizedBox(
                                                   width: 10,
                                                 ),
-                                                Text(data.diaReportNo)
+                                                Text(data.diaReportNo,
+                                                    style: const TextStyle(
+                                                        color:
+                                                            logoMachingColor))
                                               ],
                                             ),
                                           ),
@@ -781,8 +836,12 @@ class _HomePageState extends State<HomePage> {
                                                           child: Card.filled(
                                                             color: Colors.white,
                                                             elevation: 7,
-                                                            child: Icon(Icons
-                                                                .class_rounded),
+                                                            child: Icon(
+                                                              Icons
+                                                                  .class_rounded,
+                                                              color:
+                                                                  logoMachingColor,
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
@@ -809,10 +868,14 @@ class _HomePageState extends State<HomePage> {
                                                           height:
                                                               heighOfSearchResultCard,
                                                           child: Card.filled(
-                                                            color: accentColor,
+                                                            color: Colors.white,
                                                             elevation: 7,
-                                                            child: Icon(Icons
-                                                                .camera_alt_outlined),
+                                                            child: Icon(
+                                                              Icons
+                                                                  .camera_alt_outlined,
+                                                              color:
+                                                                  logoMachingColor,
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
@@ -830,10 +893,14 @@ class _HomePageState extends State<HomePage> {
                                                           height:
                                                               heighOfSearchResultCard,
                                                           child: Card.filled(
-                                                            color: accentColor,
+                                                            color: Colors.white,
                                                             elevation: 8,
-                                                            child: Icon(Icons
-                                                                .video_call_outlined),
+                                                            child: Icon(
+                                                              Icons
+                                                                  .video_call_outlined,
+                                                              color:
+                                                                  logoMachingColor,
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
@@ -910,27 +977,67 @@ class _HomePageState extends State<HomePage> {
                     child: Padding(
                       padding: const EdgeInsets.all(paddingCard),
                       child: Card(
-                        color: accentColor,
+                        color: cardColor,
                         elevation: 8, // shadow depth (higher = stronger shadow)
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(
                               12), // optional rounded corners
                         ),
-                        child: const Center(
-                            child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.diamond_rounded,
-                                size: 60, color: mainColor),
-                            TextStyleHeader(
-                              text: "Exclusive 2 Carat +",
-                              colors: mainColor,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ],
+                        child: Center(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.diamond_rounded,
+                                  size: 60, color: mainColor),
+                              const TextStyleHeader(
+                                text: "Rare & Beautiful",
+                                colors: mainColor,
+                                fontWeight: FontWeight.normal,
+                              ),
+                              const TextStyleHeader(
+                                text: "2 Carat +",
+                                colors: mainColor,
+                                fontWeight: FontWeight.normal,
+                              ),
+                              FutureBuilder(
+                                future: diamondsFutureRareTwoCarat,
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const Center(
+                                      child: CircularProgressIndicator(
+                                          color: logoMachingColor),
+                                    );
+                                  } else if (snapshot.hasError) {
+                                    return const TextStyleHeader(
+                                      text: "Error",
+                                      colors: Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                    );
+                                  } else if (!snapshot.hasData ||
+                                      snapshot.data!.diamonds.isEmpty) {
+                                    return const TextStyleHeader(
+                                      text: "0",
+                                      colors: mainColor,
+                                      fontWeight: FontWeight.w700,
+                                    );
+                                  } else {
+                                    // Filter diamonds with carat >= 2.0 safely
+
+                                    return TextStyleHeader(
+                                      text: "( " +
+                                          snapshot.data!.total.toString() +
+                                          " )",
+                                      colors: mainColor,
+                                      fontWeight: FontWeight.w700,
+                                    );
+                                  }
+                                },
+                              )
+                            ],
+                          ),
                         ),
-                            ),
                       ),
                     ),
                   ),
@@ -946,26 +1053,26 @@ class _HomePageState extends State<HomePage> {
                     child: Padding(
                       padding: const EdgeInsets.all(paddingCard),
                       child: Card(
-                        color: accentColor,
+                        color: cardColor,
                         elevation: 8, // shadow depth (higher = stronger shadow)
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(
                               12), // optional rounded corners
                         ),
                         child: const Center(
-                            child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.delivery_dining_rounded,
-                                size: 60, color: mainColor),
-                            TextStyleHeader(
-                              text: "Order Status",
-                              colors: mainColor,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ],
-                        ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.delivery_dining_rounded,
+                                  size: 60, color: mainColor),
+                              TextStyleHeader(
+                                text: "Order Status",
+                                colors: mainColor,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -1109,7 +1216,7 @@ class _HomePageState extends State<HomePage> {
               Padding(
                 padding: const EdgeInsets.all(paddingCard),
                 child: Card(
-                  color: accentColor,
+                  color: cardColor,
                   elevation: 8, // shadow depth (higher = stronger shadow)
                   shape: RoundedRectangleBorder(
                     borderRadius:
@@ -1169,12 +1276,12 @@ class _HomePageState extends State<HomePage> {
                                     TextStyleHeader(
                                       text: salesPersonName,
                                       fontWeight: FontWeight.normal,
-                                      colors: Colors.black,
+                                      colors: logoMachingColor,
                                     ),
                                     const TextStyleHeader(
                                         text: "Marketing Executive",
                                         fontWeight: FontWeight.normal,
-                                        colors: Colors.black),
+                                        colors: logoMachingColor),
                                   ],
                                 ),
                               ],
@@ -1206,7 +1313,9 @@ class _HomePageState extends State<HomePage> {
                                           const EdgeInsets.all(paddingCard),
                                       child: Text(
                                         salesPersonaPhone,
-                                        style: const TextStyle(fontSize: 15.0),
+                                        style: const TextStyle(
+                                            fontSize: 15.0,
+                                            color: logoMachingColor),
                                       ),
                                     )
                                   ],
@@ -1238,7 +1347,9 @@ class _HomePageState extends State<HomePage> {
                                           const EdgeInsets.all(paddingCard),
                                       child: Text(
                                         salesPersonWhatsapp,
-                                        style: const TextStyle(fontSize: 15.0),
+                                        style: const TextStyle(
+                                            fontSize: 15.0,
+                                            color: logoMachingColor),
                                       ),
                                     )
                                   ],
@@ -1261,7 +1372,9 @@ class _HomePageState extends State<HomePage> {
                                   padding: const EdgeInsets.all(paddingCard),
                                   child: Text(
                                     salesPersonWexine,
-                                    style: const TextStyle(fontSize: 15.0),
+                                    style: const TextStyle(
+                                        fontSize: 15.0,
+                                        color: logoMachingColor),
                                   ),
                                 )
                               ],
@@ -1297,7 +1410,8 @@ class _HomePageState extends State<HomePage> {
                                             child: Text(
                                               salesPersonSkype, // Use null-aware operator to handle null value
                                               style: const TextStyle(
-                                                  fontSize: 15.0),
+                                                  fontSize: 15.0,
+                                                  color: logoMachingColor),
                                             ),
                                           ),
                                         ),

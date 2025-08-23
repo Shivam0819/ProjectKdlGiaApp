@@ -26,9 +26,9 @@ class _ContactUsState extends State<ContactUs> {
       "WhatsUp": "+852 68597966"
     },
     "Hong Kong": {
-      "Contact No": "+852-23115078",
+      "Contact No": "+852 97316693",
       "Address": "17CD, 17th Floor,Cameron Plaza,23-25A Cameron Road,TST,HK",
-      "WhatsUp": "+852-90840578"
+      "WhatsUp": "+852 97316693"
     }
   };
 

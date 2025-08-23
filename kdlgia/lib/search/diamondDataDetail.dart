@@ -155,5 +155,60 @@ class Diamond {
       dia_kts: json[47],
     );
   }
+
+    /// Factory constructor for creating an empty Diamond
+  factory Diamond.empty() {
+    return Diamond(
+      inCart: "",
+      id: "",
+      diaSource: "",
+      diaItemNo: "",
+      diaPlace: "",
+      diaStatus: "",
+      canToCart: null,
+      diaShape: "",
+      diaCarat: "",
+      diaColor: "",
+      diaColorIntensity: "",
+      diaColorOvertone: "",
+      diaColorColor: "",
+      diaClarity: "",
+      diaCut: "",
+      diaPolish: "",
+      diaSymmetry: "",
+      diaFluorescence: "",
+      diaDiameter: "",
+      diaColsh: "",
+      diaMilky: "",
+      diaWc: "",
+      diaWt: "",
+      diaBt: "",
+      diaBc: "",
+      diaEyeClean: "",
+      diaHna: "",
+      diaIns: "",
+      diaTable: "",
+      diaDepth: "",
+      diaCa: "",
+      diaPa: "",
+      diaReport: "",
+      diaReportNo: "",
+      diaRap: "",
+      diaArrive: "",
+      diaTime: "",
+      diaSerial: "",
+      imageUrl: "",
+      movieUrl: "",
+      diaNote: "",
+      back: "",
+      dollar1: "",
+      rmb: "",
+      rmbTax: "",
+      rap: "",
+      fieldMore: null,
+      dia_kts: "",
+    );
+  }
+
 }
 

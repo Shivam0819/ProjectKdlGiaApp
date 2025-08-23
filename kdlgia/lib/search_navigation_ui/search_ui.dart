@@ -447,7 +447,7 @@ class _SearchUiState extends State<SearchUi> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Center(
-                        child: CircularProgressIndicator(strokeWidth: 3.0),
+                        child: CircularProgressIndicator(strokeWidth: 3.0, color: logoMachingColor),
                       ),
                       SizedBox(
                         width: 10,
@@ -1395,7 +1395,8 @@ class _SearchUiState extends State<SearchUi> {
                                             "H",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: fontSizeElement),
+                                                fontSize: fontSizeElement
+                                                ),
                                           ),
                                         ),
                                       ),
@@ -1483,7 +1484,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.colKIsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -2006,7 +2007,7 @@ class _SearchUiState extends State<SearchUi> {
                                     margin: const EdgeInsets.all(paddingCard),
                                     color: widget.claI2IsSelected
                                         ? mainColor
-                                        : null, // Set color based on isSelected flag
+                                        : cardColor, // Set color based on isSelected flag
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
@@ -4159,7 +4160,7 @@ class _SearchUiState extends State<SearchUi> {
                                                   color: navigationMenuColor)),
                                           Center(
                                             child: CircularProgressIndicator(
-                                                strokeWidth: 3.0),
+                                                strokeWidth: 3.0, color: logoMachingColor,),
                                           ),
                                           Text(
                                             ")",
